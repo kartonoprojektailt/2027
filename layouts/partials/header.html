@@ -1,0 +1,133 @@
+<header class="header">
+    <nav class="nav" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        
+        <!-- Logo wczytywane ze statycznego folderu -->
+        <div class="logo">
+            <a href="{{ "" | absURL }}" accesskey="h" title="Kartono projektai (Alt + H)" style="display: flex; align-items: center;">
+                <img src="/logo/logo-full.png" alt="Kartono projektai" class="adaptive-logo" style="height: 90px; width: auto; display: block;">
+            </a>
+        </div>
+        
+        <ul id="menu" style="display: flex; list-style: none; gap: 20px; align-items: center; margin: 0;">
+            {{- range site.Menus.main -}}
+                {{- if .HasChildren -}}
+                    <li class="menu-item-has-children" style="position: relative;">
+                        <a href="{{ .URL | absURL }}">
+                            <span>{{ .Name }}</span>
+                        </a>
+                        <ul class="sub-menu" style="position: absolute; top: 100%; left: 0; background: var(--theme); border: 1px solid var(--border); list-style: none; padding: 10px 0; display: none; min-width: 200px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            {{- range .Children -}}
+                            <li style="padding: 5px 20px;">
+                                <a href="{{ .URL | absURL }}">
+                                    <span>{{ .Name }}</span>
+                                </a>
+                            </li>
+                            {{- end -}}
+                        </ul>
+                    </li>
+                {{- else -}}
+                    <li>
+                        <a href="{{ .URL | absURL }}">
+                            <span>{{ .Name }}</span>
+                        </a>
+                    </li>
+                {{- end -}}
+            {{- end -}}
+
+            <!-- Przycisk zmiany motywu po prawej stronie -->
+            {{- if not site.Params.disableThemeToggle -}}
+            <li>
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme" style="background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center;">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun" style="display: none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+            </li>
+            {{- end -}}
+        </ul>
+    </nav>
+</header>
+
+<style>
+    /* Kontrola przestrzeni NAD i POD całym nagłówkiem */
+    .header {
+        padding-top: 15px;    /* Tutaj możesz swobodnie regulować odstęp od góry ekranu */
+        padding-bottom: 30px; /* Odstęp pod nagłówkiem (przed h1) */
+    }
+
+    .menu-item-has-children:hover .sub-menu {
+        display: block !important;
+    }
+
+    /* W trybie ciemnym delikatnie dostosowujemy logo, jeśli potrzebuje inwersji kolorów */
+    html[data-theme="dark"] .adaptive-logo,
+    body.dark .adaptive-logo {
+        filter: invert(0.9) hue-rotate(180deg);
+    }
+    
+    .adaptive-logo {
+        transition: filter 0.2s ease-in-out;
+    }
+
+    html[data-theme="dark"] {
+        background: #1d1e22;
+        color: #f1f1f1;
+    }
+    html[data-theme="dark"] body {
+        background: #1d1e22;
+        color: #f1f1f1;
+    }
+
+    /* CENTROWANIE LOGO TYLKO W WERSJI MOBILNEJ (ekrany do 768px) */
+    @media screen and (max-width: 768px) {
+        .nav {
+            flex-direction: column;
+            align-items: center !important;
+        }
+        .logo {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .logo a {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    (function() {
+        const toggleBtn = document.getElementById("theme-toggle");
+        if (!toggleBtn) return;
+
+        const moon = document.getElementById('moon');
+        const sun = document.getElementById('sun');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                document.documentElement.classList.add('dark');
+                if (moon) moon.style.display = 'none';
+                if (sun) sun.style.display = 'block';
+            } else {
+                document.body.classList.remove('dark');
+                document.documentElement.classList.remove('dark');
+                if (moon) moon.style.display = 'block';
+                if (sun) sun.style.display = 'none';
+            }
+            localStorage.setItem("pref-theme", theme);
+        }
+
+        const savedTheme = localStorage.getItem("pref-theme") || "light";
+        setTheme(savedTheme);
+
+        toggleBtn.addEventListener("click", () => {
+            const currentTheme = localStorage.getItem("pref-theme");
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+    })();
+</script>

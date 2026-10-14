@@ -1,0 +1,221 @@
+baseURL = "/"
+locale = "lt"
+title = "Kartono projektai"
+theme = "PaperMod"
+
+[permalinks]
+  page = "/:slug/"
+  section = "/:slug/"
+
+# ==========================================
+# WŁĄCZENIE HTML W MARKDOWN (GOLDMARK)
+# Umożliwia renderowanie przycisków HTML (Google Maps / Waze)
+# ==========================================
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[params]
+  env = "production"
+  title = "Kartono projektai"
+  description = "Reklaminių stendų ir pakuočių gamintojas UAB Kartono projektai"
+  defaultTheme = "light"
+  disableThemeToggle = false
+
+  # Wyłączenie wyświetlania autora i metadanych pod nagłówkami
+  author = ""
+  showAuthor = false
+  hideMeta = true
+  showShareButtons = false
+  showReadingTime = false
+  disableScrollToTop = false
+
+  [params.label]
+    text = "Kartono projektai"
+    icon = ""
+    iconHeight = 35
+
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 100
+    threshold = 0.3
+    minMatchCharLength = 2
+    keys = ["title", "permalink", "summary", "content"]
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+# ==========================================
+# KONFIGURACJA MENU GŁÓWNEGO (HEADER MENU)
+# ==========================================
+[menu]
+
+  # --- 1. REKLAMINIAI STENDAI IR POSM ---
+  [[menu.main]]
+    identifier = "stendai-posm"
+    name = "Reklaminiai stendai ir POSM"
+    url = "/reklaminiai-stendai-stovai/"
+    weight = 10
+
+  [[menu.main]]
+    parent = "stendai-posm"
+    name = "Stendai ir ekspoziciniai stovai"
+    url = "/stendai-stovai/"
+    weight = 11
+
+  [[menu.main]]
+    parent = "stendai-posm"
+    name = "Parduotuvių ir vitrinų dekoracijos"
+    url = "/parduotuviu-dekoracijos/"
+    weight = 12
+
+  [[menu.main]]
+    parent = "stendai-posm"
+    name = "Foto sienelės ir renginių įranga"
+    url = "/foto-sieneles/"
+    weight = 13
+
+  [[menu.main]]
+    parent = "stendai-posm"
+    name = "Akrilo gaminiai ir balsadėžės"
+    url = "/akrilo-gaminiai/"
+    weight = 14
+
+
+  # --- 2. PAKUOTĖS ---
+  [[menu.main]]
+    identifier = "pakuotes"
+    name = "Pakuotės"
+    url = "/pakuotes/"
+    weight = 20
+
+  [[menu.main]]
+    parent = "pakuotes"
+    name = "Projektavimo paslaugos"
+    url = "/projektavimo-paslaugos/"
+    weight = 21
+
+  [[menu.main]]
+    parent = "pakuotes"
+    name = "Dėžės"
+    url = "/dezes/"
+    weight = 22
+
+  [[menu.main]]
+    parent = "pakuotes"
+    name = "Dėžutės"
+    url = "/dezutes/"
+    weight = 23
+
+  [[menu.main]]
+    parent = "pakuotes"
+    name = "Dovanų dėžutės"
+    url = "/dovanu-dezutes/"
+    weight = 24
+
+  [[menu.main]]
+    parent = "pakuotes"
+    name = "Pakuotės maistui"
+    url = "/maisto-dezutes/"
+    weight = 25
+
+  [[menu.main]]
+    parent = "pakuotes"
+    name = "FEFCO katalogas"
+    url = "/fefco-dezes/"
+    weight = 26
+
+  [[menu.main]]
+    parent = "pakuotes"
+    name = "Unikalios pakuotės"
+    url = "/individualios-nestandartines-pakuotes/"
+    weight = 27
+
+
+  # --- 3. SANDĖLYJE ---
+  [[menu.main]]
+    identifier = "sandelyje"
+    name = "Sandėlyje"
+    url = "/sandelyje/"
+    weight = 30
+
+
+  # --- 4. CNC PASLAUGOS ---
+  [[menu.main]]
+    identifier = "cnc"
+    name = "CNC Paslaugos"
+    url = "/cnc-paslaugos/"
+    weight = 40
+
+  [[menu.main]]
+    parent = "cnc"
+    name = "CNC frezavimas"
+    url = "/cnc-frezavimas/"
+    weight = 41
+
+  [[menu.main]]
+    parent = "cnc"
+    name = "CNC pjovimas"
+    url = "/cnc-pjovimas/"
+    weight = 42
+
+
+  # --- 5. KONTAKTAI ---
+  [[menu.main]]
+    identifier = "kontaktai"
+    name = "Kontaktai"
+    url = "/kontaktai/"
+    weight = 50
+
+
+  # --- WYSZUKIWARKA (SYMBOL LUPY) ---
+  [[menu.main]]
+    identifier = "search"
+    name = "🔍"
+    url = "/search/"
+    weight = 60
+
+
+# ==========================================
+# KONFIGURACJA MENU STOPKI (FOOTER MENU)
+# ==========================================
+
+  # Kopia głównych kategorii z nagłówka
+  [[menu.footer]]
+    name = "Reklaminiai stendai ir POSM"
+    url = "/reklaminiai-stendai-stovai/"
+    weight = 1
+
+  [[menu.footer]]
+    name = "Pakuotės"
+    url = "/pakuotes/"
+    weight = 2
+
+  [[menu.footer]]
+    name = "Sandėlyje"
+    url = "/sandelyje/"
+    weight = 3
+
+  [[menu.footer]]
+    name = "CNC Paslaugos"
+    url = "/cnc-paslaugos/"
+    weight = 4
+
+  [[menu.footer]]
+    name = "Kontaktai"
+    url = "/kontaktai/"
+    weight = 5
+
+  # Dodatkowe elementy wymagane w stopce
+  [[menu.footer]]
+    name = "Rekvizitai"
+    url = "/rekvizitai/"
+    weight = 6
+
+  [[menu.footer]]
+    name = "Apie UAB Kartono projektai"
+    url = "/uab-kartono-projektai/"
+    weight = 7

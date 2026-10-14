@@ -1,0 +1,234 @@
+/* ================================================= */
+/* 0. GLOBALNA CZCIONKA: INTER + PŁYNNE PRZEWIJANIE  */
+/* ================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+html {
+    scroll-behavior: smooth;
+    font-size: 100% !important; /* Pozwala stronie dostosować się do domyślnych ustawień urządzenia/przeglądarki */
+    -webkit-overflow-scrolling: touch; /* Płynne przewijanie dotykowe na urządzeniach Apple */
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 1rem !important;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased; /* Idealne wygładzanie czcionek na ekranach Retina (Apple) */
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%; /* Zapobiega automatycznej zmianie rozmiaru tekstu przez iOS przy obrocie */
+    text-size-adjust: 100%;
+}
+
+/* ================================================= */
+/* 1. UKŁAD DLA PC (DESKTOP)                         */
+/* ================================================= */
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    gap: 25px;
+}
+
+#menu li {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+}
+
+#menu li a {
+    padding: 6px 12px;
+    display: block;
+    white-space: nowrap;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+}
+
+/* Dropdown na PC */
+#menu li .sub-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--theme);
+    border: 1px solid var(--border);
+    list-style: none;
+    padding: 10px 0;
+    min-width: 240px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 999;
+}
+
+#menu li:hover .sub-menu {
+    display: block;
+}
+
+#menu .sub-menu li {
+    display: block;
+    width: 100%;
+}
+
+#menu .sub-menu li a {
+    padding: 10px 18px;
+    white-space: nowrap;
+    display: block;
+    font-size: 0.9375rem !important;
+}
+
+#menu .sub-menu li a:hover {
+    background: var(--entry);
+}
+
+
+/* ================================================= */
+/* 2. CZYTELNA, PIONOWA LISTA MOBILNA (SENIOR-FRIENDLY)*/
+/* ================================================= */
+
+@media screen and (max-width: 768px) {
+  body {
+    /* Bezpieczne marginesy dla nowych ekranów Apple (Dynamic Island / Notch / Home Indicator) */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+  }
+
+  .nav ul {
+    display: flex !important; 
+  }
+
+  /* Pionowy układ całego menu na telefonie */
+  #menu {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-top: 14px;
+    width: 100%;
+    padding-top: 12px;
+    border-top: 2px solid var(--border);
+    background: transparent;
+    position: static;
+    box-shadow: none;
+  }
+
+  #menu li {
+    margin: 0;
+    width: 100%;
+    display: block;
+  }
+
+  /* Główne kategorie: Wielkie litery, duża czytelna czcionka, wyrównanie do lewej */
+  #menu li a {
+    font-size: 1.03rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px;
+    display: block !important;
+    text-align: left;
+    padding: 12px 16px !important;
+    background: var(--entry);
+    border: 2px solid var(--secondary);
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: normal !important;
+  }
+
+  /* Podkategorie z wcięciem i wyśrodkowaniem */
+  #menu li .sub-menu {
+    position: static !important;
+    display: block !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 6px 0 4px 16px !important;
+    width: 100%;
+  }
+
+  #menu .sub-menu li {
+    margin: 6px 0;
+    width: 100%;
+  }
+
+  #menu .sub-menu li a {
+    background: var(--entry) !important;
+    padding: 10px 14px !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px;
+    text-align: center;
+    border: 2px solid var(--secondary) !important;
+    border-radius: 8px;
+    white-space: normal !important;
+  }
+
+  .logo-sw {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+  }
+}
+
+
+/* ================================================= */
+/* 3. POPRAWKA CZYTELNOŚCI PRZYCISKÓW (MAPS / WAZE)  */
+/* ================================================= */
+.main a.btn, 
+.content a.btn, 
+article a.btn,
+.post-content a.btn,
+.map-button,
+a[href*="maps.app.goo.gl"],
+a[href*="waze.com"] {
+    background-color: var(--entry) !important;
+    color: var(--primary) !important;
+    border: 1px solid var(--border) !important;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.main a.btn:hover, 
+.content a.btn:hover, 
+article a.btn:hover,
+.post-content a.btn:hover,
+.map-button:hover,
+a[href*="maps.app.goo.gl"]:hover,
+a[href*="waze.com"]:hover {
+    background-color: var(--secondary) !important;
+    color: var(--theme) !important;
+}
+
+
+/* ================================================= */
+/* 4. TOTALNE WYMUSZENIE CZCIONKI INTER DLA SHORTCODE COPY */
+/* ================================================= */
+div.highlight pre, 
+div.highlight code, 
+pre code, 
+.post-content pre, 
+.post-content code,
+figure.highlight pre,
+figure.highlight code {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 0.9375rem !important;
+    font-weight: 400 !important;
+    letter-spacing: normal !important;
+    line-height: 1.5 !important;
+    text-transform: none !important;
+}

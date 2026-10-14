@@ -1,0 +1,80 @@
+{{- /* Hugo Shortcode: Click-to-Copy (Works on HTTP, IP, Localhost, HTTPS) */ -}}
+{{- $text := .Get 0 -}}
+
+{{- if not (.Page.Scratch.Get "copyJS") -}}
+{{- .Page.Scratch.Set "copyJS" true -}}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.copy-clickable-data').forEach(function(container) {
+        container.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (this.classList.contains('copy-cooldown')) return;
+            
+            var textToCopy = this.getAttribute('data-copy');
+            var icon = this.querySelector('.copy-icon');
+            var success = this.querySelector('.copy-success');
+            var self = this;
+
+            // Funkcja kopiująca działająca na HTTP, HTTPS, IP oraz localhost
+            function doCopy(text) {
+                if (navigator.clipboard && window.isSecureContext) {
+                    return navigator.clipboard.writeText(text);
+                } else {
+                    // Fallback dla połączeń niezaszyfrowanych (np. http://192.168.1.159:1313)
+                    return new Promise(function(resolve, reject) {
+                        var textArea = document.createElement("textarea");
+                        textArea.value = text;
+                        textArea.style.position = "fixed";
+                        textArea.style.left = "-999999px";
+                        textArea.style.top = "-999999px";
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        try {
+                            var successful = document.execCommand('copy');
+                            document.body.removeChild(textArea);
+                            successful ? resolve() : reject();
+                        } catch (err) {
+                            document.body.removeChild(textArea);
+                            reject(err);
+                        }
+                    });
+                }
+            }
+
+            doCopy(textToCopy).then(function() {
+                if (icon) icon.style.display = 'none';
+                if (success) success.style.display = 'inline-flex';
+                self.style.borderColor = '#22c55e';
+                self.classList.add('copy-cooldown');
+                
+                setTimeout(function() {
+                    if (success) success.style.display = 'none';
+                    if (icon) icon.style.display = 'inline-flex';
+                    self.style.borderColor = '';
+                    self.classList.remove('copy-cooldown');
+                }, 1500);
+            }).catch(function(err) {
+                console.error('Kopijavimo klaida: ', err);
+            });
+        });
+    });
+});
+</script>
+{{- end -}}
+
+<span class="copy-clickable-data" data-copy="{{ $text }}" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(128, 128, 128, 0.3); border-radius: 4px; padding: 2px 8px; background-color: rgba(128, 128, 128, 0.05); font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 400; line-height: 1.4; transition: all 0.2s; white-space: nowrap; user-select: none;" title="Spustelėkite, kad nukopijuotumėte">
+    
+    <span style="user-select: all; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 400;">{{ $text }}</span>
+    
+    <!-- Ikona kopiowania (z pointer-events: none) -->
+    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.6; display: inline-flex; pointer-events: none;">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+    </svg>
+    
+    <!-- Stan sukcesu (zielony ptaszek) -->
+    <svg class="copy-success" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none; align-items: center; pointer-events: none;">
+        <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+</span>
