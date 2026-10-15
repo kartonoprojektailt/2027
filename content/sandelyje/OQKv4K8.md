@@ -1,0 +1,1 @@
+Testowy opis produktu
