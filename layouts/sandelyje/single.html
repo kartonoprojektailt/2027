@@ -6,7 +6,7 @@
   "@type": "Product",
   "name": "{{ .Title }}",
   "image": [
-    {{ range $index,$element := .Params.images }}{{ if gt $index 0 }},{{ end }}"{{ $element }}"{{ end }}
+    {{ range $index, $element := .Params.images }}{{ if gt $index 0 }},{{ end }}"{{ $element }}"{{ end }}
   ],
   "description": "{{ .Description }}",
   "sku": "{{ .Params.offer_code }}",
@@ -188,11 +188,60 @@
         {{ $emailSubject := printf "Uzklausa del pasiulymo - %s - %s" .Params.offer_code .Title }}
         {{ if not $isSold }}
         <div class="cta-box no-print" style="display: flex; gap: 15px; margin-bottom: 35px; flex-wrap: wrap;">
-            <a href="mailto:{{ $managerEmail }}?subject={{$emailSubject }}" style="flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
+            <a href="mailto:{{ $managerEmail }}?subject={{ $emailSubject }}" style="flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
                 ✉️ Teirautis dėl šios prekės
             </a>
             <a href="tel:+37065285223" class="mobile-phone-btn" style="display: none; flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
                 📞 Skambinti: +370 652 85223
             </a>
             <a href="/kontaktai/" class="desktop-contact-btn" style="flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
-                📞 Susisiekti su Kart
+                📞 Susisiekti su Kartono projektai
+            </a>
+        </div>
+        {{ end }}
+    </div>
+</article>
+
+<style>
+.product-info-box h2, 
+.product-info-box h3 {
+    font-size: 1.1rem;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--primary);
+}
+.product-info-box h2:first-child, 
+.product-info-box h3:first-child {
+    margin-top: 0;
+}
+.product-info-box p, 
+.product-info-box ul {
+    margin-bottom: 15px;
+}
+.product-info-box p:last-child,
+.product-info-box ul:last-child {
+    margin-bottom: 0;
+}
+@media screen and (max-width: 768px) {
+    .mobile-phone-btn { display: block !important; }
+    .desktop-contact-btn { display: none !important; }
+}
+@media print {
+    @page {
+        size: auto;
+        margin: 15mm 15mm 20mm 15mm;
+    }
+    body {
+        background: #fff !important;
+        color: #000 !important;
+    }
+    .print-header { display: block !important; }
+    .print-footer { display: block !important; }
+    .print-embedded-pdf { display: block !important; }
+    .print-about-sandelyje { display: block !important; }
+    .no-print, header, footer, .cta-box { display: none !important; }
+    .product-info-box { background: none !important; border: none !important; padding: 0 !important; }
+}
+</style>
+{{ end }}
