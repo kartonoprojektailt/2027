@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: kartonoprojektailt/2027  # Nazwa Twojego repozytorium na GitHub
+  repo: kartonoprojektailt/2027  # Upewnij się, że tu jest dokładna nazwa Twojego repo na GitHub
   branch: main
 
 media_folder: "static/uploads"
@@ -15,7 +15,7 @@ collections:
     fields:
       - {label: "Pavadinimas (Title)", name: "title", widget: "string"}
       - {label: "Data", name: "date", widget: "datetime"}
-      - {label: "Unikalus kodas (SKU)", name: "offer_code", widget: "string", hint: "pvz., kp20261015a"}
+      - {label: "Unikalus kodas (SKU)", name: "offer_code", widget: "string", hint: "np. kp20261015a"}
       - label: "Kategorija"
         name: "category"
         widget: "select"
@@ -24,8 +24,8 @@ collections:
         name: "status"
         widget: "select"
         options: ["aktyvus", "parduota"]
-      - {label: "Kaina", name: "price", widget: "string", hint: "pvz., 0.45 € / vnt."}
-      - {label: "Likutis (kiekis ir matas)", name: "stock", widget: "string", hint: "pvz., 500 vnt."}
+      - {label: "Kaina", name: "price", widget: "string", hint: "np. 0.45 € / vnt."}
+      - {label: "Likutis (kiekis ir matas)", name: "stock", widget: "string", hint: "np. 500 vnt."}
       - {label: "Aprašymas", name: "description", widget: "text"}
       - label: "Nuotraukos"
         name: "images"
@@ -37,6 +37,6 @@ collections:
         fields:
           - {label: "Dokumento pavadinimas", name: "title", widget: "string"}
           - {label: "PDF failas", name: "url", widget: "file"}
-      - {label: "Techninės specifikacijos", name: "specs", widget: "markdown"}
+      - {label: "Techninės specifikacje", name: "specs", widget: "markdown"}
       - {label: "Paskirtis ir taikymo sritys", name: "application", widget: "markdown"}
       - {label: "Administratoriaus el. paštas", name: "manager_email", widget: "string", default: "info@kartonoprojektai.lt"}
