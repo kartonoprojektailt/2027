@@ -1,7 +1,9 @@
 backend:
   name: github
-  repo: kartonoprojektailt/2027  # Upewnij się, że tu jest dokładna nazwa Twojego repo na GitHub
+  repo: kartonoprojektailt/2027
   branch: main
+  base_url: https://github.com
+  auth_endpoint: login/oauth/authorize
 
 media_folder: "static/uploads"
 public_folder: "/uploads"
@@ -37,6 +39,6 @@ collections:
         fields:
           - {label: "Dokumento pavadinimas", name: "title", widget: "string"}
           - {label: "PDF failas", name: "url", widget: "file"}
-      - {label: "Techninės specifikacje", name: "specs", widget: "markdown"}
+      - {label: "Techninės specifikacijos", name: "specs", widget: "markdown"}
       - {label: "Paskirtis ir taikymo sritys", name: "application", widget: "markdown"}
       - {label: "Administratoriaus el. paštas", name: "manager_email", widget: "string", default: "info@kartonoprojektai.lt"}
