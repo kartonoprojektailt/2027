@@ -1,32 +1,31 @@
-<header class="header">
-    <nav class="nav" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+<header class="header" style="position: relative; z-index: 100;">
+    <nav class="nav" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
         
-        <!-- Logo wczytywane ze statycznego folderu -->
+        <!-- Logo -->
         <div class="logo">
             <a href="{{ "" | absURL }}" accesskey="h" title="Kartono projektai (Alt + H)" style="display: flex; align-items: center;">
-                <img src="/logo/logo-full.png" alt="Kartono projektai" class="adaptive-logo" style="height: 70px; width: auto; display: block;">
+                <img src="/logo/logo-full.png" alt="Kartono projektai" class="adaptive-logo" style="height: 60px; width: auto; display: block;">
             </a>
         </div>
 
-        <!-- Przycisk Hamburgera (Widoczny tylko na mobile) -->
-        <button id="menu-toggle" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; font-size: 1.8rem; padding: 5px; color: inherit;">
+        <!-- Przycisk Hamburgera -->
+        <button id="custom-menu-toggle" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; font-size: 2rem; padding: 5px; color: inherit; line-height: 1;">
             ☰
         </button>
         
-        <!-- Główna lista menu -->
-        <ul id="menu" style="display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0;">
+        <!-- Lista menu -->
+        <ul id="custom-menu" style="display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0;">
             {{- range site.Menus.main -}}
-                {{- /* Ignorujemy podkategorie w menu głównym na rzecz czystej listy głównych kategorii */ -}}
                 {{- if not .Parent -}}
                     <li>
-                        <a href="{{ .URL | absURL }}" style="text-decoration: none; font-weight: 500; color: inherit;">
+                        <a href="{{ .URL | absURL }}" style="text-decoration: none; font-weight: 500; color: inherit; white-space: nowrap;">
                             <span>{{ .Name }}</span>
                         </a>
                     </li>
                 {{- end -}}
             {{- end -}}
 
-            <!-- Przycisk zmiany motywu po prawej stronie -->
+            <!-- Przycisk zmiany motywu -->
             {{- if not site.Params.disableThemeToggle -}}
             <li>
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme" style="background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center;">
@@ -63,45 +62,62 @@
         color: #f1f1f1;
     }
 
-    /* MOBILNY UKŁAD RESPONSYWNY (Poniżej 768px) */
+    /* NADPISANIE ORYGINALNYCH STYLÓW PAPERMOD DLA MOBILE */
     @media screen and (max-width: 768px) {
         .nav {
             position: relative;
         }
-        #menu-toggle {
+        #custom-menu-toggle {
             display: block !important;
         }
-        /* Domyślnie menu na telefonie jest ukryte, z wyjątkiem flexa po rozwinięciu */
-        #menu {
-            display: none;
+        /* Całkowite ukrycie menu domyślnego na telefonie */
+        #custom-menu {
+            display: none !important;
             flex-direction: column;
             width: 100%;
-            background: var(--theme, #fff);
+            background: var(--theme, #ffffff);
             position: absolute;
             top: 100%;
             left: 0;
-            padding: 20px 0;
+            padding: 20px;
             border-bottom: 1px solid var(--border, #ddd);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             align-items: flex-start !important;
             gap: 15px !important;
-            padding-left: 20px;
-            z-index: 999;
+            z-index: 9999;
         }
-        #menu.active {
+        /* Klasa aktywująca wysunięcie menu */
+        #custom-menu.mobile-open {
             display: flex !important;
+        }
+        #custom-menu li {
+            width: 100%;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        #custom-menu li:last-child {
+            border-bottom: none;
         }
     }
 </style>
 
 <script>
     (function() {
-        // Obsługa Hamburger Menu
-        const menuToggle = document.getElementById("menu-toggle");
-        const menu = document.getElementById("menu");
+        // Obsługa własnego hamburgera
+        const menuToggle = document.getElementById("custom-menu-toggle");
+        const menu = document.getElementById("custom-menu");
+        
         if (menuToggle && menu) {
-            menuToggle.addEventListener("click", () => {
-                menu.classList.toggle("active");
+            menuToggle.addEventListener("click", function(e) {
+                e.stopPropagation();
+                menu.classList.toggle("mobile-open");
+            });
+
+            // Zamknięcie menu po kliknięciu w dowolne miejsce poza nim
+            document.addEventListener("click", function(e) {
+                if (!menu.contains(e.target) && !menuToggle.contains(e.target)) {
+                    menu.classList.remove("mobile-open");
+                }
             });
         }
 
