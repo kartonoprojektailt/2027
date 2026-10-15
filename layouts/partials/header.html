@@ -1,24 +1,24 @@
-<header class="header" style="position: relative; z-index: 100;">
-    <nav class="nav" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+<header class="header" style="position: relative; z-index: 1000; border-bottom: 1px solid var(--border, #333);">
+    <nav class="nav" style="max-width: 1200px; margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
         
         <!-- Logo -->
         <div class="logo">
             <a href="{{ "" | absURL }}" accesskey="h" title="Kartono projektai (Alt + H)" style="display: flex; align-items: center;">
-                <img src="/logo/logo-full.png" alt="Kartono projektai" class="adaptive-logo" style="height: 60px; width: auto; display: block;">
+                <img src="/logo/logo-full.png" alt="Kartono projektai" class="adaptive-logo" style="height: 55px; width: auto; display: block;">
             </a>
         </div>
 
-        <!-- Przycisk Hamburgera -->
-        <button id="custom-menu-toggle" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; font-size: 2rem; padding: 5px; color: inherit; line-height: 1;">
+        <!-- Przycisk Hamburgera (Ikona) -->
+        <button id="custom-menu-toggle" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; font-size: 1.8rem; padding: 8px; color: var(--primary, #fff); line-height: 1;">
             ☰
         </button>
         
         <!-- Lista menu -->
-        <ul id="custom-menu" style="display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0;">
+        <ul id="custom-menu" style="display: flex; list-style: none; gap: 25px; align-items: center; margin: 0; padding: 0;">
             {{- range site.Menus.main -}}
                 {{- if not .Parent -}}
                     <li>
-                        <a href="{{ .URL | absURL }}" style="text-decoration: none; font-weight: 500; color: inherit; white-space: nowrap;">
+                        <a href="{{ .URL | absURL }}" class="menu-link">
                             <span>{{ .Name }}</span>
                         </a>
                     </li>
@@ -28,9 +28,9 @@
             <!-- Przycisk zmiany motywu -->
             {{- if not site.Params.disableThemeToggle -}}
             <li>
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme" style="background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center;">
-                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun" style="display: none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme" style="background: none; border: none; cursor: pointer; padding: 5px; display: flex; align-items: center; color: var(--primary, #fff);">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                 </button>
             </li>
             {{- end -}}
@@ -39,9 +39,14 @@
 </header>
 
 <style>
-    .header {
-        padding-top: 15px;
-        padding-bottom: 20px;
+    .menu-link {
+        text-decoration: none;
+        font-weight: 500;
+        color: var(--primary, inherit);
+        transition: opacity 0.2s;
+    }
+    .menu-link:hover {
+        opacity: 0.7;
     }
 
     html[data-theme="dark"] .adaptive-logo,
@@ -53,16 +58,7 @@
         transition: filter 0.2s ease-in-out;
     }
 
-    html[data-theme="dark"] {
-        background: #1d1e22;
-        color: #f1f1f1;
-    }
-    html[data-theme="dark"] body {
-        background: #1d1e22;
-        color: #f1f1f1;
-    }
-
-    /* NADPISANIE ORYGINALNYCH STYLÓW PAPERMOD DLA MOBILE */
+    /* MOBILNY UKŁAD ELEGANCKIEGO MENU ROZWIJANEGO (Poniżej 768px) */
     @media screen and (max-width: 768px) {
         .nav {
             position: relative;
@@ -70,40 +66,48 @@
         #custom-menu-toggle {
             display: block !important;
         }
-        /* Całkowite ukrycie menu domyślnego na telefonie */
+        /* Domyślnie menu jest całkowicie ukryte za pomocą visibility i opacity dla płynności */
         #custom-menu {
-            display: none !important;
+            display: flex !important;
+            visibility: hidden;
+            opacity: 0;
             flex-direction: column;
             width: 100%;
-            background: var(--theme, #ffffff);
+            background: var(--theme, #1d1e22);
             position: absolute;
             top: 100%;
             left: 0;
-            padding: 20px;
-            border-bottom: 1px solid var(--border, #ddd);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            align-items: flex-start !important;
-            gap: 15px !important;
+            padding: 25px 20px;
+            border-bottom: 2px solid var(--border, #333);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            align-items: center !important; /* Wycentrowane elegancko na środku */
+            gap: 20px !important;
             z-index: 9999;
+            transform: translateY(-10px);
+            transition: visibility 0.2s, opacity 0.2s, transform 0.2s;
         }
-        /* Klasa aktywująca wysunięcie menu */
+        /* Klasa aktywująca pokazanie menu */
         #custom-menu.mobile-open {
-            display: flex !important;
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
         }
         #custom-menu li {
             width: 100%;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            text-align: center; /* Wycentrowane napisy w menu */
         }
-        #custom-menu li:last-child {
-            border-bottom: none;
+        #custom-menu .menu-link {
+            font-size: 1.15rem; /* Większe, czytelne litery */
+            font-weight: 600;
+            display: block;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
     }
 </style>
 
 <script>
     (function() {
-        // Obsługa własnego hamburgera
         const menuToggle = document.getElementById("custom-menu-toggle");
         const menu = document.getElementById("custom-menu");
         
@@ -111,12 +115,15 @@
             menuToggle.addEventListener("click", function(e) {
                 e.stopPropagation();
                 menu.classList.toggle("mobile-open");
+                // Zmiana ikony hamburgera na "X" po otwarciu
+                menuToggle.textContent = menu.classList.contains("mobile-open") ? "✕" : "☰";
             });
 
             // Zamknięcie menu po kliknięciu w dowolne miejsce poza nim
             document.addEventListener("click", function(e) {
                 if (!menu.contains(e.target) && !menuToggle.contains(e.target)) {
                     menu.classList.remove("mobile-open");
+                    menuToggle.textContent = "☰";
                 }
             });
         }
