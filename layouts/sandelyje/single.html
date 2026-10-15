@@ -159,12 +159,23 @@
             <strong>Apie „Kartono projektai“ sandėlio pasiūlymus:</strong> šis dokumentas yra automatinis techninis pasiūlymas iš Kartono projektų sandėlio https://kartonoprojektai.lt/sandelyje/ Čia skelbiamas sandėlio likučių perteklius, nestandartinės kartono pakuotės, gamybinės medžiagos bei POSM sprendimai už mažesnę kainą operatyviam įsigijimui. Kviečiame apsilankyti svetainėje ir susipažinti su visais aktyviais pasiūlymais.
         </div>
 
-        <!-- Przycisk PDF / drukowania -->
+        <!-- Przycisk PDF / drukowania z obsługą zdarzeń dotykowych -->
         <div style="margin: 40px 0 25px 0; text-align: center;" class="no-print">
-            <button type="button" onclick="window.print(); return false;" class="button" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem; display: inline-block; -webkit-appearance: none; -webkit-tap-highlight-color: transparent;">
+            <button id="mobile-print-btn" type="button" class="button" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem; display: inline-block; -webkit-appearance: none; -webkit-tap-highlight-color: transparent;">
                 🖨️ Viso skelbimo PDF + QR
             </button>
         </div>
+
+        <script>
+        document.getElementById('mobile-print-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.print();
+        });
+        document.getElementById('mobile-print-btn').addEventListener('touchend', function(e) {
+            e.preventDefault();
+            window.print();
+        });
+        </script>
 
         <!-- Przyciski konwersyjne -->
         {{ $managerEmail := .Params.manager_email | default "info@kartonoprojektai.lt" }}
