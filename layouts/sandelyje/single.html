@@ -6,7 +6,7 @@
   "@type": "Product",
   "name": "{{ .Title }}",
   "image": [
-    {{ range $index, $element := .Params.images }}{{ if gt $index 0 }},{{ end }}"{{ $element }}"{{ end }}
+    {{ range $index,$element := .Params.images }}{{ if gt $index 0 }},{{ end }}"{{ $element }}"{{ end }}
   ],
   "description": "{{ .Description }}",
   "sku": "{{ .Params.offer_code }}",
@@ -159,7 +159,7 @@
             <strong>Apie „Kartono projektai“ sandėlio pasiūlymus:</strong> šis dokumentas yra automatinis techninis pasiūlymas iš Kartono projektų sandėlio https://kartonoprojektai.lt/sandelyje/ Čia skelbiamas sandėlio likučių perteklius, nestandartinės kartono pakuotės, gamybinės medžiagos bei POSM sprendimai už mažesnę kainą operatyviam įsigijimui. Kviečiame apsilankyti svetainėje ir susipažinti su visais aktyviais pasiūlymais.
         </div>
 
-        <!-- Przycisk PDF / drukowania z obsługą zdarzeń dotykowych -->
+        <!-- Przycisk PDF / drukowania -->
         <div style="margin: 40px 0 25px 0; text-align: center;" class="no-print">
             <button id="mobile-print-btn" type="button" class="button" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem; display: inline-block; -webkit-appearance: none; -webkit-tap-highlight-color: transparent;">
                 🖨️ Viso skelbimo PDF + QR
@@ -169,11 +169,17 @@
         <script>
         document.getElementById('mobile-print-btn').addEventListener('click', function(e) {
             e.preventDefault();
-            window.print();
-        });
-        document.getElementById('mobile-print-btn').addEventListener('touchend', function(e) {
-            e.preventDefault();
-            window.print();
+            if (navigator.share) {
+                navigator.share({
+                    title: document.title,
+                    text: 'UAB „Kartono projektai“ – Techninis pasiūlymas',
+                    url: window.location.href
+                }).catch(() => {
+                    window.print();
+                });
+            } else {
+                window.print();
+            }
         });
         </script>
 
@@ -182,60 +188,11 @@
         {{ $emailSubject := printf "Uzklausa del pasiulymo - %s - %s" .Params.offer_code .Title }}
         {{ if not $isSold }}
         <div class="cta-box no-print" style="display: flex; gap: 15px; margin-bottom: 35px; flex-wrap: wrap;">
-            <a href="mailto:{{ $managerEmail }}?subject={{ $emailSubject }}" style="flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
+            <a href="mailto:{{ $managerEmail }}?subject={{$emailSubject }}" style="flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
                 ✉️ Teirautis dėl šios prekės
             </a>
             <a href="tel:+37065285223" class="mobile-phone-btn" style="display: none; flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
                 📞 Skambinti: +370 652 85223
             </a>
             <a href="/kontaktai/" class="desktop-contact-btn" style="flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
-                📞 Susisiekti su Kartono projektai
-            </a>
-        </div>
-        {{ end }}
-    </div>
-</article>
-
-<style>
-.product-info-box h2, 
-.product-info-box h3 {
-    font-size: 1.1rem;
-    margin-top: 20px;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: var(--primary);
-}
-.product-info-box h2:first-child, 
-.product-info-box h3:first-child {
-    margin-top: 0;
-}
-.product-info-box p, 
-.product-info-box ul {
-    margin-bottom: 15px;
-}
-.product-info-box p:last-child,
-.product-info-box ul:last-child {
-    margin-bottom: 0;
-}
-@media screen and (max-width: 768px) {
-    .mobile-phone-btn { display: block !important; }
-    .desktop-contact-btn { display: none !important; }
-}
-@media print {
-    @page {
-        size: auto;
-        margin: 15mm 15mm 20mm 15mm;
-    }
-    body {
-        background: #fff !important;
-        color: #000 !important;
-    }
-    .print-header { display: block !important; }
-    .print-footer { display: block !important; }
-    .print-embedded-pdf { display: block !important; }
-    .print-about-sandelyje { display: block !important; }
-    .no-print, header, footer, .cta-box { display: none !important; }
-    .product-info-box { background: none !important; border: none !important; padding: 0 !important; }
-}
-</style>
-{{ end }}
+                📞 Susisiekti su Kart

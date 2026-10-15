@@ -4,30 +4,22 @@
         <!-- Logo wczytywane ze statycznego folderu -->
         <div class="logo">
             <a href="{{ "" | absURL }}" accesskey="h" title="Kartono projektai (Alt + H)" style="display: flex; align-items: center;">
-                <img src="/logo/logo-full.png" alt="Kartono projektai" class="adaptive-logo" style="height: 90px; width: auto; display: block;">
+                <img src="/logo/logo-full.png" alt="Kartono projektai" class="adaptive-logo" style="height: 70px; width: auto; display: block;">
             </a>
         </div>
+
+        <!-- Przycisk Hamburgera (Widoczny tylko na mobile) -->
+        <button id="menu-toggle" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; font-size: 1.8rem; padding: 5px; color: inherit;">
+            ☰
+        </button>
         
-        <ul id="menu" style="display: flex; list-style: none; gap: 20px; align-items: center; margin: 0;">
+        <!-- Główna lista menu -->
+        <ul id="menu" style="display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0;">
             {{- range site.Menus.main -}}
-                {{- if .HasChildren -}}
-                    <li class="menu-item-has-children" style="position: relative;">
-                        <a href="{{ .URL | absURL }}">
-                            <span>{{ .Name }}</span>
-                        </a>
-                        <ul class="sub-menu" style="position: absolute; top: 100%; left: 0; background: var(--theme); border: 1px solid var(--border); list-style: none; padding: 10px 0; display: none; min-width: 200px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                            {{- range .Children -}}
-                            <li style="padding: 5px 20px;">
-                                <a href="{{ .URL | absURL }}">
-                                    <span>{{ .Name }}</span>
-                                </a>
-                            </li>
-                            {{- end -}}
-                        </ul>
-                    </li>
-                {{- else -}}
+                {{- /* Ignorujemy podkategorie w menu głównym na rzecz czystej listy głównych kategorii */ -}}
+                {{- if not .Parent -}}
                     <li>
-                        <a href="{{ .URL | absURL }}">
+                        <a href="{{ .URL | absURL }}" style="text-decoration: none; font-weight: 500; color: inherit;">
                             <span>{{ .Name }}</span>
                         </a>
                     </li>
@@ -48,17 +40,11 @@
 </header>
 
 <style>
-    /* Kontrola przestrzeni NAD i POD całym nagłówkiem */
     .header {
-        padding-top: 15px;    /* Tutaj możesz swobodnie regulować odstęp od góry ekranu */
-        padding-bottom: 30px; /* Odstęp pod nagłówkiem (przed h1) */
+        padding-top: 15px;
+        padding-bottom: 20px;
     }
 
-    .menu-item-has-children:hover .sub-menu {
-        display: block !important;
-    }
-
-    /* W trybie ciemnym delikatnie dostosowujemy logo, jeśli potrzebuje inwersji kolorów */
     html[data-theme="dark"] .adaptive-logo,
     body.dark .adaptive-logo {
         filter: invert(0.9) hue-rotate(180deg);
@@ -77,28 +63,49 @@
         color: #f1f1f1;
     }
 
-    /* CENTROWANIE LOGO TYLKO W WERSJI MOBILNEJ (ekrany do 768px) */
+    /* MOBILNY UKŁAD RESPONSYWNY (Poniżej 768px) */
     @media screen and (max-width: 768px) {
         .nav {
+            position: relative;
+        }
+        #menu-toggle {
+            display: block !important;
+        }
+        /* Domyślnie menu na telefonie jest ukryte, z wyjątkiem flexa po rozwinięciu */
+        #menu {
+            display: none;
             flex-direction: column;
-            align-items: center !important;
-        }
-        .logo {
             width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
+            background: var(--theme, #fff);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border, #ddd);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            align-items: flex-start !important;
+            gap: 15px !important;
+            padding-left: 20px;
+            z-index: 999;
         }
-        .logo a {
-            display: flex;
-            justify-content: center;
-            width: 100%;
+        #menu.active {
+            display: flex !important;
         }
     }
 </style>
 
 <script>
     (function() {
+        // Obsługa Hamburger Menu
+        const menuToggle = document.getElementById("menu-toggle");
+        const menu = document.getElementById("menu");
+        if (menuToggle && menu) {
+            menuToggle.addEventListener("click", () => {
+                menu.classList.toggle("active");
+            });
+        }
+
+        // Obsługa przełącznika motywu
         const toggleBtn = document.getElementById("theme-toggle");
         if (!toggleBtn) return;
 
