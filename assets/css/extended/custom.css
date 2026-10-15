@@ -232,3 +232,7 @@ figure.highlight code {
     line-height: 1.5 !important;
     text-transform: none !important;
 }
+
+html {
+    color-scheme: dark light;
+}

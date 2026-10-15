@@ -106,12 +106,28 @@
             </div>
         </div>
 
-        <!-- Treść strukturalna ogłoszenia (bez górnej sekcji linków) -->
+        <!-- Treść strukturalna ogłoszenia -->
         <div class="product-info-box" style="background: var(--entry); border: 1px solid var(--border); padding: 25px; border-radius: 8px; margin-bottom: 35px;">
             {{ .Content }}
+
+            <!-- PRZYWRÓCONA SEKCJA POBIERANIA PLIKÓW TECHNICZNYCH (AKTYWNE LINKI DO POBRANIA) -->
+            {{ with .Params.pdf_documents }}
+            <div class="pdf-download-section" style="margin-top: 35px; padding-top: 20px; border-top: 1px dashed var(--border);">
+                <h3 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; font-weight: bold; color: var(--primary);">Su pasiūlymu susijusi techninė dokumentacija atsisiuntimui</h3>
+                <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                    {{ range . }}
+                    <li>
+                        <a href="{{ .url }}" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: 500;">
+                            📄 {{ .title }}
+                        </a>
+                    </li>
+                    {{ end }}
+                </ul>
+            </div>
+            {{ end }}
         </div>
 
-        <!-- WIZUALNY PODGLĄD (SZKICE) STRON Z ZAŁĄCZONYCH PDF -->
+        <!-- WIZUALNY PODGLĄD (SZKICE) STRON Z ZAŁĄCZONYCH PDF (WIDOCZNY W PEŁNYM PDF) -->
         {{ with .Params.tech_images }}
         <div class="tech-previews-section" style="margin: 30px 0; page-break-inside: avoid;">
             <h3 style="font-size: 1.1rem; margin-bottom: 15px; font-weight: bold; color: var(--primary);">Techniniai brėžiniai ir dokumentacijos vizualizacija (Priedas)</h3>
@@ -125,10 +141,10 @@
         </div>
         {{ end }}
 
-        <!-- SEKCJA TEKSTOWA DOKUMENTACJI WIDOCZNA W PDF (ELEGANCKA RAMKA Z NAZWAMI PLIKÓW) -->
+        <!-- SEKCJA TEKSTOWA DOKUMENTACJI WIDOCZNA W PDF (TYLKO NAZWY PLIKÓW) -->
         {{ with .Params.pdf_documents }}
         <div class="print-embedded-pdf" style="display: none; margin: 25px 0; padding: 15px; border: 1px solid #666; border-radius: 4px; background: #fafafa; font-size: 0.85rem; line-height: 1.4;">
-            <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: bold; text-transform: uppercase; color: #000;">TECHNINĖ DOKUMENTACIJA IR BRĖŽINIAI (PRIEDAS)</h4>
+            <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: bold; text-transform: uppercase; color: #000;">Techninė dokumentacija ir brėžiniai (priedas)</h4>
             <p style="margin: 0 0 10px 0;">Prie šio pasiūlymo pridedami šie techniniai dokumentai / brėžiniai CAD (jų pilną versiją galima parsisiųsti nuskenavus QR kodą arba peržiūrėjus internete):</p>
             <ul style="margin: 0; padding-left: 18px;">
                 {{ range . }}
@@ -152,7 +168,7 @@
 
         <!-- Przyciski konwersyjne -->
         {{ $managerEmail := .Params.manager_email | default "info@kartonoprojektai.lt" }}
-        {{ $emailSubject := printf "Užklausa dėl pasiūlymo: %s – %s" .Params.offer_code .Title | urlquery }}
+        {{ $emailSubject := printf "Uzklausa del pasiulymo: %s – %s" .Params.offer_code .Title | urlquery }}
         {{ if not $isSold }}
         <div class="cta-box no-print" style="display: flex; gap: 15px; margin-bottom: 35px; flex-wrap: wrap;">
             <a href="mailto:{{ $managerEmail }}?subject={{ $emailSubject }}" style="flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
