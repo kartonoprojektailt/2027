@@ -110,7 +110,7 @@
         <div class="product-info-box" style="background: var(--entry); border: 1px solid var(--border); padding: 25px; border-radius: 8px; margin-bottom: 35px;">
             {{ .Content }}
 
-            <!-- PRZYWRÓCONA SEKCJA POBIERANIA PLIKÓW TECHNICZNYCH (AKTYWNE LINKI DO POBRANIA) -->
+            <!-- SEKCJA POBIERANIA PLIKÓW TECHNICZNYCH -->
             {{ with .Params.pdf_documents }}
             <div class="pdf-download-section" style="margin-top: 35px; padding-top: 20px; border-top: 1px dashed var(--border);">
                 <h3 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; font-weight: bold; color: var(--primary);">Su pasiūlymu susijusi techninė dokumentacija atsisiuntimui</h3>
@@ -127,7 +127,7 @@
             {{ end }}
         </div>
 
-        <!-- WIZUALNY PODGLĄD (SZKICE) STRON Z ZAŁĄCZONYCH PDF (WIDOCZNY W PEŁNYM PDF) -->
+        <!-- WIZUALNY PODGLĄD (SZKICE) STRON Z ZAŁĄCZONYCH PDF -->
         {{ with .Params.tech_images }}
         <div class="tech-previews-section" style="margin: 30px 0; page-break-inside: avoid;">
             <h3 style="font-size: 1.1rem; margin-bottom: 15px; font-weight: bold; color: var(--primary);">Techniniai brėžiniai ir dokumentacijos vizualizacija (Priedas)</h3>
@@ -141,11 +141,11 @@
         </div>
         {{ end }}
 
-        <!-- SEKCJA TEKSTOWA DOKUMENTACJI WIDOCZNA W PDF (TYLKO NAZWY PLIKÓW) -->
+        <!-- SEKCJA TEKSTOWA DOKUMENTACJI WIDOCZNA W PDF -->
         {{ with .Params.pdf_documents }}
         <div class="print-embedded-pdf" style="display: none; margin: 25px 0; padding: 15px; border: 1px solid #666; border-radius: 4px; background: #fafafa; font-size: 0.85rem; line-height: 1.4;">
             <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: bold; text-transform: uppercase; color: #000;">Techninė dokumentacija ir brėžiniai (priedas)</h4>
-            <p style="margin: 0 0 10px 0;">Prie šio pasiūlymo pridedami šie techniniai dokumentai / brėžiniai CAD (jų pilną versiją galima parsisiųsti nuskenavus QR kodą arba peržiūrėjus internete):</p>
+            <p style="margin: 0 0 10px 0;">Prie šio Kartono projekų pasiūlymo pridedami šie techniniai dokumentai / brėžiniai. Pilną dokumentų versiją galima parsisiųsti nuskenavus QR kodą arba peržiūrėjus internete https://kartonoprojektai.lt/sandelyje/:</p>
             <ul style="margin: 0; padding-left: 18px;">
                 {{ range . }}
                 <li><strong>{{ .title }}</strong></li>
@@ -156,17 +156,17 @@
 
         <!-- SEKCJA INFORMACYJNA O SANDÉLYJE WIDOCZNA TYLKO W PDF -->
         <div class="print-about-sandelyje" style="display: none; margin: 25px 0 15px 0; padding: 12px; border-top: 1px solid #ccc; font-size: 0.75rem; line-height: 1.35; color: #444;">
-            <strong>Apie „Kartono projektai“ sandėlio pasiūlymus:</strong> šis dokumentas yra automatinis techninis pasiūlymas iš Kartono projektų sandėlio internete adresu https://kartonoprojektai.lt/sandelyje/ Čia skelbiamas sandėlio likučių perteklius, nestandartinės kartono pakuotės, gamybinės medžiagos bei POSM sprendimai už mažesnę kainą operatyviam įsigijimui. Kviečiame apsilankyti svetainėje ir susipažinti su visais aktyviais pasiūlymais.
+            <strong>Apie „Kartono projektai“ sandėlio pasiūlymus:</strong> šis dokumentas yra automatinis techninis pasiūlymas iš Kartono projektų sandėlio https://kartonoprojektai.lt/sandelyje/ Čia skelbiamas sandėlio likučių perteklius, nestandartinės kartono pakuotės, gamybinės medžiagos bei POSM sprendimai už mažesnę kainą operatyviam įsigijimui. Kviečiame apsilankyti svetainėje ir susipažinti su visais aktyviais pasiūlymais.
         </div>
 
-        <!-- Główny przycisk: Viso skelbimo PDF + QR -->
+        <!-- Główny przycisk: Viso skelbimo PDF + QR (Poprawiony dla pełnej interakcji mobilnej) -->
         <div style="margin: 40px 0 25px 0; text-align: center;" class="no-print">
-            <button onclick="window.print()" class="button" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem;">
+            <button onclick="window.print(); return false;" class="button" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem; display: inline-block; -webkit-tap-highlight-color: transparent;">
                 🖨️ Viso skelbimo PDF + QR
             </button>
         </div>
 
-        <!-- Przyciski konwersyjne -->
+        <!-- Przyciski konwersyjne (Zabezpieczone kodowanie tematu bez znaków specjalnych w prefixie) -->
         {{ $managerEmail := .Params.manager_email | default "info@kartonoprojektai.lt" }}
         {{ $emailSubject := printf "Uzklausa del pasiulymo: %s – %s" .Params.offer_code .Title | urlquery }}
         {{ if not $isSold }}
