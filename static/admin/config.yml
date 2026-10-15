@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: kartonoprojektai/2027
   branch: main
 
 media_folder: "static/uploads"
