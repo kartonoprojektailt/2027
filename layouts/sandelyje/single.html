@@ -159,14 +159,14 @@
             <strong>Apie „Kartono projektai“ sandėlio pasiūlymus:</strong> šis dokumentas yra automatinis techninis pasiūlymas iš Kartono projektų sandėlio https://kartonoprojektai.lt/sandelyje/ Čia skelbiamas sandėlio likučių perteklius, nestandartinės kartono pakuotės, gamybinės medžiagos bei POSM sprendimai už mažesnę kainą operatyviam įsigijimui. Kviečiame apsilankyti svetainėje ir susipažinti su visais aktyviais pasiūlymais.
         </div>
 
-        <!-- 100% Niezawodny przycisk drukowania / PDF na mobile -->
+        <!-- Przycisk PDF / drukowania -->
         <div style="margin: 40px 0 25px 0; text-align: center;" class="no-print">
             <button type="button" onclick="window.print(); return false;" class="button" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem; display: inline-block; -webkit-appearance: none; -webkit-tap-highlight-color: transparent;">
                 🖨️ Viso skelbimo PDF + QR
             </button>
         </div>
 
-        <!-- Przyciski konwersyjne (Uproszczony czysty temat e-maila) -->
+        <!-- Przyciski konwersyjne -->
         {{ $managerEmail := .Params.manager_email | default "info@kartonoprojektai.lt" }}
         {{ $emailSubject := printf "Uzklausa del pasiulymo - %s - %s" .Params.offer_code .Title }}
         {{ if not $isSold }}
