@@ -13,10 +13,25 @@
             ☰
         </button>
         
-        <!-- Lista menu -->
+        <!-- Lista menu (Wspiera podkategorie na PC przez .HasChildren) -->
         <ul id="custom-menu" style="display: flex; list-style: none; gap: 25px; align-items: center; margin: 0; padding: 0;">
             {{- range site.Menus.main -}}
-                {{- if not .Parent -}}
+                {{- if .HasChildren -}}
+                    <li class="menu-item-has-children" style="position: relative;">
+                        <a href="{{ .URL | absURL }}" class="menu-link" style="display: flex; align-items: center; gap: 4px;">
+                            <span>{{ .Name }}</span> ▾
+                        </a>
+                        <ul class="sub-menu">
+                            {{- range .Children -}}
+                            <li>
+                                <a href="{{ .URL | absURL }}" class="submenu-link">
+                                    <span>{{ .Name }}</span>
+                                </a>
+                            </li>
+                            {{- end -}}
+                        </ul>
+                    </li>
+                {{- else if not .Parent -}}
                     <li>
                         <a href="{{ .URL | absURL }}" class="menu-link">
                             <span>{{ .Name }}</span>
@@ -49,6 +64,40 @@
         opacity: 0.7;
     }
 
+    /* PC HOVER DROPDOWN STYLES */
+    .sub-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: var(--theme, #1d1e22);
+        border: 1px solid var(--border, #333);
+        list-style: none;
+        padding: 10px 0;
+        display: none;
+        min-width: 240px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        border-radius: 6px;
+        z-index: 1000;
+    }
+    .menu-item-has-children:hover .sub-menu {
+        display: block !important;
+    }
+    .sub-menu li {
+        padding: 0;
+        width: 100%;
+    }
+    .submenu-link {
+        display: block;
+        padding: 8px 20px;
+        text-decoration: none;
+        font-size: 0.95rem;
+        color: var(--primary, inherit);
+        transition: background 0.15s;
+    }
+    .submenu-link:hover {
+        background: rgba(128,128,128,0.15);
+    }
+
     html[data-theme="dark"] .adaptive-logo,
     body.dark .adaptive-logo {
         filter: invert(0.9) hue-rotate(180deg);
@@ -58,7 +107,7 @@
         transition: filter 0.2s ease-in-out;
     }
 
-    /* MOBILNY UKŁAD ELEGANCKIEGO MENU ROZWIJANEGO (Poniżej 768px) */
+    /* MOBILNY UKŁAD (Poniżej 768px) */
     @media screen and (max-width: 768px) {
         .nav {
             position: relative;
@@ -66,7 +115,6 @@
         #custom-menu-toggle {
             display: block !important;
         }
-        /* Domyślnie menu jest całkowicie ukryte za pomocą visibility i opacity dla płynności */
         #custom-menu {
             display: flex !important;
             visibility: hidden;
@@ -80,28 +128,35 @@
             padding: 25px 20px;
             border-bottom: 2px solid var(--border, #333);
             box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-            align-items: center !important; /* Wycentrowane elegancko na środku */
+            align-items: center !important;
             gap: 20px !important;
             z-index: 9999;
             transform: translateY(-10px);
             transition: visibility 0.2s, opacity 0.2s, transform 0.2s;
         }
-        /* Klasa aktywująca pokazanie menu */
         #custom-menu.mobile-open {
             visibility: visible;
             opacity: 1;
             transform: translateY(0);
         }
-        #custom-menu li {
+        #custom-menu > li {
             width: 100%;
-            text-align: center; /* Wycentrowane napisy w menu */
+            text-align: center;
         }
         #custom-menu .menu-link {
-            font-size: 1.15rem; /* Większe, czytelne litery */
+            font-size: 1.15rem;
             font-weight: 600;
             display: block;
             padding: 10px 0;
             border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        /* Na mobile ukrywamy skomplikowane zagnieżdżone podmenu, zostawiając czyste główne kategorie */
+        .sub-menu {
+            position: static !important;
+            box-shadow: none !important;
+            border: none !important;
+            background: transparent !important;
+            display: none !important; 
         }
     }
 </style>
@@ -115,11 +170,9 @@
             menuToggle.addEventListener("click", function(e) {
                 e.stopPropagation();
                 menu.classList.toggle("mobile-open");
-                // Zmiana ikony hamburgera na "X" po otwarciu
                 menuToggle.textContent = menu.classList.contains("mobile-open") ? "✕" : "☰";
             });
 
-            // Zamknięcie menu po kliknięciu w dowolne miejsce poza nim
             document.addEventListener("click", function(e) {
                 if (!menu.contains(e.target) && !menuToggle.contains(e.target)) {
                     menu.classList.remove("mobile-open");
@@ -128,7 +181,6 @@
             });
         }
 
-        // Obsługa przełącznika motywu
         const toggleBtn = document.getElementById("theme-toggle");
         if (!toggleBtn) return;
 
