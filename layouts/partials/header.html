@@ -13,30 +13,38 @@
             ☰
         </button>
         
-        <!-- Lista menu (Wspiera podkategorie na PC przez .HasChildren) -->
+        <!-- Lista menu (Wspiera podkategorie na PC, a na mobile pokazuje TYLKO główne pozycje) -->
         <ul id="custom-menu" style="display: flex; list-style: none; gap: 25px; align-items: center; margin: 0; padding: 0;">
             {{- range site.Menus.main -}}
-                {{- if .HasChildren -}}
-                    <li class="menu-item-has-children" style="position: relative;">
-                        <a href="{{ .URL | absURL }}" class="menu-link" style="display: flex; align-items: center; gap: 4px;">
-                            <span>{{ .Name }}</span> ▾
-                        </a>
-                        <ul class="sub-menu">
-                            {{- range .Children -}}
-                            <li>
-                                <a href="{{ .URL | absURL }}" class="submenu-link">
-                                    <span>{{ .Name }}</span>
-                                </a>
-                            </li>
-                            {{- end -}}
-                        </ul>
-                    </li>
-                {{- else if not .Parent -}}
-                    <li>
-                        <a href="{{ .URL | absURL }}" class="menu-link">
-                            <span>{{ .Name }}</span>
-                        </a>
-                    </li>
+                {{- if not .Parent -}}
+                    {{- if .HasChildren -}}
+                        <li class="menu-item-has-children desktop-only" style="position: relative;">
+                            <a href="{{ .URL | absURL }}" class="menu-link" style="display: flex; align-items: center; gap: 4px;">
+                                <span>{{ .Name }}</span> ▾
+                            </a>
+                            <ul class="sub-menu">
+                                {{- range .Children -}}
+                                <li>
+                                    <a href="{{ .URL | absURL }}" class="submenu-link">
+                                        <span>{{ .Name }}</span>
+                                    </a>
+                                </li>
+                                {{- end -}}
+                            </ul>
+                        </li>
+                        <!-- Wersja mobilna dla pozycji z podkategoriami (pokazuje tylko główny link bez rozwijanej listy) -->
+                        <li class="mobile-only" style="display: none;">
+                            <a href="{{ .URL | absURL }}" class="menu-link">
+                                <span>{{ .Name }}</span>
+                            </a>
+                        </li>
+                    {{- else -}}
+                        <li>
+                            <a href="{{ .URL | absURL }}" class="menu-link">
+                                <span>{{ .Name }}</span>
+                            </a>
+                        </li>
+                    {{- end -}}
                 {{- end -}}
             {{- end -}}
 
@@ -107,6 +115,11 @@
         transition: filter 0.2s ease-in-out;
     }
 
+    /* Ukrywanie klas mobilnych na desktopie */
+    .mobile-only {
+        display: none !important;
+    }
+
     /* MOBILNY UKŁAD (Poniżej 768px) */
     @media screen and (max-width: 768px) {
         .nav {
@@ -115,6 +128,14 @@
         #custom-menu-toggle {
             display: block !important;
         }
+        /* Przełączenie widoczności elementów na mobile */
+        .desktop-only {
+            display: none !important;
+        }
+        .mobile-only {
+            display: block !important;
+        }
+
         #custom-menu {
             display: flex !important;
             visibility: hidden;
@@ -150,12 +171,7 @@
             padding: 10px 0;
             border-bottom: 1px solid rgba(255,255,255,0.08);
         }
-        /* Na mobile ukrywamy skomplikowane zagnieżdżone podmenu, zostawiając czyste główne kategorie */
         .sub-menu {
-            position: static !important;
-            box-shadow: none !important;
-            border: none !important;
-            background: transparent !important;
             display: none !important; 
         }
     }
