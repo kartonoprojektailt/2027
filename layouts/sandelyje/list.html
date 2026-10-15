@@ -31,8 +31,17 @@
             {{ $catClass := .Params.category | lower }}
             <div class="sandelys-card {{ $catClass }} {{ if $isSold }}is-sold{{ end }}" style="position: relative; border: 1px solid var(--border); border-radius: 8px; padding: 15px; background: var(--entry); display: flex; flex-direction: column; justify-content: space-between; transition: border-color 0.2s;">
                 <div>
-                    {{ if .Params.images }}
-                        <img src="{{ index .Params.images 0 }}" alt="{{ .Title }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; border: 1px solid var(--border);">
+                    {{ with .Params.images }}
+                        {{ $imgSrc := index . 0 }}
+                        {{ $original := resources.Get $imgSrc }}
+                        {{ if $original }}
+                            <!-- Automatyczna optymalizacja: Resize do szerokości 600px i WebP (q85) dla błyskawicznego ładowania -->
+                            {{ $optimized := $original.Resize "600x webp q85" }}
+                            <img src="{{ $optimized.RelPermalink }}" alt="{{ $.Title }}" loading="lazy" width="{{ $optimized.Width }}" height="{{ $optimized.Height }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; border: 1px solid var(--border);">
+                        {{ else }}
+                            <!-- Fallback dla obrazów zewnętrznych / absolute URL -->
+                            <img src="{{ $imgSrc }}" alt="{{ $.Title }}" loading="lazy" style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; border: 1px solid var(--border);">
+                        {{ end }}
                     {{ end }}
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                         <span style="font-size: 0.8rem; background: var(--tertiary); padding: 2px 6px; border-radius: 4px; font-weight: bold; border: 1px solid var(--border);">Kodas: {{ .Params.offer_code }}</span>
@@ -126,7 +135,6 @@ function filterCategory(category) {
     border-color: var(--primary);
 }
 
-/* Duże, czyste odstępy między akapitami i nagłówkami bez żadnych linii */
 .sandelys-seo-text p {
     margin-bottom: 22px;
     line-height: 1.6;

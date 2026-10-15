@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Allow: /sandelyje/
+
+Sitemap: https://www.kartonoprojektai.lt/sitemap.xml

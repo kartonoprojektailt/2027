@@ -45,8 +45,15 @@ theme = "PaperMod"
     minMatchCharLength = 2
     keys = ["title", "permalink", "summary", "content"]
 
+
 [outputs]
-  home = ["HTML", "RSS", "JSON"]
+  home = ["HTML", "RSS", "JSON", "llms"]
+
+[outputFormats.llms]
+  mediaType = "text/plain"
+  baseName = "llms"
+  isPlainText = true
+  notAlternative = true
 
 # ==========================================
 # KONFIGURACJA MENU GŁÓWNEGO (HEADER MENU)
