@@ -70,7 +70,7 @@
         </div>
     </div>
 
-    {{ $isSold := eq .Params.status "parduota" }}
+{{ $isSold := or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
     {{ if $isSold }}
     <div style="background: var(--tertiary); color: var(--primary); padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; text-align: center; border: 1px solid var(--border);">
         🛑 Statusas: Parduota (Archyvinis techninis įrašas)
