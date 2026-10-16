@@ -1,1 +1,123 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Įkelti prekę | Sandėlis</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 24px auto; padding: 0 16px; line-height: 1.5; }
+  h1 { font-size: 1.4rem; }
+  label { display: block; margin-top: 14px; font-weight: 600; font-size: .9rem; }
+  input[type=text], input[type=number], textarea, select { width: 100%; padding: 10px; border: 1px solid #bbb; border-radius: 6px; font: inherit; box-sizing: border-box; background: #fff; color: #111; }
+  textarea { min-height: 110px; }
+  .drop { border: 2px dashed #bbb; border-radius: 8px; padding: 18px; text-align: center; margin-top: 6px; background: #fafafa; cursor: pointer; }
+  button { margin-top: 20px; width: 100%; padding: 14px; background: #2b6cb0; color: #fff; border: 0; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+  button:hover { background: #24587f; }
+  #status { margin-top: 14px; padding: 12px; border-radius: 6px; display: none; white-space: pre-wrap; word-break: break-word; }
+  .ok { background: #e6f4ea; color: #1e4620; display: block; }
+  .err { background: #fdecea; color: #5f1a15; display: block; }
+  .list { font-size: .85rem; color: #555; margin-top: 6px; }
+</style>
+</head>
+<body>
 
+<h1>Pridėti naują prekę į sandėlį</h1>
+
+<form id="f">
+  <label>Pavadinimas (H1)
+    <input type="text" id="title" required placeholder="pvz.: Baltas kartoninis stovas A2">
+  </label>
+
+  <label>Kategorija
+    <select id="category">
+      <option value="Stovai">Stovai</option>
+      <option value="Pakuotės">Pakuotės</option>
+      <option value="Medžiagos">Medžiagos</option>
+      <option value="Paslaugos">Paslaugos</option>
+    </select>
+  </label>
+
+  <label>Aprašymas
+    <textarea id="description" placeholder="Medžiaga, matmenys, būklė..."></textarea>
+  </label>
+
+  <label>Kaina už vnt. (EUR)
+    <input type="number" id="price" step="0.01" min="0" required placeholder="12.50">
+  </label>
+
+  <label>Likutis (vnt.)
+    <input type="number" id="stock" min="0" required placeholder="10">
+  </label>
+
+  <label>Būsena
+    <select id="status">
+      <option value="available">Parduodama</option>
+      <option value="sold_out">IŠPARDUOTA</option>
+    </select>
+  </label>
+
+  <label>Nuotraukos (gali pasirinkti kelias)
+    <div class="drop" onclick="document.getElementById('images').click()">📷 Pasirinkite failus
+      <input type="file" id="images" multiple accept="image/*" hidden></div>
+    <div class="list" id="imgList"></div>
+  </label>
+
+  <label>Failai (PDF / brėžiniai)
+    <div class="drop" onclick="document.getElementById("files").click()">📄 Pasirinkite failus
+      <input type="file" id="files" multiple accept=".pdf,.dxf,.dwg,.zip" hidden></div>
+    <div class="list" id="fileList"></div>
+  </label>
+
+  <button type="submit" id="send">Skelbti</button>
+</form>
+
+<div id="status"></div>
+
+<script>
+const API = 'https://old-glitter-ef43kartono-upload-sandelyje.kartonoprojektai.workers.dev/add-item';
+
+document.getElementById('images').onchange = e =>
+  document.getElementById('imgList').textContent = [...e.target.files].map(f => f.name).join(', ');
+document.getElementById('files').onchange = e =>
+  document.getElementById('fileList').textContent = [...e.target.files].map(f => f.name).join(', ');
+
+document.getElementById('f').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const btn = document.getElementById('send');
+  const st = document.getElementById('status');
+  btn.disabled = true; btn.textContent = 'Siunčiama...';
+  st.className = ''; st.textContent = '';
+
+  const fd = new FormData();
+  fd.append('title', document.getElementById('title').value);
+  fd.append('category', document.getElementById('category').value);
+  fd.append('description', document.getElementById('description').value);
+  fd.append('price', document.getElementById('price').value);
+  fd.append('stock', document.getElementById('stock').value);
+  fd.append('status', document.getElementById('status').value);
+
+  for (const f of document.getElementById('images').files) fd.append('image_' + f.name, f);
+  for (const f of document.getElementById('files').files) fd.append('file_' + f.name, f);
+
+  try {
+    const r = await fetch(API, { method: 'POST', body: fd });
+    const t = await r.text();
+    if (r.ok) {
+      st.className = 'ok';
+      st.textContent = '✅ Pridėta! Puslapis atsiras po ~2 min.\n' + t;
+      document.getElementById('f').reset();
+      document.getElementById('imgList').textContent = '';
+      document.getElementById('fileList').textContent = '';
+    } else {
+      st.className = 'err';
+      st.textContent = '⚠️ Klaida:\n' + t;
+    }
+  } catch (e) {
+    st.className = 'err';
+    st.textContent = '⚠️ Ryšio klaida: ' + e.message;
+  }
+  btn.disabled = false; btn.textContent = 'Skelbti';
+});
+</script>
+</body>
+</html>
