@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>Test Upload</title></head>
+<body>
+<h2>Test systemu dodawania produktu</h2>
+<form id="testForm">
+  Title: <input type="text" name="title" value="Testowy Stol Kartony" required><br>
+  Description: <input type="text" name="description" value="Test systemu" required><br>
+  Price: <input type="number" name="price" value="99.99" step="0.01" required><br>
+  Stock: <input type="number" name="stock" value="5" required><br>
+  <button type="submit">Wyślij test</button>
+</form>
+<p id="result"></p>
+
+<script>
+document.getElementById('testForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData();
+  fd.append('title', document.querySelector('[name=title]').value);
+  fd.append('description', document.querySelector('[name=description]').value);
+  fd.append('price', document.querySelector('[name=price]').value);
+  fd.append('stock', document.querySelector('[name=stock]').value);
+  
+  const res = await fetch('https://old-glitter-ef43kartono-upload-sandelyje.kartonoprojektai.workers.dev/add-item', {
+    method: 'POST',
+    body: fd
+  });
+  const text = await res.text();
+  document.getElementById('result').innerText = 'WYNIK: ' + text;
+});
+</script>
+</body>
+</html>
