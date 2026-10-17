@@ -6,6 +6,7 @@ price: 22222
 stock: 22
 status: ""
 date: "2026-10-17T05:32:01.601Z"
+draft: false
 cover: "images/DSC_0544.jpg"
 images:
   - "images/DSC_0544.jpg"
