@@ -7,16 +7,19 @@
   "name": "{{ .Title }}",
   "image": [
     {{ range $index, $element := .Params.images }}
-      {{ if gt $index 0 }},{{ end }}"{{ printf "%s%s" $.Permalink $element | absURL }}"
+      {{ if gt $index 0 }},{{ end }}"{{ printf "%s%s" $.Permalink . | absURL }}"
     {{ end }}
   ],
   "description": "{{ .Description }}",
   "sku": "{{ .Params.offer_code }}",
+  "category": "{{ .Params.category }}",
   "offers": {
     "@type": "Offer",
     "priceCurrency": "EUR",
     "price": "{{ .Params.price }}",
     "availability": "{{ if or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}https://schema.org/SoldOut{{ else }}https://schema.org/InStock{{ end }}",
+    "itemCondition": "https://schema.org/NewCondition",
+    "businessFunction": "https://schema.org/Sell",
     "seller": {
       "@type": "Organization",
       "name": "UAB „Kartono projektai“"
