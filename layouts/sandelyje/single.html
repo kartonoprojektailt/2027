@@ -151,23 +151,20 @@
         </div>
         {{ end }}
 
-        <!-- SEKCJA TECHNICZNA DOKUMENTACJI WIDOCZNA W PDF / DRUKU (Z PREVIEW OBEKTOWYM) -->
+        <!-- SEKCJA TECHNICZNA DOKUMENTACJI WIDOCZNA W PDF / DRUKU (PEWNA I CZYTELNA LISTA Z LINKAMI) -->
         {{ with .Params.pdf_documents }}
-        <div class="print-embedded-pdf" style="display: none; margin: 25px 0; page-break-inside: avoid;">
+        <div class="print-embedded-pdf" style="display: none; margin: 25px 0; padding: 15px; border: 2px solid #000; border-radius: 6px; background: #fff; page-break-inside: avoid;">
             <h4 style="margin: 0 0 10px 0; font-size: 1rem; font-weight: bold; text-transform: uppercase; color: #000; border-bottom: 1px solid #000; padding-bottom: 5px;">
-                Techniniai dokumentai ir brėžiniai (Priedai):
+                Pridėta techninė dokumentacija ir brėžiniai:
             </h4>
-            <div style="display: flex; flex-direction: column; gap: 15px;">
+            <ul style="margin: 0; padding-left: 20px; line-height: 1.6; font-size: 0.9rem; color: #000;">
                 {{ range . }}
-                {{ $pdfUrl := printf "%s%s" $.Permalink .url }}
-                <div style="border: 1px solid #999; padding: 10px; border-radius: 4px; background: #fff;">
-                    <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 0.9rem;">📄 {{ .title }}</p>
-                    <object data="{{ $pdfUrl }}" type="application/pdf" width="100%" height="400px" style="border: 1px solid #ddd;">
-                        <p style="font-size: 0.8rem; color: #333;">Failo peržiūra nepasiekiama naršyklėje. Nuoroda: <a href="{{ $pdfUrl }}">{{ $pdfUrl }}</a></p>
-                    </object>
-                </div>
+                <li>
+                    <strong>{{ .title }}</strong><br>
+                    <span style="font-size: 0.8rem; color: #333;">Tiesioginė nuoroda dokumentui: <a href="{{ printf "%s%s" $.Permalink .url }}" style="color: #000; text-decoration: underline;">{{ printf "%s%s" $.Permalink .url }}</a></span>
+                </li>
                 {{ end }}
-            </div>
+            </ul>
         </div>
         {{ end }}
 
