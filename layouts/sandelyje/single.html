@@ -151,7 +151,7 @@
         </div>
         {{ end }}
 
-        <!-- SEKCJA TECHNICZNA DOKUMENTACJI WIDOCZNA W PDF / DRUKU (PEWNA I CZYTELNA LISTA Z LINKAMI) -->
+        <!-- SEKCJA TECHNICZNA DOKUMENTACJI WIDOCZNA W PDF / DRUKU -->
         {{ with .Params.pdf_documents }}
         <div class="print-embedded-pdf" style="display: none; margin: 25px 0; padding: 15px; border: 2px solid #000; border-radius: 6px; background: #fff; page-break-inside: avoid;">
             <h4 style="margin: 0 0 10px 0; font-size: 1rem; font-weight: bold; text-transform: uppercase; color: #000; border-bottom: 1px solid #000; padding-bottom: 5px;">
@@ -183,17 +183,7 @@
         <script>
         document.getElementById('mobile-print-btn').addEventListener('click', function(e) {
             e.preventDefault();
-            if (navigator.share) {
-                navigator.share({
-                    title: document.title,
-                    text: 'UAB „Kartono projektai“ – Techninis pasiūlymas',
-                    url: window.location.href
-                }).catch(() => {
-                    window.print();
-                });
-            } else {
-                window.print();
-            }
+            window.print();
         });
         </script>
 
