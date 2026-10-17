@@ -76,6 +76,30 @@
 <script>
 const API = 'https://old-glitter-ef43kartono-upload-sandelyje.kartonoprojektai.workers.dev/add-item';
 
+// Kompresja zdjęcia w przeglądarce: max 1600px, JPEG q0.82
+function compressImage(file, maxDim = 1600, quality = 0.82) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let { width: w, height: h } = img;
+      if (w > maxDim || h > maxDim) {
+        const r = Math.min(maxDim / w, maxDim / h);
+        w = Math.round(w * r); h = Math.round(h * r);
+      }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      c.toBlob(b => {
+        URL.revokeObjectURL(url);
+        resolve(new File([b], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' }));
+      }, 'image/jpeg', quality);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+
 document.getElementById('images').onchange = e =>
   document.getElementById('imgList').textContent = [...e.target.files].map(f => f.name).join(', ');
 document.getElementById('files').onchange = e =>
@@ -85,7 +109,7 @@ document.getElementById('f').addEventListener('submit', async ev => {
   ev.preventDefault();
   const btn = document.getElementById('send');
   const st = document.getElementById('status');
-  btn.disabled = true; btn.textContent = 'Siunčiama...';
+  btn.disabled = true; btn.textContent = 'Apdorojama...';
   st.className = ''; st.textContent = '';
 
   const fd = new FormData();
@@ -96,8 +120,20 @@ document.getElementById('f').addEventListener('submit', async ev => {
   fd.append('stock', document.getElementById('stock').value);
   fd.append('status', document.getElementById('status').value);
 
-  for (const f of document.getElementById('images').files) fd.append('image_' + f.name, f);
-  for (const f of document.getElementById('files').files) fd.append('file_' + f.name, f);
+  // Kompresuj KAŻDE zdjęcie przed wysłaniem
+  const imgs = [...document.getElementById('images').files];
+  for (let i = 0; i < imgs.length; i++) {
+    btn.textContent = `Kompresuojama ${i + 1}/${imgs.length}...`;
+    fd.append('image_' + i, await compressImage(imgs[i]));
+  }
+
+  // PDF-y bez kompresji, ale pilnujemy rozmiaru
+  for (const f of document.getElementById('files').files) {
+    if (f.size > 8 * 1024 * 1024) {
+      throw new Error(`Failas "${f.name}" didesnis nei 8 MB`);
+    }
+    fd.append('file_' + f.name, f);
+  }
 
   try {
     const r = await fetch(API, { method: 'POST', body: fd });
@@ -114,7 +150,7 @@ document.getElementById('f').addEventListener('submit', async ev => {
     }
   } catch (e) {
     st.className = 'err';
-    st.textContent = '⚠️ Ryšio klaida: ' + e.message;
+    st.textContent = '⚠️ ' + e.message;
   }
   btn.disabled = false; btn.textContent = 'Skelbti';
 });
