@@ -1,0 +1,23 @@
+{{ define "main" }}
+<div class="post">
+  <h1 class="post-title">{{ .Title }}</h1>
+  <div class="post-content">
+    {{ .Content }}
+  </div>
+  
+  <!-- Inventory Grid -->
+  <div class="inventory-grid">
+    {{ range .Pages }}
+    <div class="item-card">
+      <h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+      <p class="price">{{ .Params.price }} €</p>
+      <p class="stock">Stock: {{ .Params.stock }}</p>
+      {{ if eq .Params.status "sold_out" }}<span class="badge sold-out">SOLD OUT</span>{{ end }}
+      
+      <!-- Download Bundle Button -->
+      <a href="/api/pdf/{{ .Params.slug }}" class="btn-download">Download Offer PDF</a>
+    </div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}
