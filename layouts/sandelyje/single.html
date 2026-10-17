@@ -120,7 +120,7 @@
         <div class="product-info-box" style="background: var(--entry); border: 1px solid var(--border); padding: 25px; border-radius: 8px; margin-bottom: 35px;">
             {{ .Content }}
 
-            <!-- SEKCJA PODGLĄDU I POBIERANIA PLIKÓW TECHNICZNYCH (WIDOCZNA NA STRONIE I W PDF) -->
+            <!-- SEKCJA PODGLĄDU I POBIERANIA PLIKÓW TECHNICZNYCH (ZASTĄPIONA PRZEZ BEZPIECZNY IFRAME) -->
             {{ with .Params.pdf_documents }}
             <div class="pdf-download-section" style="margin-top: 35px; padding-top: 20px; border-top: 1px dashed var(--border);">
                 <h3 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 15px; font-weight: bold; color: var(--primary);">Techninė dokumentacija ir brėžiniai (Peržiūra)</h3>
@@ -129,13 +129,8 @@
                     {{ $pdfUrl := printf "%s%s" $.Permalink .url }}
                     <div style="border: 1px solid var(--border); padding: 15px; border-radius: 6px; background: #fff;">
                         <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 0.95rem; color: #000;">📄 {{ .title }}</p>
-                        <!-- Osadzony podgląd widoczny na stronie oraz w generowanym PDF -->
-                        <object data="{{ $pdfUrl }}" type="application/pdf" width="100%" height="500px" style="border: 1px solid #ccc; border-radius: 4px;">
-                            <div style="padding: 20px; text-align: center;">
-                                <p style="margin-bottom: 10px;">Jūsų naršyklė nepalaiko tiesioginės PDF peržiūros.</p>
-                                <a href="{{ $pdfUrl }}" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: bold;">Atsisiųsti dokumentą (.pdf)</a>
-                            </div>
-                        </object>
+                        <!-- Bezpieczny iframe zamiast object - nie blokuje okna drukowania PDF -->
+                        <iframe src="{{ $pdfUrl }}" width="100%" height="450px" style="border: 1px solid #ccc; border-radius: 4px;" loading="lazy"></iframe>
                         <div style="margin-top: 8px; text-align: right;">
                             <a href="{{ $pdfUrl }}" target="_blank" style="font-size: 0.85rem; color: var(--primary); text-decoration: underline;">Atidaryti atskirame lange ↗</a>
                         </div>
@@ -165,7 +160,7 @@
             <strong>Apie „Kartono projektai“ sandėlio pasiūlymus:</strong> šis dokumentas yra automatinis techninis pasiūlymas iš Kartono projektų sandėlio https://kartonoprojektai.lt/sandelyje/ Čia skelbiamas sandėlio likučių perteklius, nestandartinės kartono pakuotės, gamybinės medžiagos bei POSM sprendimai už mažesnę kainą operatyviam įsigijimui. Kviečiame apsilankyti svetainėje ir susipažinti su visais aktyviais pasiūlymais.
         </div>
 
-        <!-- Przycisk PDF / drukowania jako bezpieczny element HTML (działa bez blokad JS) -->
+        <!-- Przycisk PDF / drukowania -->
         <div style="margin: 40px 0 25px 0; text-align: center;" class="no-print">
             <a href="#" onclick="window.print(); return false;" class="button" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 28px; border-radius: 6px; font-weight: bold; text-decoration: none; display: inline-block; font-size: 0.95rem; -webkit-tap-highlight-color: transparent;">
                 🖨️ Viso skelbimo PDF + QR
