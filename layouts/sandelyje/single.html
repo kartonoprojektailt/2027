@@ -116,23 +116,32 @@
             </div>
         </div>
 
-        <!-- Treść strukturalna ogłoszenia -->
+        <!-- Treść strukturalna ogłoszenia wraz z podglądem PDF -->
         <div class="product-info-box" style="background: var(--entry); border: 1px solid var(--border); padding: 25px; border-radius: 8px; margin-bottom: 35px;">
             {{ .Content }}
 
-            <!-- SEKCJA POBIERANIA PLIKÓW TECHNICZNYCH -->
+            <!-- SEKCJA PODGLĄDU I POBIERANIA PLIKÓW TECHNICZNYCH (WIDOCZNA NA STRONIE I W PDF) -->
             {{ with .Params.pdf_documents }}
             <div class="pdf-download-section" style="margin-top: 35px; padding-top: 20px; border-top: 1px dashed var(--border);">
-                <h3 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; font-weight: bold; color: var(--primary);">Su pasiūlymu susijusi techninė dokumentacija atsisiuntimui</h3>
-                <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                <h3 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 15px; font-weight: bold; color: var(--primary);">Techninė dokumentacija ir brėžiniai (Peržiūra)</h3>
+                <div style="display: flex; flex-direction: column; gap: 20px;">
                     {{ range . }}
-                    <li>
-                        <a href="{{ printf "%s%s" $.Permalink .url }}" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: 500;">
-                            📄 {{ .title }}
-                        </a>
-                    </li>
+                    {{ $pdfUrl := printf "%s%s" $.Permalink .url }}
+                    <div style="border: 1px solid var(--border); padding: 15px; border-radius: 6px; background: #fff;">
+                        <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 0.95rem; color: #000;">📄 {{ .title }}</p>
+                        <!-- Osadzony podgląd widoczny na stronie oraz w generowanym PDF -->
+                        <object data="{{ $pdfUrl }}" type="application/pdf" width="100%" height="500px" style="border: 1px solid #ccc; border-radius: 4px;">
+                            <div style="padding: 20px; text-align: center;">
+                                <p style="margin-bottom: 10px;">Jūsų naršyklė nepalaiko tiesioginės PDF peržiūros.</p>
+                                <a href="{{ $pdfUrl }}" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: bold;">Atsisiųsti dokumentą (.pdf)</a>
+                            </div>
+                        </object>
+                        <div style="margin-top: 8px; text-align: right;">
+                            <a href="{{ $pdfUrl }}" target="_blank" style="font-size: 0.85rem; color: var(--primary); text-decoration: underline;">Atidrawti atskirame lange ↗</a>
+                        </div>
+                    </div>
                     {{ end }}
-                </ul>
+                </div>
             </div>
             {{ end }}
         </div>
@@ -148,23 +157,6 @@
                 </div>
                 {{ end }}
             </div>
-        </div>
-        {{ end }}
-
-        <!-- SEKCJA TECHNICZNA DOKUMENTACJI WIDOCZNA W PDF / DRUKU -->
-        {{ with .Params.pdf_documents }}
-        <div class="print-embedded-pdf" style="display: none; margin: 25px 0; padding: 15px; border: 2px solid #000; border-radius: 6px; background: #fff; page-break-inside: avoid;">
-            <h4 style="margin: 0 0 10px 0; font-size: 1rem; font-weight: bold; text-transform: uppercase; color: #000; border-bottom: 1px solid #000; padding-bottom: 5px;">
-                Pridėta techninė dokumentacija ir brėžiniai:
-            </h4>
-            <ul style="margin: 0; padding-left: 20px; line-height: 1.6; font-size: 0.9rem; color: #000;">
-                {{ range . }}
-                <li>
-                    <strong>{{ .title }}</strong><br>
-                    <span style="font-size: 0.8rem; color: #333;">Tiesioginė nuoroda dokumentui: <a href="{{ printf "%s%s" $.Permalink .url }}" style="color: #000; text-decoration: underline;">{{ printf "%s%s" $.Permalink .url }}</a></span>
-                </li>
-                {{ end }}
-            </ul>
         </div>
         {{ end }}
 
@@ -244,7 +236,6 @@
     }
     .print-header { display: block !important; }
     .print-footer { display: block !important; }
-    .print-embedded-pdf { display: block !important; }
     .print-embedded-images { display: block !important; page-break-before: always; }
     .print-about-sandelyje { display: block !important; }
     .product-gallery { display: none !important; }
