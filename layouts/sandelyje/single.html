@@ -137,7 +137,7 @@
                             </div>
                         </object>
                         <div style="margin-top: 8px; text-align: right;">
-                            <a href="{{ $pdfUrl }}" target="_blank" style="font-size: 0.85rem; color: var(--primary); text-decoration: underline;">Atidaryti atskirame lange ↗</a>
+                            <a href="{{ $pdfUrl }}" target="_blank" style="font-size: 0.85rem; color: var(--primary); text-decoration: underline;">Atidrawti atskirame lange ↗</a>
                         </div>
                     </div>
                     {{ end }}
@@ -165,20 +165,12 @@
             <strong>Apie „Kartono projektai“ sandėlio pasiūlymus:</strong> šis dokumentas yra automatinis techninis pasiūlymas iš Kartono projektų sandėlio https://kartonoprojektai.lt/sandelyje/ Čia skelbiamas sandėlio likučių perteklius, nestandartinės kartono pakuotės, gamybinės medžiagos bei POSM sprendimai už mažesnę kainą operatyviam įsigijimui. Kviečiame apsilankyti svetainėje ir susipažinti su visais aktyviais pasiūlymais.
         </div>
 
-        <!-- Przycisk PDF / drukowania z zabezpieczonym kliknięciem -->
+        <!-- Przycisk PDF / drukowania jako bezpieczny element HTML (działa bez blokad JS) -->
         <div style="margin: 40px 0 25px 0; text-align: center;" class="no-print">
-            <button id="mobile-print-btn" type="button" class="button" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem; display: inline-block; -webkit-appearance: none; -webkit-tap-highlight-color: transparent; position: relative; z-index: 10;">
+            <a href="#" onclick="window.print(); return false;" class="button" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 28px; border-radius: 6px; font-weight: bold; text-decoration: none; display: inline-block; font-size: 0.95rem; -webkit-tap-highlight-color: transparent;">
                 🖨️ Viso skelbimo PDF + QR
-            </button>
+            </a>
         </div>
-
-        <script>
-        document.getElementById('mobile-print-btn').addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            window.print();
-        });
-        </script>
 
         <!-- Przyciski konwersyjne -->
         {{ $managerEmail := .Params.manager_email | default "info@kartonoprojektai.lt" }}
