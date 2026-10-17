@@ -14,10 +14,17 @@
     <div class="item-card" style="border: 1px solid var(--border); padding: 20px; border-radius: 8px; background: var(--entry); display: flex; flex-direction: column; justify-content: space-between;">
       
       <div>
-        <!-- Miniatura okładki, jeśli istnieje -->
-        {{ if .Params.cover }}
+        <!-- Miniatura okładki, bezpieczna ścieżka relatywna -->
+        {{ if .Params.cover.image }}
+        {{ $coverUrl := printf "%s%s" .RelPermalink .Params.cover.image }}
         <div style="margin-bottom: 12px; height: 160px; overflow: hidden; border-radius: 4px; background: #f0f0f0;">
-          <img src="{{ printf "%s%s" .RelPermalink .Params.cover }}" alt="{{ .Title }}" style="width: 100%; height: 100%; object-fit: cover;">
+          <img src="{{ $coverUrl }}" alt="{{ .Title }}" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        {{ else if .Params.cover }}
+        <!-- Fallback dla starszych wpisów zapisanych jako string -->
+        {{ $coverUrl := printf "%s%s" .RelPermalink .Params.cover }}
+        <div style="margin-bottom: 12px; height: 160px; overflow: hidden; border-radius: 4px; background: #f0f0f0;">
+          <img src="{{ $coverUrl }}" alt="{{ .Title }}" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
         {{ end }}
 
