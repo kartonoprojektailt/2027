@@ -76,29 +76,6 @@
 <script>
 const API = 'https://old-glitter-ef43kartono-upload-sandelyje.kartonoprojektai.workers.dev/add-item';
 
-function compressImage(file, maxDim = 1600, quality = 0.82) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => {
-      let { width: w, height: h } = img;
-      if (w > maxDim || h > maxDim) {
-        const r = Math.min(maxDim / w, maxDim / h);
-        w = Math.round(w * r); h = Math.round(h * r);
-      }
-      const c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      c.getContext('2d').drawImage(img, 0, 0, w, h);
-      c.toBlob(b => {
-        URL.revokeObjectURL(url);
-        resolve(new File([b], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' }));
-      }, 'image/jpeg', quality);
-    };
-    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
-    img.src = url;
-  });
-}
-
 document.getElementById('images').onchange = e =>
   document.getElementById('imgList').textContent = [...e.target.files].map(f => f.name).join(', ');
 document.getElementById('files').onchange = e =>
@@ -108,7 +85,7 @@ document.getElementById('f').addEventListener('submit', async ev => {
   ev.preventDefault();
   const btn = document.getElementById('send');
   const st = document.getElementById('status');
-  btn.disabled = true; btn.textContent = 'Apdorojama...';
+  btn.disabled = true; btn.textContent = 'Siunčiama...';
   st.className = ''; st.textContent = '';
 
   const fd = new FormData();
@@ -119,18 +96,24 @@ document.getElementById('f').addEventListener('submit', async ev => {
   fd.append('stock', document.getElementById('stock').value);
   fd.append('status', document.getElementById('status').value);
 
-  // Kompresuj zdjęcia asynchronicznie (nie psuje się przy kilku plikach)
   const imgs = [...document.getElementById('images').files];
-  const compressed = [];
-  for (let i = 0; i < imgs.length; i++) {
-    btn.textContent = `Kompresuojama ${i + 1}/${imgs.length}...`;
-    compressed.push(await compressImage(imgs[i]));
-  }
-  for (let i = 0; i < compressed.length; i++) {
-    fd.append('image_' + i, compressed[i]);
+  if (imgs.length > 5) {
+    st.className = 'err';
+    st.textContent = '⚠️ Maksimaliai galima įkelti 5 nuotraukas';
+    btn.disabled = false; btn.textContent = 'Skelbti';
+    return;
   }
 
-  // PDF-y max 8 MB
+  for (let i = 0; i < imgs.length; i++) {
+    if (imgs[i].size > 5 * 1024 * 1024) {
+      st.className = 'err';
+      st.textContent = '⚠️ Nuotrauka "' + imgs[i].name + '" didesnė nei 5 MB';
+      btn.disabled = false; btn.textContent = 'Skelbti';
+      return;
+    }
+    fd.append('image_' + i, imgs[i]);
+  }
+
   for (const f of document.getElementById('files').files) {
     if (f.size > 8 * 1024 * 1024) {
       st.className = 'err';
