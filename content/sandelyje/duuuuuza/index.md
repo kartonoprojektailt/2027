@@ -5,6 +5,7 @@ category: "Stovai"
 price: 41
 stock: 11
 status: ""
+draft: false
 date: "2026-10-17T05:24:02.085Z"
 cover: "images/PXL_20260608_094906345.jpg"
 images:
