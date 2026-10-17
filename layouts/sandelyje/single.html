@@ -6,7 +6,7 @@
   "@type": "Product",
   "name": "{{ .Title }}",
   "image": [
-    {{ range $index, $element := .Params.images }}{{ if gt $index 0 }},{{ end }}"{{ $element }}"{{ end }}
+    {{ range $index, $element := .Params.images }}{{ if gt $index 0 }},{{ end }}"{{ $element | absURL }}"{{ end }}
   ],
   "description": "{{ .Description }}",
   "sku": "{{ .Params.offer_code }}",
@@ -14,7 +14,7 @@
     "@type": "Offer",
     "priceCurrency": "EUR",
     "price": "{{ .Params.price }}",
-    "availability": "{{ if eq .Params.status "parduota" }}https://schema.org/SoldOut{{ else }}https://schema.org/InStock{{ end }}",
+    "availability": "{{ if or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}https://schema.org/SoldOut{{ else }}https://schema.org/InStock{{ end }}",
     "seller": {
       "@type": "Organization",
       "name": "UAB „Kartono projektai“"
@@ -26,7 +26,9 @@
 <article class="post-single" itemscope itemtype="https://schema.org/Product">
     <header class="post-header">
         <div style="margin-bottom: 15px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; font-size: 0.9rem;">
+            {{ if .Params.offer_code }}
             <span style="background: var(--tertiary); padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid var(--border);">Kodas: <span itemprop="sku">{{ .Params.offer_code }}</span></span>
+            {{ end }}
             
             {{ $catLower := .Params.category | lower }}
             {{ $catUrl := "" }}
@@ -47,7 +49,7 @@
             <div>
                 <h2 style="margin: 0; font-size: 1.3rem;">UAB „Kartono projektai“ – Techninis pasiūlymas</h2>
                 <p style="margin: 5px 0 0 0; font-size: 1rem; font-weight: bold;">Kodas: {{ .Params.offer_code }} | {{ .Title }}</p>
-                <p style="margin: 3px 0 0 0; font-size: 0.85rem;">Kaina: {{ .Params.price }} | Likutis: {{ .Params.stock }}</p>
+                <p style="margin: 3px 0 0 0; font-size: 0.85rem;">Kaina: {{ .Params.price }} EUR | Likutis: {{ .Params.stock }} vnt.</p>
             </div>
             <div>
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data={{ .Permalink }}" alt="QR Kod" style="width: 80px; height: 80px;">
@@ -70,7 +72,7 @@
         </div>
     </div>
 
-{{ $isSold := or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
+    {{ $isSold := or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
     {{ if $isSold }}
     <div style="background: var(--tertiary); color: var(--primary); padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; text-align: center; border: 1px solid var(--border);">
         🛑 Statusas: Parduota (Archyvinis techninis įrašas)
@@ -82,12 +84,12 @@
         {{ with .Params.images }}
         <div class="product-gallery" style="margin-bottom: 30px;">
             <div class="main-image-container" style="margin-bottom: 10px;">
-                <img id="active-image" src="{{ index . 0 }}" alt="{{ $.Title }}" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 6px; border: 1px solid var(--border);" itemprop="image">
+                <img id="active-image" src="{{ index . 0 | relURL }}" alt="{{ $.Title }}" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 6px; border: 1px solid var(--border);" itemprop="image">
             </div>
             {{ if gt (len .) 1 }}
             <div class="thumbnails" style="display: flex; gap: 10px; overflow-x: auto;">
                 {{ range . }}
-                <img src="{{ . }}" onclick="document.getElementById('active-image').src='{{ . }}'" style="width: 70px; height: 70px; object-fit: cover; cursor: pointer; border-radius: 4px; border: 1px solid var(--border);">
+                <img src="{{ . | relURL }}" onclick="document.getElementById('active-image').src='{{ . | relURL }}'" style="width: 70px; height: 70px; object-fit: cover; cursor: pointer; border-radius: 4px; border: 1px solid var(--border);">
                 {{ end }}
             </div>
             {{ end }}
@@ -98,11 +100,11 @@
         <div class="price-stock-box" style="background: var(--entry); border: 1px solid var(--border); padding: 20px; border-radius: 8px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
             <div>
                 <div style="font-size: 0.85rem; opacity: 0.7;">Kaina:</div>
-                <div style="font-size: 1.8rem; font-weight: bold; color: var(--primary);"><span itemprop="price" content="{{ .Params.price }}">{{ .Params.price }}</span><meta itemprop="priceCurrency" content="EUR"></div>
+                <div style="font-size: 1.8rem; font-weight: bold; color: var(--primary);"><span itemprop="price" content="{{ .Params.price }}">{{ .Params.price }}</span> EUR<meta itemprop="priceCurrency" content="EUR"></div>
             </div>
             <div>
                 <div style="font-size: 0.85rem; opacity: 0.7;">Likutis sandėlyje:</div>
-                <div style="font-size: 1.4rem; font-weight: bold;">{{ .Params.stock }}</div>
+                <div style="font-size: 1.4rem; font-weight: bold;">{{ .Params.stock }} vnt.</div>
             </div>
         </div>
 
@@ -117,7 +119,7 @@
                 <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
                     {{ range . }}
                     <li>
-                        <a href="{{ .url }}" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: 500;">
+                        <a href="{{ .url | relURL }}" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: 500;">
                             📄 {{ .title }}
                         </a>
                     </li>
@@ -127,25 +129,11 @@
             {{ end }}
         </div>
 
-        <!-- WIZUALNY PODGLĄD (SZKICE) STRON Z ZAŁĄCZONYCH PDF -->
-        {{ with .Params.tech_images }}
-        <div class="tech-previews-section" style="margin: 30px 0; page-break-inside: avoid;">
-            <h3 style="font-size: 1.1rem; margin-bottom: 15px; font-weight: bold; color: var(--primary);">Techniniai brėžiniai ir dokumentacijos vizualizacija (Priedas)</h3>
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                {{ range . }}
-                <div style="border: 1px solid var(--border); padding: 10px; border-radius: 6px; background: #fff; text-align: center;">
-                    <img src="{{ . }}" alt="Brėžinio kopija" style="width: 100%; max-height: 700px; object-fit: contain; border-radius: 4px;">
-                </div>
-                {{ end }}
-            </div>
-        </div>
-        {{ end }}
-
         <!-- SEKCJA TEKSTOWA DOKUMENTACJI WIDOCZNA W PDF -->
         {{ with .Params.pdf_documents }}
         <div class="print-embedded-pdf" style="display: none; margin: 25px 0; padding: 15px; border: 1px solid #666; border-radius: 4px; background: #fafafa; font-size: 0.85rem; line-height: 1.4;">
             <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: bold; text-transform: uppercase; color: #000;">Techninė dokumentacija ir brėžiniai (priedas)</h4>
-            <p style="margin: 0 0 10px 0;">Prie šio Kartono projektų pasiūlymo pridedami šie techniniai dokumentai / brėžiniai. Pilną dokumentų versiją galima parsisiųsti nuskenavus QR kodą arba peržiūrėjus internete https://kartonoprojektai.lt/sandelyje/:</p>
+            <p style="margin: 0 0 10px 0;">Prie šio Kartono projektų pasiūlymo pridedami šie techniniai dokumentai / brėžiniai. Pilną dokumentų versiją galima parsisiųsti nuskenavus QR kodą arba peržiūrėjus internete:</p>
             <ul style="margin: 0; padding-left: 18px;">
                 {{ range . }}
                 <li><strong>{{ .title }}</strong></li>
