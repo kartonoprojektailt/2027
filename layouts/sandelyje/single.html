@@ -6,7 +6,12 @@
   "@type": "Product",
   "name": "{{ .Title }}",
   "image": [
-    {{ range $index, $element := .Params.images }}{{ if gt $index 0 }},{{ end }}"{{ $element | absURL }}"{{ end }}
+    {{ $schemaImgs := .Resources.ByType "image" }}
+    {{ if not $schemaImgs }}{{ $schemaImgs = .Params.images }}{{ end }}
+    {{ range $index, $element := $schemaImgs }}
+      {{ $imgLink := cond (reflect.IsMap .) .Permalink (printf "%s" . | absURL) }}
+      {{ if gt $index 0 }},{{ end }}"{{ $imgLink }}"
+    {{ end }}
   ],
   "description": "{{ .Description }}",
   "sku": "{{ .Params.offer_code }}",
@@ -80,16 +85,21 @@
     {{ end }}
 
     <div class="post-content" itemprop="description">
-        <!-- Galeria zdjęć -->
-        {{ with .Params.images }}
+        <!-- Galeria zdjęć (Obsługa Page Resources oraz parametrów) -->
+        {{ $images := .Resources.ByType "image" }}
+        {{ if not $images }}{{ $images = .Params.images }}{{ end }}
+        {{ if $images }}
         <div class="product-gallery" style="margin-bottom: 30px;">
             <div class="main-image-container" style="margin-bottom: 10px;">
-                <img id="active-image" src="{{ index . 0 | relURL }}" alt="{{ $.Title }}" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 6px; border: 1px solid var(--border);" itemprop="image">
+                {{ $firstImg := index $images 0 }}
+                {{ $firstUrl := cond (reflect.IsMap $firstImg) $firstImg.RelPermalink (printf "%s" $firstImg | relURL) }}
+                <img id="active-image" src="{{ $firstUrl }}" alt="{{ $.Title }}" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 6px; border: 1px solid var(--border);" itemprop="image">
             </div>
-            {{ if gt (len .) 1 }}
+            {{ if gt (len $images) 1 }}
             <div class="thumbnails" style="display: flex; gap: 10px; overflow-x: auto;">
-                {{ range . }}
-                <img src="{{ . | relURL }}" onclick="document.getElementById('active-image').src='{{ . | relURL }}'" style="width: 70px; height: 70px; object-fit: cover; cursor: pointer; border-radius: 4px; border: 1px solid var(--border);">
+                {{ range $images }}
+                    {{ $imgUrl := cond (reflect.IsMap .) .RelPermalink (printf "%s" . | relURL) }}
+                    <img src="{{ $imgUrl }}" onclick="document.getElementById('active-image').src='{{ $imgUrl }}'" style="width: 70px; height: 70px; object-fit: cover; cursor: pointer; border-radius: 4px; border: 1px solid var(--border);">
                 {{ end }}
             </div>
             {{ end }}
@@ -113,11 +123,19 @@
             {{ .Content }}
 
             <!-- SEKCJA POBIERANIA PLIKÓW TECHNICZNYCH -->
-            {{ with .Params.pdf_documents }}
+            {{ $pdfs := .Resources.Match "files/*" }}
+            {{ if or $pdfs .Params.pdf_documents }}
             <div class="pdf-download-section" style="margin-top: 35px; padding-top: 20px; border-top: 1px dashed var(--border);">
                 <h3 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; font-weight: bold; color: var(--primary);">Su pasiūlymu susijusi techninė dokumentacija atsisiuntimui</h3>
                 <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
-                    {{ range . }}
+                    {{ range $pdfs }}
+                    <li>
+                        <a href="{{ .RelPermalink }}" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: 500;">
+                            📄 {{ .Name }}
+                        </a>
+                    </li>
+                    {{ end }}
+                    {{ range .Params.pdf_documents }}
                     <li>
                         <a href="{{ .url | relURL }}" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: 500;">
                             📄 {{ .title }}
