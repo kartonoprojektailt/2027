@@ -6,10 +6,8 @@
   "@type": "Product",
   "name": "{{ .Title }}",
   "image": [
-    {{ $schemaImgs := .Params.images }}
-    {{ range $index, $element := $schemaImgs }}
-      {{ $imgLink := printf "%s%s" $.Permalink . | absURL }}
-      {{ if gt $index 0 }},{{ end }}"{{ $imgLink }}"
+    {{ range $index, $element := .Params.images }}
+      {{ if gt $index 0 }},{{ end }}"{{ printf "%s%s" $.Permalink $element | absURL }}"
     {{ end }}
   ],
   "description": "{{ .Description }}",
@@ -85,17 +83,17 @@
 
     <div class="post-content" itemprop="description">
         <!-- Galeria zdjęć -->
-        {{ if .Params.images }}
+        {{ with .Params.images }}
         <div class="product-gallery" style="margin-bottom: 30px;">
             <div class="main-image-container" style="margin-bottom: 10px;">
-                {{ $firstImg := index .Params.images 0 }}
-                {{ $firstUrl := printf "%s%s" .RelPermalink $firstImg }}
+                {{ $firstImg := index . 0 }}
+                {{ $firstUrl := printf "%s%s" $.RelPermalink $firstImg }}
                 <img id="active-image" src="{{ $firstUrl }}" alt="{{ $.Title }}" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 6px; border: 1px solid var(--border);" itemprop="image">
             </div>
-            {{ if gt (len .Params.images) 1 }}
+            {{ if gt (len .) 1 }}
             <div class="thumbnails" style="display: flex; gap: 10px; overflow-x: auto;">
-                {{ range .Params.images }}
-                {{ $thumbUrl := printf "%s%s" $.Permalink . }}
+                {{ range . }}
+                {{ $thumbUrl := printf "%s%s" $.RelPermalink . }}
                 <img src="{{ $thumbUrl }}" onclick="document.getElementById('active-image').src='{{ $thumbUrl }}'" style="width: 70px; height: 70px; object-fit: cover; cursor: pointer; border-radius: 4px; border: 1px solid var(--border);">
                 {{ end }}
             </div>
@@ -136,12 +134,12 @@
             {{ end }}
         </div>
 
-        <!-- WIZUALNY PODGLĄD (SZKICE) ZDJĘĆ W TRYBIE DRUKU / PDF -->
-        {{ if .Params.images }}
+        <!-- WIZUALNY PODGLĄD ZDJĘĆ W TRYBIE DRUKU / PDF -->
+        {{ with .Params.images }}
         <div class="print-embedded-images" style="display: none; margin: 25px 0;">
             <h4 style="font-size: 1rem; font-weight: bold; margin-bottom: 10px; color: #000;">Prekės nuotraukos ir vizualizacija (priedas)</h4>
             <div style="display: flex; flex-direction: column; gap: 15px;">
-                {{ range .Params.images }}
+                {{ range . }}
                 <div style="text-align: center; border: 1px solid #ddd; padding: 5px;">
                     <img src="{{ printf "%s%s" $.Permalink . }}" style="max-height: 500px; max-width: 100%; object-fit: contain;" alt="Nuotrauka">
                 </div>
@@ -154,7 +152,7 @@
         {{ with .Params.pdf_documents }}
         <div class="print-embedded-pdf" style="display: none; margin: 25px 0; padding: 15px; border: 1px solid #666; border-radius: 4px; background: #fafafa; font-size: 0.85rem; line-height: 1.4;">
             <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: bold; text-transform: uppercase; color: #000;">Techninė dokumentacija ir brėžiniai (priedas)</h4>
-            <p style="margin: 0 0 10px 0;">Prie šio Kartono projektų pasiūlymo pridedami šie techniniai dokumentai / brėžiniai. Pilną dokumentų versiją galima parsisiųsti nuskenavus QR kodą arba peržiūrėjus internete:</p>
+            <p style="margin: 0 0 10px 0;">Prie šio Kartono projektų pasiūlymo pridedami šie techniniai dokumentai / brėžiniai. Pilną dokumentų versiją galima parsisiųsti nuskenavus QR kodą:</p>
             <ul style="margin: 0; padding-left: 18px;">
                 {{ range . }}
                 <li><strong>{{ .title }}</strong></li>
