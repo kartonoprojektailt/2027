@@ -151,14 +151,16 @@
         </div>
         {{ end }}
 
-        <!-- SEKCJA TEKSTOWA DOKUMENTACJI WIDOCZNA W PDF -->
+        <!-- SEKCJA TECHNICZNA DOKUMENTACJI WIDOCZNA W PDF / DRUKU -->
         {{ with .Params.pdf_documents }}
         <div class="print-embedded-pdf" style="display: none; margin: 25px 0; padding: 15px; border: 1px solid #666; border-radius: 4px; background: #fafafa; font-size: 0.85rem; line-height: 1.4;">
-            <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: bold; text-transform: uppercase; color: #000;">Techninė dokumentacija ir brėžiniai (priedas)</h4>
-            <p style="margin: 0 0 10px 0;">Prie šio Kartono projektų pasiūlymo pridedami šie techniniai dokumentai / brėžiniai. Pilną dokumentų versiją galima parsisiųsti nuskenavus QR kodą:</p>
+            <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: bold; text-transform: uppercase; color: #000;">Pridėti techniniai dokumentai ir brėžiniai:</h4>
             <ul style="margin: 0; padding-left: 18px;">
                 {{ range . }}
-                <li><strong>{{ .title }}</strong></li>
+                <li>
+                    <strong>{{ .title }}</strong><br>
+                    <span style="font-size: 0.75rem; color: #555;">Nuoroda atsisiuntimui: {{ printf "%s%s" $.Permalink .url }}</span>
+                </li>
                 {{ end }}
             </ul>
         </div>
