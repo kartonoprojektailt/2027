@@ -5,6 +5,7 @@ category: "Pakuotės"
 price: 5
 stock: 52
 status: ""
+draft: false
 date: "2026-10-17T05:14:47.405Z"
 cover: "images/1000011392.jpg"
 images:
