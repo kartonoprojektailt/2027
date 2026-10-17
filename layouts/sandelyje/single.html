@@ -6,13 +6,9 @@
   "@type": "Product",
   "name": "{{ .Title }}",
   "image": [
-    {{ $schemaImgs := .Resources.ByType "image" }}
-    {{ if not $schemaImgs }}{{$schemaImgs = .Resources.Match "images/*" }}{{ end }}
-    {{ if not $schemaImgs }}{{$schemaImgs = .Params.images }}{{ end }}
-    {{ range $index, $element :=$schemaImgs }}
-      {{ $imgLink := "" }}
-      {{ if reflect.IsMap . }}{$imgLink = .Permalink}
-      {{ else }}{$imgLink = printf "%s" . | absURL}{{ end }}
+    {{ $schemaImgs := .Params.images }}
+    {{ range $index, $element := $schemaImgs }}
+      {{ $imgLink := printf "%s%s" $.Permalink . | absURL }}
       {{ if gt $index 0 }},{{ end }}"{{ $imgLink }}"
     {{ end }}
   ],
@@ -35,4 +31,230 @@
     <header class="post-header">
         <div style="margin-bottom: 15px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; font-size: 0.9rem;">
             {{ if .Params.offer_code }}
-            <span style="background
+            <span style="background: var(--tertiary); padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid var(--border);">Kodas: <span itemprop="sku">{{ .Params.offer_code }}</span></span>
+            {{ end }}
+            
+            {{ $catLower := .Params.category | lower }}
+            {{ $catUrl := "" }}
+            {{ if eq $catLower "stovai" }}{{ $catUrl = "/stendai-stovai/" }}
+            {{ else if eq $catLower "pakuotės" }}{{ $catUrl = "/pakuotes/" }}
+            {{ else if eq $catLower "medžiagos" }}{{ $catUrl = "/cnc-paslaugos/" }}
+            {{ else if eq $catLower "paslaugos" }}{{ $catUrl = "/cnc-paslaugos/" }}
+            {{ else }}{{ $catUrl = "/sandelyje/" }}{{ end }}
+            
+            <span style="opacity: 0.8;">Kategorija: <a href="{{ $catUrl }}" style="font-weight: bold; color: var(--primary);" itemprop="category">{{ .Params.category }}</a></span>
+        </div>
+        <h1 class="post-title" itemprop="name">{{ .Title }}</h1>
+    </header>
+
+    <!-- UKRYTY NAGŁÓWEK DLA DRUKU / PDF Z KODEM QR OFERTY -->
+    <div class="print-header" style="display: none; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 15px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="margin: 0; font-size: 1.3rem;">UAB „Kartono projektai“ – Techninis pasiūlymas</h2>
+                <p style="margin: 5px 0 0 0; font-size: 1rem; font-weight: bold;">Kodas: {{ .Params.offer_code }} | {{ .Title }}</p>
+                <p style="margin: 3px 0 0 0; font-size: 0.85rem;">Kaina: {{ .Params.price }} EUR | Likutis: {{ .Params.stock }} vnt.</p>
+            </div>
+            <div>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data={{ .Permalink }}" alt="QR Kod" style="width: 80px; height: 80px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- STOPKA DLA DRUKU / PDF -->
+    <div class="print-footer" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; width: 100%; border-top: 1px solid #333; padding-top: 10px; font-size: 0.75rem; line-height: 1.3; color: #111; background: #fff;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>UAB „Kartono projektai“</strong><br>
+                Adresas: Raudondvario pl. 164, Kaunas, Lietuva<br>
+                Tel.: +370 652 85223 | El. paštas: info@kartonoprojektai.lt<br>
+                Svetainė: www.kartonoprojektai.lt | Puslapis: /kontaktai/
+            </div>
+            <div>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=https://www.kartonoprojektai.lt/kontaktai/" alt="QR Kontaktai" style="width: 50px; height: 50px;">
+            </div>
+        </div>
+    </div>
+
+    {{ $isSold := or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
+    {{ if $isSold }}
+    <div style="background: var(--tertiary); color: var(--primary); padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; text-align: center; border: 1px solid var(--border);">
+        🛑 Statusas: Parduota (Archyvinis techninis įrašas)
+    </div>
+    {{ end }}
+
+    <div class="post-content" itemprop="description">
+        <!-- Galeria zdjęć -->
+        {{ if .Params.images }}
+        <div class="product-gallery" style="margin-bottom: 30px;">
+            <div class="main-image-container" style="margin-bottom: 10px;">
+                {{ $firstImg := index .Params.images 0 }}
+                {{ $firstUrl := printf "%s%s" .RelPermalink $firstImg }}
+                <img id="active-image" src="{{ $firstUrl }}" alt="{{ $.Title }}" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 6px; border: 1px solid var(--border);" itemprop="image">
+            </div>
+            {{ if gt (len .Params.images) 1 }}
+            <div class="thumbnails" style="display: flex; gap: 10px; overflow-x: auto;">
+                {{ range .Params.images }}
+                {{ $thumbUrl := printf "%s%s" $.Permalink . }}
+                <img src="{{ $thumbUrl }}" onclick="document.getElementById('active-image').src='{{ $thumbUrl }}'" style="width: 70px; height: 70px; object-fit: cover; cursor: pointer; border-radius: 4px; border: 1px solid var(--border);">
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+        {{ end }}
+
+        <!-- Blok cen i parametrów -->
+        <div class="price-stock-box" style="background: var(--entry); border: 1px solid var(--border); padding: 20px; border-radius: 8px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <div>
+                <div style="font-size: 0.85rem; opacity: 0.7;">Kaina:</div>
+                <div style="font-size: 1.8rem; font-weight: bold; color: var(--primary);"><span itemprop="price" content="{{ .Params.price }}">{{ .Params.price }}</span> EUR<meta itemprop="priceCurrency" content="EUR"></div>
+            </div>
+            <div>
+                <div style="font-size: 0.85rem; opacity: 0.7;">Likutis sandėlyje:</div>
+                <div style="font-size: 1.4rem; font-weight: bold;">{{ .Params.stock }} vnt.</div>
+            </div>
+        </div>
+
+        <!-- Treść strukturalna ogłoszenia -->
+        <div class="product-info-box" style="background: var(--entry); border: 1px solid var(--border); padding: 25px; border-radius: 8px; margin-bottom: 35px;">
+            {{ .Content }}
+
+            <!-- SEKCJA POBIERANIA PLIKÓW TECHNICZNYCH -->
+            {{ with .Params.pdf_documents }}
+            <div class="pdf-download-section" style="margin-top: 35px; padding-top: 20px; border-top: 1px dashed var(--border);">
+                <h3 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; font-weight: bold; color: var(--primary);">Su pasiūlymu susijusi techninė dokumentacija atsisiuntimui</h3>
+                <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                    {{ range . }}
+                    <li>
+                        <a href="{{ printf "%s%s" $.Permalink .url }}" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: 500;">
+                            📄 {{ .title }}
+                        </a>
+                    </li>
+                    {{ end }}
+                </ul>
+            </div>
+            {{ end }}
+        </div>
+
+        <!-- WIZUALNY PODGLĄD (SZKICE) ZDJĘĆ W TRYBIE DRUKU / PDF -->
+        {{ if .Params.images }}
+        <div class="print-embedded-images" style="display: none; margin: 25px 0;">
+            <h4 style="font-size: 1rem; font-weight: bold; margin-bottom: 10px; color: #000;">Prekės nuotraukos ir vizualizacija (priedas)</h4>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                {{ range .Params.images }}
+                <div style="text-align: center; border: 1px solid #ddd; padding: 5px;">
+                    <img src="{{ printf "%s%s" $.Permalink . }}" style="max-height: 500px; max-width: 100%; object-fit: contain;" alt="Nuotrauka">
+                </div>
+                {{ end }}
+            </div>
+        </div>
+        {{ end }}
+
+        <!-- SEKCJA TEKSTOWA DOKUMENTACJI WIDOCZNA W PDF -->
+        {{ with .Params.pdf_documents }}
+        <div class="print-embedded-pdf" style="display: none; margin: 25px 0; padding: 15px; border: 1px solid #666; border-radius: 4px; background: #fafafa; font-size: 0.85rem; line-height: 1.4;">
+            <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; font-weight: bold; text-transform: uppercase; color: #000;">Techninė dokumentacija ir brėžiniai (priedas)</h4>
+            <p style="margin: 0 0 10px 0;">Prie šio Kartono projektų pasiūlymo pridedami šie techniniai dokumentai / brėžiniai. Pilną dokumentų versiją galima parsisiųsti nuskenavus QR kodą arba peržiūrėjus internete:</p>
+            <ul style="margin: 0; padding-left: 18px;">
+                {{ range . }}
+                <li><strong>{{ .title }}</strong></li>
+                {{ end }}
+            </ul>
+        </div>
+        {{ end }}
+
+        <!-- SEKCJA INFORMACYJNA O SANDÉLYJE WIDOCZNA TYLKO W PDF -->
+        <div class="print-about-sandelyje" style="display: none; margin: 25px 0 15px 0; padding: 12px; border-top: 1px solid #ccc; font-size: 0.75rem; line-height: 1.35; color: #444;">
+            <strong>Apie „Kartono projektai“ sandėlio pasiūlymus:</strong> šis dokumentas yra automatinis techninis pasiūlymas iš Kartono projektų sandėlio https://kartonoprojektai.lt/sandelyje/ Čia skelbiamas sandėlio likučių perteklius, nestandartinės kartono pakuotės, gamybinės medžiagos bei POSM sprendimai už mažesnę kainą operatyviam įsigijimui. Kviečiame apsilankyti svetainėje ir susipažinti su visais aktyviais pasiūlymais.
+        </div>
+
+        <!-- Przycisk PDF / drukowania -->
+        <div style="margin: 40px 0 25px 0; text-align: center;" class="no-print">
+            <button id="mobile-print-btn" type="button" class="button" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem; display: inline-block; -webkit-appearance: none; -webkit-tap-highlight-color: transparent;">
+                🖨️ Viso skelbimo PDF + QR
+            </button>
+        </div>
+
+        <script>
+        document.getElementById('mobile-print-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (navigator.share) {
+                navigator.share({
+                    title: document.title,
+                    text: 'UAB „Kartono projektai“ – Techninis pasiūlymas',
+                    url: window.location.href
+                }).catch(() => {
+                    window.print();
+                });
+            } else {
+                window.print();
+            }
+        });
+        </script>
+
+        <!-- Przyciski konwersyjne -->
+        {{ $managerEmail := .Params.manager_email | default "info@kartonoprojektai.lt" }}
+        {{ $emailSubject := printf "Uzklausa del pasiulymo - %s - %s" .Params.offer_code .Title }}
+        {{ if not $isSold }}
+        <div class="cta-box no-print" style="display: flex; gap: 15px; margin-bottom: 35px; flex-wrap: wrap;">
+            <a href="mailto:{{ $managerEmail }}?subject={{ $emailSubject }}" style="flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
+                ✉️ Teirautis dėl šios prekės
+            </a>
+            <a href="tel:+37065285223" class="mobile-phone-btn" style="display: none; flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
+                📞 Skambinti: +370 652 85223
+            </a>
+            <a href="/kontaktai/" class="desktop-contact-btn" style="flex: 1; min-width: 250px; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem;">
+                📞 Susisiekti su Kartono projektai
+            </a>
+        </div>
+        {{ end }}
+    </div>
+</article>
+
+<style>
+.product-info-box h2, 
+.product-info-box h3 {
+    font-size: 1.1rem;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--primary);
+}
+.product-info-box h2:first-child, 
+.product-info-box h3:first-child {
+    margin-top: 0;
+}
+.product-info-box p, 
+.product-info-box ul {
+    margin-bottom: 15px;
+}
+.product-info-box p:last-child,
+.product-info-box ul:last-child {
+    margin-bottom: 0;
+}
+@media screen and (max-width: 768px) {
+    .mobile-phone-btn { display: block !important; }
+    .desktop-contact-btn { display: none !important; }
+}
+@media print {
+    @page {
+        size: auto;
+        margin: 15mm 15mm 20mm 15mm;
+    }
+    body {
+        background: #fff !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .print-header { display: block !important; }
+    .print-footer { display: block !important; }
+    .print-embedded-pdf { display: block !important; }
+    .print-embedded-images { display: block !important; page-break-before: always; }
+    .print-about-sandelyje { display: block !important; }
+    .product-gallery { display: none !important; }
+    .no-print, header, footer, .cta-box { display: none !important; }
+    .product-info-box { background: none !important; border: none !important; padding: 0 !important; }
+}
+</style>
+{{ end }}
