@@ -1,6 +1,6 @@
 ---
 title: "Stendai peiliams"
-offer_code: "KP-20261017-PX5ZQ"
+offer_code: "KP-20261017-stendai-peiliams"
 category: "Stovai"
 price: 140
 stock: 200
