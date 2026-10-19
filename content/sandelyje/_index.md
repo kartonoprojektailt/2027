@@ -29,7 +29,7 @@ description: "UAB „Kartono projektai“ sandėlio išpardavimas – riboto kie
 }
 </script>
 
-## Apie Kartono projektų sandėlio išpardavimą
+## Kartono projektų sandėlio pasiūlymas įsigyti pakuotes, stendus ir POSM geresnėmis sąlygomis
 
 Šis sandėlis – tai galimybė operatyviai įsigyti kokybiškas kartonines pakuotes, prekybinius stendus bei POSM sprendimus už mažesnę kainą, tiesiai iš <a href="https://maps.app.goo.gl/yBs4vuL5MTLH3qVa9" target="_blank" rel="noopener" style="background: none !important; border: none !important; padding: 0 !important; margin: 0 !important; color: inherit !important; text-decoration: underline !important; font-weight: bold !important; box-shadow: none !important; border-radius: 0 !important; display: inline !important;">gamybinio Kartono projektų sandėlio Kaune</a> (Raudondvario pl. 164).
 
