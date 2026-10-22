@@ -35,4 +35,16 @@
     <header class="post-header">
         <div style="margin-bottom: 15px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; font-size: 0.9rem;">
             {{ if .Params.offer_code }}
-            <span style="background
+            <span style="background: var(--code-bg, #eee); padding: 4px 10px; border-radius: 4px; font-family: monospace;">Kod: {{ .Params.offer_code }}</span>
+            {{ end }}
+        </div>
+        <h1 class="post-title" itemprop="name">
+            {{ .Title }}
+        </h1>
+    </header>
+
+    <div class="post-content" itemprop="description">
+        {{ .Content }}
+    </div>
+</article>
+{{ end }}
