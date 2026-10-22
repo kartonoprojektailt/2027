@@ -12,7 +12,7 @@ UAB „Kartono projektai” – tai gamybinė įmonė, įsikūrusi strategiškai
 
 Kartono projektų gamybinis asortimentas sukurtas tam, kad užtikrintų produktų saugumą transportavimo metu, stiprintų prekinio ženklo žinomumą ir optimizuotų prekybos vietų ekspozicijas:
 
-* **[Pakuotės ir dėžės](/pakuotes/)** – nuo standartinių [Fefco katalogo dėžių](/fefco-dezes/) iki individualių konstrukcijų [dėžučių](/dezutes/), [dovanų pakuočių](/dovanu-dezutes/) bei [maisto pakuočių](/maisto-dezutes/). Kuriame [unikalias nestandartines pakuotes](/individualios-nestandartines-pakuotes/) ir teikiame profesionalias [projektavimo paslaugas](/projektavimo-paslaugos/).
+* **[Pakuotės ir dėžės](/pakuotes/)** – nuo standartinių [Fefco katalogo dėžių](/fefco-dezes/) iki individualių konstrukcijų [dėžučių](/dezutes/), [dovanų pakuočių](/dovanu-dezutes/). Kuriame [unikalias nestandartines pakuotes](/individualios-nestandartines-pakuotes/) ir teikiame profesionalias [projektavimo paslaugas](/projektavimo-paslaugos/).
 * **[Reklaminiai stendai ir POSM](/reklaminiai-stendai-stovai/)** – prekybiniai [stendai ir ekspoziciniai stovai](/stendai-stovai/), [parduotuvių bei vitrinų dekoracijos](/parduotuviu-dekoracijos/), [foto sienelės ir renginių įranga](/foto-sieneles/) bei [akrilo gaminiai ir balsadėžės](/akrilo-gaminiai/).
 * **[CNC paslaugos](/cnc-paslaugos/)** – tikslus kompozitinių, kartono, medžio bei plastiko medžiagų [CNC frezavimas](/cnc-frezavimas/) ir [CNC pjovimas](/cnc-pjovimas/) pagal techninius brėžinius.
 

@@ -125,21 +125,15 @@ theme = "PaperMod"
 
   [[menu.main]]
     parent = "pakuotes"
-    name = "Pakuotės maistui"
-    url = "/maisto-dezutes/"
-    weight = 25
-
-  [[menu.main]]
-    parent = "pakuotes"
     name = "FEFCO katalogas"
     url = "/fefco-dezes/"
-    weight = 26
+    weight = 25
 
   [[menu.main]]
     parent = "pakuotes"
     name = "Unikalios pakuotės"
     url = "/individualios-nestandartines-pakuotes/"
-    weight = 27
+    weight = 26
 
 
   # --- 3. SANDĖLYJE ---
@@ -190,7 +184,6 @@ theme = "PaperMod"
 # KONFIGURACJA MENU STOPKI (FOOTER MENU)
 # ==========================================
 
-  # Kopia głównych kategorii z nagłówka
   [[menu.footer]]
     name = "Reklaminiai stendai ir POSM"
     url = "/reklaminiai-stendai-stovai/"
@@ -216,7 +209,6 @@ theme = "PaperMod"
     url = "/kontaktai/"
     weight = 5
 
-  # Dodatkowe elementy wymagane w stopce
   [[menu.footer]]
     name = "Rekvizitai"
     url = "/rekvizitai/"

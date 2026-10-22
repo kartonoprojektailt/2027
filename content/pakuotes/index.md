@@ -24,7 +24,6 @@ draft: false
 * **E-commerce ir el. prekybos siuntos** – Saugios siuntinių dėžutės su firminiu logotipu, pritaikytos paštomatams, unboxing patirčiai ir saugiam transportavimui.
 * **FEFCO ir pramoninė tara logistikai** – Ttvirtos 3-jų ir 5-ių sluoksnių gofrokartono dėžės, transportavimo indėklai, gofro lakštai bei sunkiosios taros pakuotės sandėliavimui ir eksportui.
 * **Lentynų ir mažmeninės prekybos pakuotės** – Reprezentacinės pakuotės prekybos centrams, kosmetikai, farmacijai, elektronikai ir buitinei technikai.
-* **Maisto pramonė ir konditerija** – Riebalams atsparios [maisto dėžutės](/maisto-dezutes/) restoranams, kavos pupelėms, kepiniams bei greito maisto išsinešimui.
 * **Reprezentacinės ir dovanų pakuotės** – Elegantiškos [dovanų dėžutės](/dovanu-dezutes/), [dviejų dalių dėžutės](/dvieju-daliu-dezutes/), [kalėdiniai pakuočių rinkiniai](/kaledines-dezutes/) bei dovanų dėklai su spauda.
 * **Unikalios nestandartinės pakuotės** – [Individualūs pakuočių projektai](/individualios-nestandartines-pakuotes/) pagal kliento brėžinius, gaminio išmatavimus, svorį ir specifines technines užduotis.
 

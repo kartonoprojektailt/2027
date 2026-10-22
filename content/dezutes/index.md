@@ -11,7 +11,7 @@ draft: false
 | Parametras | Galimybės ir techninės specifikacijos |
 | :--- | :--- |
 | **Gaminamos medžiagos** | Vientisas popierinis puskartonis (*Carton Box*), 3-jų ir 5-ių sluoksnių gofruotas kartonas (*Corrugated Box* – E, B, C, EB banga), ekologiškas kraft kartonas |
-| **Konstrukcijos ir formatai** | [Dviejų dalių dėžutės](/dvieju-daliu-dezutes/) (dangtis + dugnas), [dovanų dėžutės](/dovanu-dezutes/), [maisto dėžutės](/maisto-dezutes/), fasoninės dėžutės, FEFCO standartai, pakuotės su langeliu |
+| **Konstrukcijos ir formatai** | [Dviejų dalių dėžutės](/dvieju-daliu-dezutes/) (dangtis + dugnas), [dovanų dėžutės](/dovanu-dezutes/), fasoninės dėžutės, FEFCO standartai, pakuotės su langeliu |
 | **Spaudos ir apdailos technologijos** | Tiesioginė skaitmeninė spauda, ofsetinė spauda, šilkografija, PANTONE spalvos, UV lakavimas, karštasis folijavimas (*hot-stamping*), reljefinis įspaudas |
 | **Pjovimas ir pritaikymas** | CAD projektavimas, CNC pjaustymas be štampų (prototipams), kirtimas stampais (serijinei gamybai), vidinės ložetės ir tinkleliai |
 | **Užsakymo apimtys** | Nuo 1 vnt. (prototipai, bandomieji pavyzdžiai) iki didelių serijinių pramoninių tiražų |

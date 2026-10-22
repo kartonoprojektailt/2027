@@ -31,7 +31,6 @@ UAB „Kartono projektai“ projektuoja ir gamina individualias pakuotes iš gof
 * **[Gofro kartono dėžės (FEFCO)](/fefco-dezes/)** – Standartinės klapinės (FEFCO 0201/0203) ir fasoninės (FEFCO 0427) dėžės pagal tarptautinį katalogą.
 * **[Dovanų ir reprezentacinės dėžutės](/dovanu-dezutes/)** – Dviejų dalių dėžutės su dangteliu (FEFCO 03xx), kalėdinės pakuotės, dėžutės su magnetiniais užraktais, folijavimu bei individualiomis ložetėmis.
 * **[Individualios ir nestandartinės pakuotės](/individualios-nestandartines-pakuotes/)** – Sudėtingos geometrijos pakuotės, transportavimo įdėklai įrangai ir demonstraciniai B2B rinkiniai (*Sample Kits*).
-* **[Maisto pramonės pakuotės](/maisto-dezutes/)** – Sertifikuotos pakuotės sausiems produktams, konditerijai, gėrimams ir maistui išsinešti.
 
 ### 2. Prekybinė įranga, reklaminiai stendai ir POSM
 * **[Reklaminiai stendai ir stovai](/reklaminiai-stendai-stovai/)** – Grindiniai ir moduliniai stendai prekybos centrams, parodoms bei reprezentaciniams renginiams.
