@@ -76,7 +76,7 @@ theme = "PaperMod"
   [[menu.main]]
     parent = "stendai-posm"
     name = "Prekystalio stendai ir stoveliai"
-    url = "/prekystalio-stendai/"
+    url = "/prekystalio-displejai-stoveliai/"
     weight = 12
 
   [[menu.main]]
