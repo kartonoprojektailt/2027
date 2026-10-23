@@ -75,35 +75,41 @@ theme = "PaperMod"
 
   [[menu.main]]
     parent = "stendai-posm"
+    name = "Prekystalio stendai ir stoveliai"
+    url = "/prekystalio-stendai/"
+    weight = 12
+
+  [[menu.main]]
+    parent = "stendai-posm"
     name = "Parduotuvių ir vitrinų dekoracijos"
     url = "/parduotuviu-dekoracijos/"
-    weight = 12
+    weight = 13
 
   [[menu.main]]
     parent = "stendai-posm"
     name = "Foto sienelės ir renginių įranga"
     url = "/foto-sieneles/"
-    weight = 13
+    weight = 14
 
   [[menu.main]]
     parent = "stendai-posm"
     name = "Akrilo gaminiai ir balsadėžės"
     url = "/akrilo-gaminiai/"
-    weight = 14
-
-
-  # --- 2. PAKUOTĖS ---
-  [[menu.main]]
-    identifier = "pakuotes"
-    name = "Pakuotės"
-    url = "/pakuotes/"
-    weight = 20
+    weight = 15
 
   [[menu.main]]
-    parent = "pakuotes"
+    parent = "stendai-posm"
     name = "Projektavimo paslaugos"
     url = "/projektavimo-paslaugos/"
-    weight = 21
+    weight = 16
+
+
+  # --- 2. KARTONO PAKUOTĖS ---
+  [[menu.main]]
+    identifier = "pakuotes"
+    name = "Kartono pakuotės"
+    url = "/pakuotes/"
+    weight = 20
 
   [[menu.main]]
     parent = "pakuotes"
@@ -134,6 +140,12 @@ theme = "PaperMod"
     name = "Unikalios pakuotės"
     url = "/individualios-nestandartines-pakuotes/"
     weight = 26
+
+  [[menu.main]]
+    parent = "pakuotes"
+    name = "Rūšiavimo dėžės"
+    url = "/rusiavimo-siuksliadezes/"
+    weight = 27
 
 
   # --- 3. SANDĖLYJE ---
@@ -190,7 +202,7 @@ theme = "PaperMod"
     weight = 1
 
   [[menu.footer]]
-    name = "Pakuotės"
+    name = "Kartono pakuotės"
     url = "/pakuotes/"
     weight = 2
 

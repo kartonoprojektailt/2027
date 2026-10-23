@@ -1,5 +1,5 @@
 ---
-title: "KARTONO DĖŽĖS RŪŠIAVIMUI"
+title: "Kartono dėžės rūšiavimui"
 description: "Ekologiškos kartoninės šiukšliadėžės ir rūšiavimo konteineriai biurams, mokykloms ir renginiams. Tvarios medžiagos, individualus dizainas ir spauda."
 draft: false
 ---
