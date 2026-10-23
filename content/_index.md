@@ -6,7 +6,7 @@ draft: false
 
 # Tvarūs pakuočių, reklamos stendų ir konstrukcijų inžineriniai sprendimai
 
-UAB „Kartono projektai“ projektuoja ir gamina individualias pakuotes iš gofruoto kartono, prekybinius POSM stendus, foto sieneles bei akrilo gaminius B2B sektoriui. Valdome pilną gamybos ciklą – nuo inžinerinio CAD projektavimo bei pavyzdžių išpjovimo iki didelio formato skaitmeninės UV spaudos ir serijinio kirtimo.
+UAB „Kartono projektai“ projektuje ir gamina individualias pakuotes iš gofruoto kartono, prekybinius POSM stendus, foto sieneles bei akrilo gaminius verslui. Valdome pilną gamybos ciklą – nuo inžinerinio CAD projektavimo bei pavyzdžių išpjovimo iki didelio formato skaitmeninės UV spaudos ir serijinio kirtimo. Įmonė įsikūrusi Kaune, užtikrinant operatyvų pristatymą visoje Lietuvoje bei ES.
 
 ---
 
@@ -30,7 +30,8 @@ UAB „Kartono projektai“ projektuoja ir gamina individualias pakuotes iš gof
 * **[Pakuotės ir transportavimo dėžės](/pakuotes/)** – Sustiprintos 3-jų ir 5-ių sluoksnių gofruoto kartono dėžės logistikai, sandėliavimui bei e-commerce siuntoms.
 * **[Gofro kartono dėžės (FEFCO)](/fefco-dezes/)** – Standartinės klapinės (FEFCO 0201/0203) ir fasoninės (FEFCO 0427) dėžės pagal tarptautinį katalogą.
 * **[Dovanų ir reprezentacinės dėžutės](/dovanu-dezutes/)** – Dviejų dalių dėžutės su dangteliu (FEFCO 03xx), kalėdinės pakuotės, dėžutės su magnetiniais užraktais, folijavimu bei individualiomis ložetėmis.
-* **[Individualios ir nestandartinės pakuotės](/individualios-nestandartines-pakuotes/)** – Sudėtingos geometrijos pakuotės, transportavimo įdėklai įrangai ir demonstraciniai B2B rinkiniai (*Sample Kits*).
+* **[Individualios ir nestandartinės pakuotės](/individualios-nestandartines-pakuotes/)** – Sudėtingos geometrijos pakuotės, transportavimo įdėklai įrangai ir demonstraciniai rinkiniai (*Sample Kits*).
+* **[Ekologiškos rūšiavimo šiukšliadėžės](/rusiavimo-siuksliadezes/)** – Tvarios kartoninės šiukšliadėžės biurams, renginiams, mokykloms ir pramoninėms patalpoms.
 
 ### 2. Prekybinė įranga, reklaminiai stendai ir POSM
 * **[Reklaminiai stendai ir stovai](/reklaminiai-stendai-stovai/)** – Grindiniai ir moduliniai stendai prekybos centrams, parodoms bei reprezentaciniams renginiams.
@@ -42,8 +43,7 @@ UAB „Kartono projektai“ projektuoja ir gamina individualias pakuotes iš gof
 ### 3. Skaitmeninės paslaugos ir plastiko apdirbimas
 * **[CAD projektavimo paslaugos](/projektavimo-paslaugos/)** – Pakuočių ir POSM konstrukcijų inžinerinis projektavimas, BCT/ECT gniuždymo skaičiavimas ir prototipavimas ploteriu nuo 1 vnt.
 * **[CNC pjovimas ir frezavimas](/cnc-pjovimas/)** – Tikslus kartono, kietojo puskartonio, akrilo ir putplasčio pjovimas skaitmeniniu ploteriu.
-* **[Akrilo gaminiai ir stendai](/akrilo-gaminiai/)** – Skaidraus ir spalvoto PMMA plastikų kirtimas, terminis lenkimas, kišenėlės, informaciniai stoveliai bei tūriniai logotipai.
-* **[Ekologiškos rūšiavimo šiukšliadėžės](/rusiavimo-siuksliadezes/)** – Tvarios kartoninės šiukšliadėžės biurams, renginiams, mokykloms ir pramoninėms patalpoms.
+* **[Akrilo gaminiai ir stendai](/akrilo-gaminiai/)** – Skaidraus ir spalvoto PMMA plastikų kirtimas, terminis lenkimas, kišenėlės, informaciniai stoveliai vykdymui bei tūriniai logotipai.
 
 ---
 
