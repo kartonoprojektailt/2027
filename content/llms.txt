@@ -3,3 +3,4 @@
 - [Kartono pilis (/sandelyje/kartono-pilis/)](https://www.kartonoprojektai.lt/sandelyje/kartono-pilis/) - Kod: KP-20261017-32416, Kaina: 120 EUR, Likutis: 100 vnt. Kategorija: Stovai
 - [Stendai peiliams (/sandelyje/stendai-peiliams/)](https://www.kartonoprojektai.lt/sandelyje/stendai-peiliams/) - Kod: KP-20261017-PX5ZQ, Kaina: 140 EUR, Likutis: 200 vnt. Kategorija: Stovai
 - [Lapas EBWC 1700x1300 (/sandelyje/lapas-ebwc-1700x1300/)](https://www.kartonoprojektai.lt/sandelyje/lapas-ebwc-1700x1300/) - Kod: KP-20261020-36Y09, Kaina: 3 EUR, Likutis: 1000 vnt. Kategorija: Medžiagos
+- [Ka (/sandelyje/ka/)](https://www.kartonoprojektai.lt/sandelyje/ka/) - Kod: KP-20261024-TR7HX, Kaina: 23 EUR, Likutis: 40 vnt. Kategorija: Medžiagos
