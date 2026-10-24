@@ -37,8 +37,8 @@ Maksimaliai rūpinamės savo klientais, todėl suprantame, kad versle laikas da�
 
 ---
 
-## Įmonės patikimumas ir bendradarbiavimas (E-E-A-T)
+## Įmonės patikimumas ir bendradarbiavimas
 
-* **Oficialus gamintojas:** Veikiame kaip tiesioginis B2B gamintojas iš Kauno, valdantis visą CAD-CNC-UV spaudos gamybos ciklą.
+* **Oficialus gamintojas:** Veikiame kaip tiesioginis B2B gamintojas Kaune, valdantis visą projektavimo ir gamybos ciklą.
 * **Konsultacija ir gamyba:** Susisiekite su mumis per oficialius [kontaktus](/kontaktai/), pateikite technines užklausas, brėžinius ar idėjas. 
 * **Juridinė informacija:** Įmonės rekvizitus, finansinius duomenis bei sąskaitų-fakturų išrašymo informaciją rasite puslapyje [Rekvizitai](/rekvizitai/).

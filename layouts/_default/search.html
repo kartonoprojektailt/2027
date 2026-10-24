@@ -1,0 +1,152 @@
+{{- define "main" }}
+
+<header class="page-header">
+    <h1>
+        {{ .Title }}
+        {{- if .Draft -}}<sup><span class="entry-isdraft">&nbsp;&nbsp;[draft]</span></sup>{{- end -}}
+    </h1>
+    {{- if .Description }}
+    <div class="post-description">
+        {{ .Description }}
+    </div>
+    {{- end }}
+</header>
+
+<div id="searchbox" class="searchbox">
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <input id="searchInput" placeholder="Paieškos žodis..." aria-label="search" type="search" autocomplete="off" autofocus maxlength="64" style="flex: 1;">
+        <button id="clearSearch" style="background: none; border: 1px solid var(--border, #444); color: var(--primary, #fff); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; display: none;">Išvalyti</button>
+    </div>
+    <ul id="searchResults" class="searchResults" aria-label="search results"></ul>
+</div>
+
+<!-- INTELIGENTNY HUB KATEGORII (Zamiast mieszania słów – precyzyjne filtry) -->
+<div class="search-discovery-hub" style="margin-top: 2.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+        <h3 style="font-size: 1.1rem; color: var(--primary, #fff); font-weight: 600; margin: 0;">Populiarios paieškos kryptys:</h3>
+        <span style="font-size: 0.8rem; color: var(--secondary, #888);">Spustelėkite norėdami greitai rasti sprendimą</span>
+    </div>
+
+    <!-- Sekcija 1: Pakavimas ir Logistika -->
+    <div class="filter-group" style="margin-bottom: 1.8rem;">
+        <span style="display: block; font-size: 0.85rem; font-weight: bold; color: var(--secondary, #888); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px;">📦 Pakuotės ir logistika:</span>
+        <div class="chips-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <button class="search-chip" data-query="gofruotas kartonas">Gofruotas kartonas</button>
+            <button class="search-chip" data-query="paštomatų dėžutės">Paštomatų dėžutės</button>
+            <button class="search-chip" data-query="FEFCO standartas">FEFCO standartas</button>
+            <button class="search-chip" data-query="klapinės dėžės">Klapinės dėžės</button>
+            <button class="search-chip" data-query="dovanų pakuotės">Dovanų pakuotės</button>
+            <button class="search-chip" data-query="magnetinis užraktas">Magnetinis užraktas</button>
+            <button class="search-chip" data-query="individualus dydis">Individualus dydis</button>
+            <button class="search-chip" data-query="prototipas nuo 1 vnt.">Prototipas nuo 1 vnt.</button>
+            <button class="search-chip" data-query="ekologiškos rūšiavimo šiukšliadėžės">Rūšiavimo šiukšliadėžės</button>
+        </div>
+    </div>
+
+    <!-- Sekcija 2: Reklama, Stendai ir POSM -->
+    <div class="filter-group" style="margin-bottom: 1.8rem;">
+        <span style="display: block; font-size: 0.85rem; font-weight: bold; color: var(--secondary, #888); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px;">🏪 Reklaminiai stendai ir POSM:</span>
+        <div class="chips-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <button class="search-chip" data-query="POSM stendai">POSM stendai</button>
+            <button class="search-chip" data-query="grindinės lentynos">Grindinės lentynos</button>
+            <button class="search-chip" data-query="paletiniai stendai">Paletiniai stendai</button>
+            <button class="search-chip" data-query="prekystalio stoveliai">Prekystalio stoveliai</button>
+            <button class="search-chip" data-query="kasos zona">Kasos zona</button>
+            <button class="search-chip" data-query="Plastic-Free POSM">Plastic-Free POSM</button>
+            <button class="search-chip" data-query="foto sienelės">Foto sienelės</button>
+            <button class="search-chip" data-query="renginiai ir parodos">Renginiai ir parodos</button>
+            <button class="search-chip" data-query="akrilo gaminiai">Akrilo gaminiai</button>
+            <button class="search-chip" data-query="parduotuvių dekoracijos">Parduotuvių dekoracijos</button>
+        </div>
+    </div>
+
+    <!-- Sekcija 3: Technologijos ir Inžinerinės paslaugos -->
+    <div class="filter-group" style="margin-bottom: 1.5rem;">
+        <span style="display: block; font-size: 0.85rem; font-weight: bold; color: var(--secondary, #888); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px;">⚙️ Technologijos ir CNC paslaugos:</span>
+        <div class="chips-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <button class="search-chip" data-query="CNC pjovimas">CNC pjovimas</button>
+            <button class="search-chip" data-query="CNC frezavimas">CNC frezavimas</button>
+            <button class="search-chip" data-query="didelio formato UV spauda">UV spauda</button>
+            <button class="search-chip" data-query="CAD projektavimas">CAD projektavimas</button>
+            <button class="search-chip" data-query="3D vizualizacija">3D vizualizacija</button>
+            <button class="search-chip" data-query="akrilo lenkimas">Akrilo lenkimas</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .search-chip {
+        background-color: var(--entry, #25262b);
+        border: 1px solid var(--border, #333);
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: var(--primary, #ccc);
+    }
+    .search-chip:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: var(--secondary, #666);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+    .search-chip.active {
+        background-color: var(--primary, #fff);
+        color: var(--theme, #1d1e22);
+        border-color: var(--primary, #fff);
+        font-weight: 600;
+    }
+    #clearSearch:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("searchInput");
+        const clearBtn = document.getElementById("clearSearch");
+        if (!searchInput) return;
+
+        const chips = document.querySelectorAll(".search-chip");
+
+        chips.forEach(chip => {
+            chip.addEventListener("click", function() {
+                const queryPart = this.getAttribute("data-query");
+                
+                // Zamiast doklejać, teraz chmurka OD RAZU ustawia konkretną frazę (zastępuje zapytanie)
+                chips.forEach(c => c.classList.remove("active"));
+                
+                if (searchInput.value === queryPart) {
+                    searchInput.value = "";
+                    clearBtn.style.display = "none";
+                } else {
+                    searchInput.value = queryPart;
+                    this.classList.add("active");
+                    clearBtn.style.display = "block";
+                }
+
+                searchInput.dispatchEvent(new Event("input"));
+            });
+        });
+
+        searchInput.addEventListener("input", function() {
+            if (this.value.trim().length > 0) {
+                clearBtn.style.display = "block";
+            } else {
+                clearBtn.style.display = "none";
+                chips.forEach(c => c.classList.remove("active"));
+            }
+        });
+
+        clearBtn.addEventListener("click", function() {
+            searchInput.value = "";
+            chips.forEach(c => c.classList.remove("active"));
+            this.style.display = "none";
+            searchInput.dispatchEvent(new Event("input"));
+            searchInput.focus();
+        });
+    });
+</script>
+
+{{- end -}}

@@ -1,8 +1,5 @@
 ---
 title: "Paieška"
+description: "Kartono projektai paieška"
 layout: "search"
-summary: "Kartono projektai paieška"
-placeholder: "Paieškos žodis"
 ---
-
-
