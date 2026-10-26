@@ -18,7 +18,7 @@ try:
     client = gspread.authorize(creds)
     spreadsheet = client.open_by_key(SPREADSHEET_ID)
     
-    # Główna zakładka 'puslapiai'
+    # Zakładka główna ze stronami 'puslapiai'
     df_puslapiai = pd.DataFrame(spreadsheet.worksheet("puslapiai").get_all_records())
     df_puslapiai['source_tab'] = 'puslapiai'
     
@@ -43,7 +43,7 @@ def sanitize_text(text):
         return ""
     return text.strip()
 
-# USUŃ BŁĘDNY PLIK INDEX.MD z głównego folderu content, jeśli tam jest (zapobiega 404 i konfliktom)
+# Usuwamy błędny plik index.md z głównego folderu content (zapobiega 404 i konfliktom strony głównej)
 rogue_index = "content/index.md"
 if os.path.exists(rogue_index):
     os.remove(rogue_index)
@@ -57,7 +57,7 @@ for index, row in df.iterrows():
     hero_image = sanitize_text(str(row.get('hero_image', '')))
     search_cloud = sanitize_text(str(row.get('Search_Cloud', '')))
     
-    # Obsługa galerii zdjęć po przecinku dla non-tech ownera
+    # Obsługa galerii zdjęć po przecinku (właściciel wkleja linki z Google Drive)
     gallery_raw = sanitize_text(str(row.get('gallery_images', '')))
     gallery_list = [img.strip() for img in gallery_raw.split(',') if img.strip()]
     
@@ -66,13 +66,13 @@ for index, row in df.iterrows():
     if not title and not content_body:
         continue
         
-    # 1. Zakładka 'sandelyje' -> content/sandelyje/{slug}/index.md
+    # 1. Zakładka 'sandelyje' -> pliki trafiają do folderu content/sandelyje/{slug}/index.md
     if source_tab == 'sandelyje' and slug and slug.lower() != 'nan':
         file_path = f"content/sandelyje/{slug}/index.md"
     
     # 2. Strona główna (_index.md) - obsługa pustego sluga, 'index' lub '/'
     elif not slug or slug.lower() == 'nan' or slug.lower() == 'index' or slug == '/':
-        file_path = "content/_index.md"
+        file_path = f"content/_index.md"
     
     # 3. Zwykła podstrona -> content/{slug}/index.md
     else:
@@ -80,7 +80,7 @@ for index, row in df.iterrows():
 
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-    # Budujemy YAML Frontmatter z obsługą obrazków, galerii po przecinku i chmurek tagów
+    # Budowanie frontmatter YAML z uwzględnieniem linków do Google Drive
     gallery_yaml = "\n".join([f"  - \"{img}\"" for img in gallery_list])
     if gallery_yaml:
         gallery_block = f"\ngallery_images:\n{gallery_yaml}"
@@ -103,15 +103,15 @@ draft: false
         f.write(markdown_content)
     print(f"Įrašyta: {file_path}")
 
-# Automatyczny Git sync i push
+# Automatyczny Git commit i push do Cloudflare Pages
 print("Vykdomas Git sinchronizavimas...")
 try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Auto-update: comma-separated gallery sync and rogue index cleanup"], check=True)
+        subprocess.run(["git", "commit", "-m", "Auto-update: streamlined sheets sync, cleaned obsolete files and fixed routing"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
-        print("Valio! Visi pakeitimai iškeliavo į GitHub.")
+        print("Valio! Visi pakeitimai iškeliavo į GitHub ir Cloudflare Pages atsinaujins akimirksniu.")
     else:
         print("Jokių naujų pakeitimų faile nėra.")
 except subprocess.CalledProcessError as e:
