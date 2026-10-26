@@ -33,32 +33,42 @@
 
 <article class="post-single" itemscope itemtype="https://schema.org/Product">
     <header class="post-header">
-        <div style="margin-bottom: 15px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; font-size: 0.9rem;">
+        <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 0.85rem;">
             {{ if .Params.offer_code }}
-            <span style="background: var(--code-bg, #eee); padding: 4px 10px; border-radius: 4px; font-family: monospace;">Kod: {{ .Params.offer_code }}</span>
+            <span style="border: 1px solid var(--border); background: var(--entry); color: var(--primary); padding: 3px 8px; border-radius: 4px; font-family: monospace;">Kod: {{ .Params.offer_code }}</span>
             {{ end }}
+            
             {{ if .Params.category }}
-            <span style="background: #e2e8f0; padding: 4px 10px; border-radius: 4px;">Kategorija: {{ .Params.category }}</span>
+              {{ $cat := .Params.category }}
+              {{ $catLower := lower $cat }}
+              {{ $catUrl := "/uab-kartono-projektai/" }}
+              {{ if or (eq $catLower "pakuotės") (eq $catLower "pakuotes") }}
+                {{ $catUrl = "/pakuotes/" }}
+              {{ else if or (eq $catLower "stovai") (eq $catLower "reklaminiai stovai") }}
+                {{ $catUrl = "/reklaminiai-stendai-stovai/" }}
+              {{ end }}
+              <a href="{{ $catUrl }}" style="border: 1px solid var(--border); background: var(--entry); color: var(--primary); padding: 3px 8px; border-radius: 4px; text-decoration: none;">Kat: {{ $cat }}</a>
             {{ end }}
+
             {{ if .Params.price }}
-            <span style="background: #c6f6d5; color: #22543d; padding: 4px 10px; border-radius: 4px; font-weight: bold;">Kaina: {{ .Params.price }} EUR</span>
+            <span style="border: 1px solid var(--border); background: var(--entry); color: var(--primary); padding: 3px 8px; border-radius: 4px; font-weight: 600;">Kaina: {{ .Params.price }} EUR</span>
             {{ end }}
             {{ if .Params.stock }}
-            <span style="background: #feebc8; color: #744210; padding: 4px 10px; border-radius: 4px;">Likutis: {{ .Params.stock }} vnt.</span>
+            <span style="border: 1px solid var(--border); background: var(--entry); color: var(--primary); padding: 3px 8px; border-radius: 4px;">Likutis: {{ .Params.stock }} vnt.</span>
             {{ end }}
             {{ if .Params.status }}
-            <span style="background: #e2e8f0; padding: 4px 10px; border-radius: 4px;">Būsena: {{ .Params.status }}</span>
+            <span style="border: 1px solid var(--border); background: var(--entry); color: var(--primary); padding: 3px 8px; border-radius: 4px;">Būsena: {{ .Params.status }}</span>
             {{ end }}
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
             <h1 class="post-title" itemprop="name" style="margin: 0;">
                 {{ .Title }}
             </h1>
             
-            <!-- Przycisk Skelbimo PDF su QR -->
-            <a href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ .Permalink }}" target="_blank" style="background: #3182ce; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;">
-                🖨️ Skelbimo PDF su QR
+            <!-- Przycisk Pasiūlymo PDF su QR (otwierający dedykowany widok PDF/druk) -->
+            <a href="#print-view" onclick="window.open('', '_blank').document.write(document.getElementById('printable-leaflet').innerHTML); return false;" style="border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 6px 14px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s, color 0.2s;" onmouseover="this.style.background='var(--primary)'; this.style.color='var(--theme)';" onmouseout="this.style.background='transparent'; this.style.color='var(--primary)';">
+                🖨️ Pasiūlymo PDF su QR
             </a>
         </div>
     </header>
@@ -82,7 +92,7 @@
                     {{ end }}
                 {{ end }}
                 <a href="{{ $imgUrl }}" target="_blank">
-                    <img src="{{ $imgUrl }}" alt="Prekės nuotrauka" style="width: 100%; height: 180px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd;" onerror="this.onerror=null; this.src='/images/placeholder.png';">
+                    <img src="{{ $imgUrl }}" alt="Prekės nuotrauka" style="width: 100%; height: 180px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border);" onerror="this.onerror=null; this.src='/images/placeholder.png';">
                 </a>
             {{ end }}
         </div>
@@ -92,8 +102,8 @@
         {{ $files := .Resources.Match "files/*" }}
         {{ if not $files }}{{ $files = .Params.files }}{{ end }}
         {{ if $files }}
-        <div class="product-files" style="margin-top: 24px; padding: 16px; background: #f9f9f9; border-radius: 6px;">
-            <h3 style="margin-top: 0; font-size: 1.1rem;">Prisegti dokumentai:</h3>
+        <div class="product-files" style="margin-top: 24px; padding: 16px; background: var(--entry); border: 1px solid var(--border); border-radius: 6px;">
+            <h3 style="margin-top: 0; font-size: 1.1rem; color: var(--primary);">Prisegti dokumentai:</h3>
             <ul style="margin: 0; padding-left: 20px;">
                 {{ range $files }}
                     {{ $fileUrl := "" }}
@@ -107,11 +117,96 @@
                             {{ $fileUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $fileUrl) | absURL }}
                         {{ end }}
                     {{ end }}
-                    <li><a href="{{ $fileUrl }}" target="_blank" style="color: #2b6cb0; text-decoration: none;">{{ $fileName }}</a></li>
+                    <li><a href="{{ $fileUrl }}" target="_blank" style="color: var(--primary); text-decoration: underline;">{{ $fileName }}</a></li>
                 {{ end }}
             </ul>
         </div>
         {{ end }}
     </div>
 </article>
+
+<!-- Ukryty szablon do generowania czystego PDF/ulotki z QR kodem i stopką -->
+<div id="printable-leaflet" style="display:none;">
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ .Title }} - Kartono Projektai</title>
+    <style>
+      body { font-family: Arial, sans-serif; color: #111; line-height: 1.5; padding: 40px; max-width: 800px; margin: 0 auto; }
+      .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+      .title h1 { margin: 0 0 10px 0; font-size: 24px; }
+      .meta { font-size: 14px; color: #555; }
+      .qr-box img { width: 120px; height: 120px; }
+      .content { margin-bottom: 30px; }
+      .gallery { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+      .gallery img { width: 200px; height: 150px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; }
+      .files { background: #f4f4f4; padding: 15px; border-radius: 4px; margin-bottom: 30px; }
+      .footer { border-top: 1px solid #ccc; padding-top: 20px; font-size: 13px; color: #444; }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div>
+        <div style="font-weight: bold; font-size: 16px; margin-bottom: 5px; color: #222;">UAB „Kartono projektai“</div>
+        <h1 style="margin: 0 0 10px 0;">{{ .Title }}</h1>
+        <div class="meta"><strong>Kodas:</strong> {{ .Params.offer_code }} | <strong>Kaina:</strong> {{ .Params.price }} EUR | <strong>Būsena:</strong> {{ .Params.status }}</div>
+      </div>
+      <div class="qr-box">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ .Permalink }}" alt="QR Kodas">
+      </div>
+    </div>
+
+    <div class="content">
+      <h3>Aprašymas:</h3>
+      <div>{{ .Content }}</div>
+    </div>
+
+    {{ if $imgs }}
+    <div class="gallery">
+      {{ range $imgs }}
+        {{ $imgUrl := "" }}
+        {{ if reflect.IsMap . }}{{ $imgUrl = .Permalink }}
+        {{ else }}
+          {{ $imgUrl = printf "%s" . }}
+          {{ if not (strings.HasPrefix $imgUrl "http") }}
+            {{ $imgUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $imgUrl) | absURL }}
+          {{ end }}
+        {{ end }}
+        <img src="{{ $imgUrl }}" alt="Nuotrauka">
+      {{ end }}
+    </div>
+    {{ end }}
+
+    {{ if $files }}
+    <div class="files">
+      <strong>Prisegti dokumentai / specifikacijos:</strong>
+      <ul>
+        {{ range $files }}
+          {{ $fileUrl := "" }}
+          {{ $fileName := "Dokumentas" }}
+          {{ if reflect.IsMap . }}{{ $fileUrl = .Permalink }}
+          {{ else }}
+            {{ $fileUrl = printf "%s" . }}
+            {{ if not (strings.HasPrefix $fileUrl "http") }}
+              {{ $fileName = path.Base $fileUrl }}
+              {{ $fileUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $fileUrl) | absURL }}
+            {{ end }}
+          {{ end }}
+          <li><a href="{{ $fileUrl }}" target="_blank">{{ $fileName }}</a></li>
+        {{ end }}
+      </ul>
+    </div>
+    {{ end }}
+
+    <div class="footer">
+      <p>Šis dokumentas yra viena iš aktualiatų ofertų <strong>UAB „Kartono projektai“ sandėlyje</strong>.</p>
+      <p>Kviečiame suinteresuotus asmenis susisiekti su mumis, susipažinti su šia oferta internete nuskenuojant aukščiau esantį QR kodą, peržiūrėti kitas specialias pasiūlymų okazijas bei pasikonsultuoti dėl visos bendros <strong>Kartono projektai</strong> siūlomos produkcijos: kartoninių pakuočių, stendų, POSM bei CNC paslaugų Kaune.</p>
+      <p style="margin-top: 15px; font-weight: bold;">Kontaktai:</p>
+      <p>UAB „Kartono projektai“ | Kaunas, Lietuva | El. paštas: info@kartonoprojektai.lt | Tel. +370 ... | Interneto svetainė: <a href="https://kartonoprojektai.lt">kartonoprojektai.lt</a></p>
+    </div>
+    <script>window.print();</script>
+  </body>
+  </html>
+</div>
 {{ end }}
