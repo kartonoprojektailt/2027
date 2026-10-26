@@ -1,27 +1,27 @@
 backend:
-  name: github
-  repo: kartonoprojektailt/2027
-  branch: main
-  base_url: https://2027-2de.pages.dev/
+  name: github
+  repo: kartonoprojektailt/2027
+  branch: main
+  base_url: https://2027-2de.pages.dev
 
 media_folder: "content/sandelyje/images"
 public_folder: "/images"
 
 collections:
-  - name: "sandelyje"
-    label: "Sandėlio Pasiūlymai"
-    folder: "content/sandelyje"
-    create: true
-    slug: "{{slug}}"
-    extension: "md"
-    format: "frontmatter"
-    fields:
-      - {label: "Pavadinimas (Title)", name: "title", widget: "string"}
-      - {label: "Unikalus kodas (Offer Code)", name: "offer_code", widget: "string", required: false}
-      - {label: "Kategorija", name: "category", widget: "select", options: ["Stovai", "Pakuotės", "Medžiagos", "Paslaugos"]}
-      - {label: "Kaina (EUR)", name: "price", widget: "number", value_type: "float", required: false}
-      - {label: "Likutis (vnt.)", name: "stock", widget: "number", value_type: "int", required: false}
-      - {label: "Statusas", name: "status", widget: "select", options: [{label: "Galioja", value: "active"}, {label: "Parduota", value: "parduota"}]}
-      - {label: "Nuotrauka (Pagrindinė)", name: "image", widget: "image", required: false}
-      - {label: "Brėžinys / Dokumentas (PDF)", name: "document", widget: "file", required: false}
-      - {label: "Aprašymas", name: "body", widget: "markdown"}
+  - name: "sandelyje"
+    label: "Sandėlio Pasiūlymai"
+    folder: "content/sandelyje"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - {label: "Pavadinimas (Title)", name: "title", widget: "string"}
+      - {label: "Unikalus kodas (Offer Code)", name: "offer_code", widget: "string", required: false}
+      - {label: "Kategorija", name: "category", widget: "select", options: ["Stovai", "Pakuotės", "Medžiagos", "Paslaugos"]}
+      - {label: "Kaina (EUR)", name: "price", widget: "number", value_type: "float", required: false}
+      - {label: "Likutis (vnt.)", name: "stock", widget: "number", value_type: "int", required: false}
+      - {label: "Statusas", name: "status", widget: "select", options: [{label: "Galioja", value: "active"}, {label: "Parduota", value: "parduota"}]}
+      - {label: "Nuotrauka (Główna)", name: "image", widget: "image", required: false}
+      - {label: "Brėžinys / Dokumentas (PDF)", name: "document", widget: "file", required: false}
+      - {label: "Aprašymas", name: "body", widget: "markdown"}
