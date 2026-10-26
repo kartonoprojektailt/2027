@@ -438,14 +438,18 @@
       const imgFiles = document.getElementById('imagesInput').files;
       const docFiles = document.getElementById('docsInput').files;
       let imagesList = [];
+      let docsList = [];
 
+      // Įkeliame nuotraukas
       for(let file of imgFiles) {
         await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
         imagesList.push(file.name);
       }
 
+      // Įkeliame dokumentus (PDF / CAD / kt.)
       for(let file of docFiles) {
         await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
+        docsList.push(file.name);
       }
 
       const offer_code = document.getElementById('offer_code').value;
@@ -481,6 +485,12 @@ condition: "${condition}"
         mdContent += `image: "${imagesList[0]}"\n`;
       }
 
+      // Įrašome dokumentus į Frontmatter, kad Hugo šablonas galėtų juos atvaizduoti
+      if(docsList.length > 0) {
+        mdContent += `documents:\n`;
+        docsList.forEach(doc => mdContent += `  - "${doc}"\n`);
+      }
+
       mdContent += `date: ${new Date().toISOString().split('T')[0]}
 ---
 
@@ -490,7 +500,7 @@ ${description}
       const mdFile = new File([mdContent], `index.md`, { type: 'text/markdown' });
       await uploadFileToGitHub(mdFile, `content/sandelyje/${slug}/index.md`, repo, token);
 
-      alert('🎉 Skelbimas sėkmingai išsaugotas!');
+      alert('🎉 Skelbimas ir visi failai (nuotraukos bei PDF) sėkmingai išsaugoti!');
       resetForm();
       loadOffers();
     } catch(err) {
