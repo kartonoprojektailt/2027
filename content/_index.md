@@ -1,6 +1,5 @@
 ---
 title: "CNC pjovimas"
-description: ""
 draft: false
 ---
 
