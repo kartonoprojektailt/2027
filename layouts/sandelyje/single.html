@@ -174,10 +174,13 @@
             {{ $isSold := or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
             {{ if and (ne .Permalink $currentPath) (not $isSold) }}
                 
+                {{/* Robusty pobieranie miniatury dla każdej strony w pętli */}}
                 {{ $thumbImg := "" }}
                 {{ $itemImgs := .Resources.ByType "image" }}
                 {{ if not $itemImgs }}{{ $itemImgs = .Resources.Match "images/*" }}{{ end }}
                 {{ if not $itemImgs }}{{ $itemImgs = .Params.images }}{{ end }}
+                {{ if not $itemImgs }}{{ with .Params.image }}{{ $itemImgs = slice . }}{{ end }}{{ end }}
+                
                 {{ with index $itemImgs 0 }}
                     {{ if reflect.IsMap . }}
                         {{ $thumbImg = .Permalink }}
@@ -185,8 +188,10 @@
                         {{ $rawImg := printf "%s" . }}
                         {{ if strings.HasPrefix $rawImg "http" }}
                             {{ $thumbImg = $rawImg }}
+                        {{ else if strings.HasPrefix $rawImg "/" }}
+                            {{ $thumbImg = $rawImg | absURL }}
                         {{ else }}
-                            {{ $thumbImg = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $rawImg) | absURL }}
+                            {{ $thumbImg = printf "%s/%s" .RelPermalink (strings.TrimPrefix "./" $rawImg) | absURL }}
                         {{ end }}
                     {{ end }}
                 {{ end }}
@@ -195,7 +200,7 @@
                     
                     <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
                         {{ if $thumbImg }}
-                        <img src="{{ $thumbImg }}" alt="" style="width: 45px; height: 45px; object-fit: cover; border-radius: 4px; flex-shrink: 0; border: 1px solid var(--border);">
+                        <img src="{{ $thumbImg }}" alt="" style="width: 45px; height: 45px; object-fit: cover; border-radius: 4px; flex-shrink: 0; border: 1px solid var(--border);" onerror="this.style.display='none';">
                         {{ end }}
                         <div style="display: flex; flex-direction: column; gap: 2px; overflow: hidden;">
                             {{ if .Params.category }}
