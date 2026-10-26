@@ -1,294 +1,340 @@
-{{ define "main" }}
-<!-- Schema.org Product / SEO / AI Optimization -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org/",
-  "@type": "Product",
-  "name": "{{ .Title }}",
-  "image": [
-    {{ $schemaImgs := .Resources.ByType "image" }}
-    {{ if not $schemaImgs }}{{ $schemaImgs = .Resources.Match "images/*" }}{{ end }}
-    {{ if not $schemaImgs }}{{ $schemaImgs = .Params.images }}{{ end }}
-    {{ range $index, $element := $schemaImgs }}
-      {{ $imgLink := "" }}
-      {{ if reflect.IsMap . }}{{ $imgLink = .Permalink }}
-      {{ else }}{{ $imgLink = printf "%s" . | absURL }}{{ end }}
-      {{ if gt $index 0 }},{{ end }}"{{ $imgLink }}"
-    {{ end }}
-  ],
-  "description": "{{ .Description }}",
-  "sku": "{{ .Params.offer_code }}",
-  "category": "{{ .Params.category }}",
-  "offers": {
-    "@type": "Offer",
-    "priceCurrency": "EUR",
-    "price": "{{ .Params.price }}",
-    "availability": "{{ if or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}https://schema.org/SoldOut{{ else }}https://schema.org/InStock{{ end }}",
-    "seller": {
-      "@type": "Organization",
-      "name": "UAB „Kartono projektai“",
-      "address": "Raudondvario pl. 164, Kaunas, Lietuva"
-    }
-  }
-}
-</script>
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kartono Projektai - Valdymo pultas</title>
+<style>
+  :root { --bg: #f4f6f8; --card: #ffffff; --primary: #2b6cb0; --primary-hover: #234e70; --text: #2d3748; --border: #cbd5e0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+  .container { max-width: 850px; margin: 0 auto; }
+  .card { background: var(--card); padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+  h1, h2 { margin-top: 0; font-size: 1.5rem; color: #1a202c; }
+  label { display: block; margin-top: 14px; font-weight: 600; font-size: 0.9rem; }
+  input, select, textarea { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+  textarea { min-height: 120px; resize: vertical; }
+  button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 1rem; cursor: pointer; margin-top: 20px; width: 100%; font-weight: bold; }
+  button:hover { background: var(--primary-hover); }
+  .login-box { max-width: 400px; margin: 80px auto; text-align: center; }
+  .hidden { display: none !important; }
+  .flex { display: flex; gap: 10px; }
+  .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 16px; background: #fffaf0; padding: 12px; border-radius: 6px; border: 1px solid #fbd38d; }
+  .checkbox-group input { width: auto; margin-top: 0; }
+  .file-info { font-size: 0.85rem; color: #666; margin-top: 4px; }
+  .settings-box { background: #edf2f7; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+  .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; margin: 0; }
+  .btn-danger { background: #e53e3e; }
+  .btn-success { background: #38a169; }
+</style>
+</head>
+<body>
 
-<article class="post-single" itemscope itemtype="https://schema.org/Product" style="border: 1px solid var(--border); padding: 24px; border-radius: 8px; background: var(--entry);">
-    
-    <!-- NAGŁÓWEK I METADANE -->
-    <header class="post-header" style="margin-bottom: 20px;">
-        <h1 class="post-title" itemprop="name" style="margin: 0 0 8px 0; font-size: 1.8rem;">
-            {{ .Title }}
-        </h1>
+<div class="container">
+  <!-- EKRAN LOGOWANIA -->
+  <div id="loginScreen" class="card login-box">
+    <h2>Valdymo Pultas</h2>
+    <p style="font-size: 0.9rem; color: #666;">Įveskite administratoriaus slaptažodį</p>
+    <input type="password" id="passInput" placeholder="Slaptažodis...">
+    <button onclick="tryLogin()">Prisijungti</button>
+    <p id="loginError" style="color: #e53e3e; font-size: 0.85rem; margin-top: 10px; display: none;">Neteisingas slaptažodis!</p>
+  </div>
 
-        {{ if .Params.category }}
-          {{ $cat := .Params.category }}
-          {{ $catLower := lower $cat }}
-          {{ $catUrl := "/uab-kartono-projektai/" }}
-          {{ if or (eq $catLower "pakuotės") (eq $catLower "pakuotes") }}
-            {{ $catUrl = "/pakuotes/" }}
-          {{ else if or (eq $catLower "stovai") (eq $catLower "reklaminiai stovai") }}
-            {{ $catUrl = "/reklaminiai-stendai-stovai/" }}
-          {{ end }}
-          <div style="margin-bottom: 10px; font-size: 0.9rem;">
-            <a href="{{ $catUrl }}" style="color: var(--secondary); text-decoration: underline;">{{ .Params.category }}</a>
-          </div>
-        {{ end }}
-
-        <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 12px; font-size: 1.1rem; font-weight: bold;">
-            {{ if .Params.price }}
-            <span style="color: var(--primary);">Kaina: {{ .Params.price }} EUR</span>
-            {{ end }}
-            {{ if .Params.stock }}
-            <span style="color: var(--secondary); font-weight: normal;">Likutis: {{ .Params.stock }} vnt.</span>
-            {{ end }}
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 0;">
-            <div style="font-family: monospace; font-size: 0.9rem; color: var(--primary);">
-                Kodas: <strong>{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}</strong>
-            </div>
-            
-            {{ if or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
-            <span style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">
-                Pasiūlymas nebegaliojantis
-            </span>
-            {{ else }}
-            <span style="background: #276749; color: #fff; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">
-                Pasiūlymas galioja
-            </span>
-            {{ end }}
-        </div>
-    </header>
-
-    <!-- GALERIA ZDJĘĆ -->
-    {{ $imgs := .Resources.ByType "image" }}
-    {{ if not $imgs }}{{ $imgs = .Resources.Match "images/*" }}{{ end }}
-    {{ if not $imgs }}{{ $imgs = .Params.images }}{{ end }}
-    {{ if $imgs }}
-    <div class="product-gallery" style="margin-bottom: 25px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
-        {{ range $imgs }}
-            {{ $imgUrl := "" }}
-            {{ if reflect.IsMap . }}{{ $imgUrl = .Permalink }}
-            {{ else }}
-                {{ $imgUrl = printf "%s" . }}
-                {{ if not (strings.HasPrefix $imgUrl "http") }}
-                    {{ $imgUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $imgUrl) | absURL }}
-                {{ end }}
-            {{ end }}
-            <div style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--theme); cursor: pointer;" onclick="openLightbox('{{ $imgUrl }}')">
-                <img src="{{ $imgUrl }}" alt="Prekės nuotrauka" style="width: 100%; height: 180px; object-fit: cover; display: block;" onerror="this.onerror=null; this.src='/images/placeholder.png';">
-            </div>
-        {{ end }}
-    </div>
-    {{ end }}
-
-    <!-- DOKUMENTY ORAZ PRZYCISK PDF -->
-    {{ $files := .Resources.Match "files/*" }}
-    {{ if not $files }}{{ $files = .Params.files }}{{ end }}
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; padding: 15px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px;">
-        
-        <div style="flex: 1; min-width: 250px;">
-            <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary);">Su produktu susiję dokumentai atsisiuntimui:</h4>
-            {{ if $files }}
-                <ul style="margin: 0; padding-left: 18px; font-size: 0.9rem;">
-                    {{ range $files }}
-                        {{ $fileUrl := "" }}
-                        {{ $fileName := "Atsisiųsti dokumentą" }}
-                        {{ if reflect.IsMap . }}
-                            {{ $fileUrl = .Permalink }}
-                        {{ else }}
-                            {{ $fileUrl = printf "%s" . }}
-                            {{ if not (strings.HasPrefix $fileUrl "http") }}
-                                {{ $fileName = path.Base $fileUrl }}
-                                {{ $fileUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $fileUrl) | absURL }}
-                            {{ end }}
-                        {{ end }}
-                        <li style="margin-bottom: 4px;">
-                            <a href="{{ $fileUrl }}" target="_blank" style="color: var(--primary); text-decoration: underline;">📄 {{ $fileName }}</a>
-                        </li>
-                    {{ end }}
-                </ul>
-            {{ else }}
-                <span style="font-size: 0.85rem; color: var(--secondary);">Nėra prisegtų papildomų dokumentų.</span>
-            {{ end }}
-        </div>
-
-        <div>
-            <a href="#pdf-pasiulymas" onclick="generatePDF(); return false;" style="border: 1px solid var(--primary); background: var(--entry); color: var(--primary); padding: 10px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;">
-                📄 Pasiūlymo PDF ir QR
-            </a>
-        </div>
-    </div>
-
-    <!-- OPIS TEKSTOWY -->
-    <div class="post-content" itemprop="description" style="margin-top: 20px; line-height: 1.6;">
-        {{ .Content }}
-    </div>
-
-    <!-- SEKCJA KONTAKTOWA -->
-    <div style="margin-top: 40px; padding: 24px; border: 1px solid var(--border); border-radius: 6px; background: var(--theme); text-align: center;">
-        <h3 style="margin-top: 0; font-size: 1.2rem; color: var(--primary);">
-            Susisiekti dėl pasiūlymo {{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}:
-        </h3>
-        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 15px; font-size: 1.05rem;">
-            <a href="tel:+37065285223" class="mobile-phone-link" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
-                📞 +370 652 85223
-            </a>
-            <a href="mailto:info@kartonoprojektai.lt?subject=KP%20sandėlio%20pasiūlymas%20{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}&body=Laba%20diena,%20norėčiau%20pasiteirauti%20dėl%20Kartono%20projektų%20sandėlio%20pasiūlymo%20{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}." style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
-                ✉️ info@kartonoprojektai.lt
-            </a>
-        </div>
-    </div>
-</article>
-
-<!-- SEKCJA: Kiti galiojantys Kartono projektų sandėlio pasiūlymai (Czysta wersja tekstowa) -->
-<div style="margin-top: 50px; padding: 24px; border: 1px solid var(--border); border-radius: 8px; background: var(--entry);">
-    <h3 style="margin-top: 0; font-size: 1.3rem; color: var(--primary); margin-bottom: 16px;">
-        Kiti <a href="/sandelyje/" style="color: var(--primary); text-decoration: underline;">galiojantys Kartono projektų sandėlio pasiūlymai</a>:
-    </h3>
-    
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-        {{ $currentPath := .Permalink }}
-        {{ range where site.RegularPages "Section" "sandelyje" }}
-            {{ $isSold := or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
-            {{ if and (ne .Permalink $currentPath) (not $isSold) }}
-                <a href="{{ .Permalink }}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: inherit; gap: 12px; transition: background 0.2s;" onmouseover="this.style.background='var(--entry)';" onmouseout="this.style.background='var(--theme)';">
-                    
-                    <div style="display: flex; flex-direction: column; gap: 2px; overflow: hidden;">
-                        {{ if .Params.category }}
-                        <span style="font-size: 0.75rem; color: var(--secondary);">{{ .Params.category }}</span>
-                        {{ end }}
-                        <strong style="font-size: 0.95rem; color: var(--primary);">{{ .Title }}</strong>
-                    </div>
-
-                    <div style="display: flex; align-items: center; gap: 12px; font-size: 0.9rem; font-weight: 600; flex-shrink: 0;">
-                        {{ if .Params.price }}<span style="color: var(--primary);">{{ .Params.price }} EUR</span>{{ end }}
-                        {{ if .Params.stock }}<span style="color: var(--secondary); font-weight: normal;">({{ .Params.stock }} vnt.)</span>{{ end }}
-                    </div>
-                </a>
-            {{ end }}
-        {{ end }}
-    </div>
-</div>
-
-<!-- SEKCJA: Kartono projektai produktai ir paslaugos -->
-<div style="margin-top: 30px; padding: 24px; border: 1px solid var(--border); border-radius: 8px; background: var(--entry);">
-    <h3 style="margin-top: 0; font-size: 1.2rem; color: var(--primary); margin-bottom: 12px;">Kartono projektai produktai ir paslaugos:</h3>
-    <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 1rem;">
-        <li><a href="/reklaminiai-stendai-stovai/" style="color: var(--primary); text-decoration: underline;">Reklaminiai stendai ir POSM</a></li>
-        <li><a href="/pakuotes/" style="color: var(--primary); text-decoration: underline;">Kartono pakuotės</a></li>
-        <li><a href="/cnc-paslaugos/" style="color: var(--primary); text-decoration: underline;">CNC paslaugos</a></li>
-        <li><a href="/projektavimo-paslaugos/" style="color: var(--primary); text-decoration: underline;">Pakuočių, POSM ir stendų projektavimo paslaugos</a></li>
-    </ul>
-</div>
-
-<!-- Lightbox Modal -->
-<div id="img-lightbox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; cursor:pointer;" onclick="closeLightbox()">
-    <img id="lightbox-img" src="" style="max-width:90%; max-height:90%; border-radius:4px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
-</div>
-
-<!-- Ukryty szablon generowania PDF -->
-<div id="printable-leaflet" style="display:none;">
-  <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.4; padding: 25px; max-width: 700px; margin: 0 auto; border: 2px solid #222; background: #fff; border-radius: 6px;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #222; padding-bottom: 12px; margin-bottom: 15px;">
-      <div>
-        <div style="font-weight: bold; font-size: 13px; text-transform: uppercase; color: #555; margin-bottom: 2px;">UAB „Kartono projektai“ — Sandėlio Pasiūlymas</div>
-        <h1 style="margin: 0 0 6px 0; font-size: 20px; color: #111;">{{ .Title }}</h1>
-        <div style="font-size: 12px; color: #444;"><strong>Kodas:</strong> {{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }} | <strong>Kaina:</strong> {{ .Params.price }} EUR | <strong>Likutis:</strong> {{ .Params.stock }} vnt.</div>
+  <!-- PANEL ZARZĄDZANIA -->
+  <div id="adminScreen" class="hidden">
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Sandėlio Valdymas (Page Bundle)</h1>
+        <button onclick="logout()" class="btn-sm btn-danger">Atsijungti</button>
       </div>
-      <div>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ .Permalink }}" alt="QR" style="width: 100px; height: 100px; display: block;">
+      <p style="font-size: 0.9rem; color: #666;">Užpildykite duomenis, pasirinkite failus ir spauskite publikuoti.</p>
+    </div>
+
+    <!-- KONFIGURACJA GITHUB API -->
+    <div class="card settings-box">
+      <h3>GitHub Nustatymai</h3>
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Repozitorija (`vardas/repo`)
+            <input type="text" id="ghRepo" placeholder="vardas/pavadinimas">
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>GitHub Token
+            <input type="password" id="ghToken" placeholder="ghp_...">
+          </label>
+        </div>
       </div>
+      <button onclick="saveSettings()" class="btn-sm" style="margin-top: 10px; background: #4a5568;">Išsaugoti nustatymus</button>
     </div>
 
-    <div style="margin-bottom: 15px; font-size: 13px;">
-      <h3 style="font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 3px; margin-bottom: 6px;">Aprašymas:</h3>
-      <div>{{ .Content }}</div>
-    </div>
+    <!-- FORMULARZ TWORZENIA -->
+    <div class="card">
+      <h2>Sukurti naują pasiūlymą</h2>
+      
+      <label>Pavadinimas (Title)
+        <input type="text" id="title" placeholder="pvz. Baltas kartoninis stovas A2">
+      </label>
 
-    {{ if $imgs }}
-    <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px;">
-      {{ range $imgs }}
-        {{ $imgUrl := "" }}
-        {{ if reflect.IsMap . }}{{ $imgUrl = .Permalink }}
-        {{ else }}
-          {{ $imgUrl = printf "%s" . }}
-          {{ if not (strings.HasPrefix $imgUrl "http") }}
-            {{ $imgUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $imgUrl) | absURL }}
-          {{ end }}
-        {{ end }}
-        <img src="{{ $imgUrl }}" alt="Foto" style="width: 140px; height: 100px; object-fit: cover; border: 1px solid #ccc;">
-      {{ end }}
-    </div>
-    {{ end }}
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Unikalus kodas (SKU)
+            <input type="text" id="offer_code" placeholder="pvz. KP-ST-A2">
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Būklė (Condition)
+            <select id="condition">
+              <option value="NewCondition">Naujas (New)</option>
+              <option value="UsedCondition">Naudotas (Used)</option>
+              <option value="RefurbishedCondition">Atnaujintas</option>
+            </select>
+          </label>
+        </div>
+      </div>
 
-    <div style="background: #f4f4f4; border: 1px solid #ddd; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 12px; color: #222;">
-      📌 <strong>Pastaba:</strong> Šis pasiūlymas paskelbtas kartu su brėžiniais. Skenuokite QR kodą ir šiame Kartono projektų pasiūlymo puslapyje susipažinkite su siūlomo produkto brėžiniais PDF formatu.
-    </div>
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Kategorija
+            <select id="category">
+              <option value="Stovai">Stovai</option>
+              <option value="Pakuotės">Pakuotės</option>
+              <option value="Medžiagos">Medžiagos</option>
+              <option value="Paslaugos">Paslaugos</option>
+            </select>
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Statusas
+            <select id="status">
+              <option value="active">Galioja</option>
+              <option value="parduota">Parduota</option>
+            </select>
+          </label>
+        </div>
+      </div>
 
-    <div style="border-top: 1px solid #ccc; padding-top: 10px; font-size: 11px; color: #444;">
-      <p style="margin: 0 0 4px 0;">Šis dokumentas yra vienas iš aktualių UAB „Kartono projektai“ sandėlio pasiūlymų.</p>
-      <p style="margin: 0; font-weight: bold; color: #111;">UAB „Kartono projektai“ | Raudondvario pl. 164, Kaunas | Tel. +370 652 85223 | info@kartonoprojektai.lt</p>
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Akcijinė / Dabartinė Kaina (EUR)
+            <input type="number" step="0.01" id="price" placeholder="10.00">
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Sena / Pradinė Kaina
+            <input type="number" step="0.01" id="original_price" placeholder="15.00">
+          </label>
+        </div>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="is_sale" checked>
+        <label for="is_sale" style="margin-top: 0; cursor: pointer;">
+          <strong>Išpardavimas / Akcija</strong>
+        </label>
+      </div>
+
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Likutis (vnt.)
+            <input type="number" id="stock" placeholder="5">
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Matmenys (Dimensions)
+            <input type="text" id="dimensions" placeholder="600x420x10 mm">
+          </label>
+        </div>
+      </div>
+
+      <label>Nuotraukos / GIF (pasirinkite per Browse)
+        <input type="file" id="imagesInput" multiple accept="image/*,.gif">
+        <div class="file-info" id="imgInfo">Pasirinkta failų: 0</div>
+      </label>
+
+      <label>Aprašymas
+        <textarea id="description" placeholder="Detalus prekės aprašymas..."></textarea>
+      </label>
+
+      <button onclick="publishToGitHub()" class="btn-success" id="pubBtn">🚀 Paskelbti automatiškai į svetainę</button>
     </div>
   </div>
 </div>
 
 <script>
-function openLightbox(url) {
-    document.getElementById('lightbox-img').src = url;
-    document.getElementById('img-lightbox').style.display = 'flex';
-}
-function closeLightbox() {
-    document.getElementById('img-lightbox').style.display = 'none';
-}
+  const ADMIN_PASS = "kartonas2027";
 
-function generatePDF() {
-    var content = document.getElementById('printable-leaflet').innerHTML;
-    var win = window.open('', '_blank', 'width=800,height=900');
-    if (win) {
-        var pdfTitle = "{{ .Title }}-{{ .Params.category }}-{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}-Kartono projektai sandėlio pasiūlymai";
-        win.document.write('<html><head><title>' + pdfTitle + '</title><style>@page { size: A4; margin: 10mm; }</style></head><body style="margin:0; padding:0; background:#fff;">' + content + '</body></html>');
-        win.document.close();
-        win.focus();
-        setTimeout(function() {
-            win.print();
-        }, 300);
+  function tryLogin() {
+    const p = document.getElementById('passInput').value;
+    if(p === ADMIN_PASS) {
+      localStorage.setItem('kp_logged', 'true');
+      showAdmin();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
     }
-}
+  }
 
-document.addEventListener("DOMContentLoaded", function() {
-    var phoneLink = document.querySelector('.mobile-phone-link');
-    if (phoneLink) {
-        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        if (!isMobile) {
-            phoneLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert("Tel. numeris: +370 652 85223");
-            });
+  function logout() {
+    localStorage.removeItem('kp_logged');
+    location.reload();
+  }
+
+  function showAdmin() {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('adminScreen').classList.remove('hidden');
+    loadSettings();
+  }
+
+  if(localStorage.getItem('kp_logged') === 'true') {
+    showAdmin();
+  }
+
+  function saveSettings() {
+    localStorage.setItem('kp_repo', document.getElementById('ghRepo').value);
+    localStorage.setItem('kp_token', document.getElementById('ghToken').value);
+    alert('Nustatymai išsaugoti!');
+  }
+
+  function loadSettings() {
+    document.getElementById('ghRepo').value = localStorage.getItem('kp_repo') || '';
+    document.getElementById('ghToken').value = localStorage.getItem('kp_token') || '';
+  }
+
+  document.getElementById('imagesInput').addEventListener('change', function() {
+    document.getElementById('imgInfo').textContent = `Pasirinkta failų: ${this.files.length}`;
+  });
+
+  function slugify(text) {
+    return text.toString().toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-');
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
+        if ((encoded.length % 4) > 0) {
+          encoded += '='.repeat(4 - (encoded.length % 4));
         }
+        resolve(encoded);
+      };
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  async function uploadFileToGitHub(file, path, repo, token) {
+    const content = await fileToBase64(file);
+    const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+    
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: `Admin bundle upload: ${file.name}`,
+        content: content
+      })
+    });
+    if (!response.ok) throw new Error(`Klaida įkeliant failą ${file.name}`);
+  }
+
+  async function publishToGitHub() {
+    const repo = localStorage.getItem('kp_repo');
+    const token = localStorage.getItem('kp_token');
+    if(!repo || !token) {
+      alert('Prašome pirma įvesti ir išsaugoti GitHub nustatymus!');
+      return;
     }
-});
+
+    const title = document.getElementById('title').value;
+    if(!title) { alert('Įveskite pavadinimą!'); return; }
+
+    const btn = document.getElementById('pubBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Kuriamas katalogas ir siunčiama...';
+
+    try {
+      const imgFiles = document.getElementById('imagesInput').files;
+      const slug = slugify(title);
+      let imagesList = [];
+
+      // 1. Wysyłamy zdjęcia bezpośrednio do dedykowanego folderu oferty w content/sandelyje/[slug]/
+      for(let file of imgFiles) {
+        await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
+        imagesList.push(file.name);
+      }
+
+      // 2. Budujemy zawartość pliku index.md w tym samym folderze
+      const offer_code = document.getElementById('offer_code').value;
+      const condition = document.getElementById('condition').value;
+      const category = document.getElementById('category').value;
+      const status = document.getElementById('status').value;
+      const price = document.getElementById('price').value || 0;
+      const original_price = document.getElementById('original_price').value;
+      const is_sale = document.getElementById('is_sale').checked;
+      const stock = document.getElementById('stock').value || 0;
+      const dimensions = document.getElementById('dimensions').value;
+      const description = document.getElementById('description').value;
+
+      let mdContent = `---
+title: "${title}"
+`;
+      if(offer_code) mdContent += `offer_code: "${offer_code}"\n`;
+      mdContent += `category: "${category}"
+status: "${status}"
+price: ${price}
+`;
+      if(original_price) mdContent += `original_price: ${original_price}\n`;
+      mdContent += `currency: "EUR"
+is_sale: ${is_sale}
+stock: ${stock}
+condition: "${condition}"
+`;
+      if(dimensions) mdContent += `dimensions: "${dimensions}"\n`;
+      
+      if(imagesList.length > 0) {
+        mdContent += `images:\n`;
+        imagesList.forEach(img => mdContent += `  - "${img}"\n`);
+        mdContent += `image: "${imagesList[0]}"\n`;
+      }
+
+      mdContent += `date: ${new Date().toISOString().split('T')[0]}
+---
+
+${description}
+`;
+
+      // 3. Wysyłamy index.md do folderu content/sandelyje/[slug]/index.md
+      const mdFile = new File([mdContent], `index.md`, { type: 'text/markdown' });
+      await uploadFileToGitHub(mdFile, `content/sandelyje/${slug}/index.md`, repo, token);
+
+      alert('🎉 Valio! Prekė paskelbta kaip pilna paczką (folder + index.md + zdjęcia). Storage atsinaujins per ~30 sekundžių.');
+      clearForm();
+    } catch(err) {
+      alert('Klaida publikuojant: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🚀 Paskelbti automatiškai į svetainę';
+    }
+  }
+
+  function clearForm() {
+    document.getElementById('title').value = '';
+    document.getElementById('offer_code').value = '';
+    document.getElementById('price').value = '';
+    document.getElementById('original_price').value = '';
+    document.getElementById('stock').value = '';
+    document.getElementById('dimensions').value = '';
+    document.getElementById('imagesInput').value = '';
+    document.getElementById('imgInfo').textContent = 'Pasirinkta failų: 0';
+    document.getElementById('description').value = '';
+  }
 </script>
-{{ end }}
+</body>
+</html>
