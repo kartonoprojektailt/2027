@@ -1,6 +1,5 @@
 ---
 title: "Pakuotės"
-description: "Gaminame kartonines dėžes, transportavimo tarą ir nestandartinius pakuotės sprendimus verslui. Individualūs išmatavimai, maži ir dideli tiražai, greitas pristatymas visoje Lietuvoje."
 draft: false
 ---
 

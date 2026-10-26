@@ -1,6 +1,5 @@
 ---
 title: "Pakuočių ir stendų projektavimo paslaugos"
-description: "Profesionalus kartoninių pakuočių, POSM stendų ir konstrukcijų CAD projektavimas. Prototipų išpjovimas nuo 1 vnt., 3D vizualizacija ir inžineriniai sprendimai."
 draft: false
 ---
 

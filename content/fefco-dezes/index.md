@@ -1,6 +1,5 @@
 ---
 title: "FEFCO katalogo dėžės"
-description: "Standartinių FEFCO katalogų kartoninių dėžių gamyba verslui. Klapinės, fasoninės ir pakuotės su užraktais. Greitas gamybos terminas ir aukšta kokybė."
 draft: false
 ---
 

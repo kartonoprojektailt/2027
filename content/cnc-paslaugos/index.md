@@ -1,6 +1,5 @@
 ---
 title: "CNC paslaugos"
-description: "Profesionalios CNC paslaugos verslui: lakštinių medžiagų pjovimas ir frezavimas. Maži ir vidutiniai tiražai, operatyvus vykdymas ir pristatymas visoje Lietuvoje."
 draft: false
 ---
 

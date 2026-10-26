@@ -1,6 +1,5 @@
 ---
 title: "Dovanų dėžutės ir reprezentacinės pakuotės"
-description: "Elegantiškų dovanų dėžučių gamyba verslui: deko dėžės, dviejų dalių dėžutės su dangteliu, kalėdinės pakuotės, dėžutės su spauda, folijavimu bei individualiomis ložetėmis nuo 2014 m."
 draft: false
 ---
 

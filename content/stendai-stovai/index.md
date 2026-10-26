@@ -1,6 +1,5 @@
 ---
 title: "Stendai ir stovai"
-description: "Profesionalūs kartono stendai, grindiniai lentyniniai ekspozitoriai ir reklaminiai stovai verslui, FMCG sektoriui bei parodoms. Individualus projektavimas, didelė apkrova ir ekologiškos medžiagos."
 draft: false
 ---
 

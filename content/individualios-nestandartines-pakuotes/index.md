@@ -1,6 +1,5 @@
 ---
 title: "Individualios ir nestandartinės pakuotės"
-description: "Unikalių konstrukcijų, nestandartinių matmenų ir sudėtingų kartoninių pakuočių gamyba. CAD projektavimas, prototipavimas nuo 1 vnt., ložetės ir spauda."
 draft: false
 ---
 

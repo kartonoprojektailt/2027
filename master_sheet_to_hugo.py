@@ -30,20 +30,20 @@ def sanitize_text(text):
     return text.strip()
 
 for index, row in df.iterrows():
-    # Naudojame tikslų stulpelio pavadinimą iš tavo lentelės: 'slug'
-    slug = sanitize_text(str(row.get('slug', '')))
+    # Paimame slug iš pirmosios kolumnas (kuri neturi pavadinimo arba yra 'slug')
+    # Naudojame iloc[0] arba row.values[0], kad pasiektume absoliučiai pirmą stulpelį lentelės
+    slug = sanitize_text(str(row.iloc[0]))
     title = sanitize_text(str(row.get('title', '')))
     content_body = sanitize_text(str(row.get('content_body', '')))
     
-    # Jei nėra turinio ar pavadinimo, praleidžiam
     if not title and not content_body:
         continue
         
-    # Jei tai pagrindinis puslapis (slug tuščias, 'index' arba '/'), rašom į _index.md
+    # Jei slug tuščias, 'index' arba '/', tai pagrindinis puslapis
     if not slug or slug.lower() == 'index' or slug == '/':
         file_path = "content/_index.md"
     else:
-        # Kitu atveju tai atskira podstrona folderio viduje
+        # Kitu atveju tai atskira podstrona atitinkama folderio tvarka
         file_path = f"content/{slug}/index.md"
 
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -58,7 +58,7 @@ draft: false
 
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(markdown_content)
-    print(f"Sukurtas/Atnaujintas puslapis: {file_path}")
+    print(f"Tvarkingai įrašyta: {file_path}")
 
 # Automatinis Git sinchronizavimas
 print("Vykdomas Git sinchronizavimas...")
@@ -66,7 +66,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Auto-update: safe sync pages using correct 'slug' column"], check=True)
+        subprocess.run(["git", "commit", "-m", "Auto-update: fixed first column index for slugs"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Pakeitimai iškeliavo į GitHub ir Cloudflare.")
     else:

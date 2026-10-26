@@ -1,6 +1,5 @@
 ---
 title: "Akrilo gaminiai ir balsadėžės"
-description: "Profesionali balsavimo, aukų, loterijų, pasiūlymų dėžių renginiams, rinkimams bei akcijoms gamyba iš organinio stiklo (akrilo) Plexiglas®. Individualūs matmenys, spauda, lipdukai ir spynos."
 draft: false
 ---
 

@@ -1,10 +1,13 @@
 ---
 title: "Foto sienelės ir renginių dekoracijos"
-description: "Mobilių foto sienelių, pres-sienelių ir modulinių reklaminių sienelių gamyba renginiams, parodoms bei šventėms iš tvaraus kartono. Tiesioginė spauda."
 draft: false
 ---
 
 # Renginių foto sienelės ir mobilios reklaminės konstrukcijos
+
+Foto sienelės – praktiškas sprendimas renginiams ir šventėms. 
+
+[GALLERY]
 
 ## Techninės specifikacijos
 

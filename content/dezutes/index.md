@@ -1,6 +1,5 @@
 ---
 title: "Dėžutės"
-description: "Kartoninių dėžučių pakavimui gamyba pagal paskirtį, matmenis, konstrukciją. Visi tiražai ir sudėtingumo lygiai."
 draft: false
 ---
 

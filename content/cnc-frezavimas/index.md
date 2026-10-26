@@ -1,6 +1,5 @@
 ---
 title: "CNC frezavimas"
-description: "Profesionalios CNC frezavimo paslaugos verslui. Tikslus ir švarus įvairių medžiagų apdorojimas pagal individualius brėžinius. Maži ir vidutiniai tiražai, greitas pristatymas visoje Lietuvoje."
 draft: false
 ---
 

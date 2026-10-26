@@ -1,11 +1,9 @@
 ---
 title: "Parduotuvių ir prekybos vietų dekoracijos (POSM)"
-description: "Profesionalios vitrinų dekoracijos, kartoninės skulptūros, paletinės dekoracijos, apsaugos vartelių apvalkalai ir ekspoziciniai podestai iš kartono. Ekologiški POSM sprendimai."
 draft: false
 ---
 
-# Parduotuvių, vitrinų ir prekybos vietų dekoracijos bei POSM sprendimai
-
+# Parduotuvių, vitrinų ir prekybos vietų dekoracijos bei POSM sprendimai 
 ## Techninės specifikacijos
 
 | Parametras | Galimybės ir techninės specifikacijos |

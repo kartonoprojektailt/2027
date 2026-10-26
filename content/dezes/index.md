@@ -1,6 +1,5 @@
 ---
 title: "Kartoninės dėžės ir gofro tara"
-description: "Sustiprintų gofruoto kartono dėžių gamyba pakavimui, logistikai ir sandėliavimui. Klapinės dėžės, fasoniniai modeliai, standartiniai ir individualūs matmenys."
 draft: false
 ---
 
