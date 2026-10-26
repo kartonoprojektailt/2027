@@ -35,7 +35,7 @@
     <header class="post-header">
         <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 0.85rem;">
             {{ if .Params.offer_code }}
-            <span style="border: 1px solid var(--border); background: var(--entry); color: var(--primary); padding: 3px 8px; border-radius: 4px; font-family: monospace;">Kod: {{ .Params.offer_code }}</span>
+            <span style="border: 1px solid var(--border); background: var(--entry); color: var(--primary); padding: 3px 8px; border-radius: 4px; font-family: monospace;">Pasiūlymo kodas: {{ .Params.offer_code }}</span>
             {{ end }}
             
             {{ if .Params.category }}
@@ -47,7 +47,7 @@
               {{ else if or (eq $catLower "stovai") (eq $catLower "reklaminiai stovai") }}
                 {{ $catUrl = "/reklaminiai-stendai-stovai/" }}
               {{ end }}
-              <a href="{{ $catUrl }}" style="border: 1px solid var(--border); background: var(--entry); color: var(--primary); padding: 3px 8px; border-radius: 4px; text-decoration: none;">Kat: {{ $cat }}</a>
+              <a href="{{ $catUrl }}" style="border: 1px solid var(--border); background: var(--entry); color: var(--primary); padding: 3px 8px; border-radius: 4px; text-decoration: none;">Kategorija: {{ $cat }}</a>
             {{ end }}
 
             {{ if .Params.price }}
@@ -66,10 +66,10 @@
                 {{ .Title }}
             </h1>
             
-            <!-- Przycisk Pasiūlymo PDF su QR (otwierający dedykowany widok PDF/druk) -->
-            <a href="#print-view" onclick="window.open('', '_blank').document.write(document.getElementById('printable-leaflet').innerHTML); return false;" style="border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 6px 14px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s, color 0.2s;" onmouseover="this.style.background='var(--primary)'; this.style.color='var(--theme)';" onmouseout="this.style.background='transparent'; this.style.color='var(--primary)';">
+            <!-- Przycisk Pasiūlymo PDF su QR (uruchamiany tylko po kliknięciu) -->
+            <button id="print-pdf-btn" style="border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s, color 0.2s;" onmouseover="this.style.background='var(--primary)'; this.style.color='var(--theme)';" onmouseout="this.style.background='transparent'; this.style.color='var(--primary)';">
                 🖨️ Pasiūlymo PDF su QR
-            </a>
+            </button>
         </div>
     </header>
 
@@ -125,7 +125,7 @@
     </div>
 </article>
 
-<!-- Ukryty szablon do generowania czystego PDF/ulotki z QR kodem i stopką -->
+<!-- Ukryty szablon do generowania czystego PDF/ulotki po kliknięciu przycisku -->
 <div id="printable-leaflet" style="display:none;">
   <!DOCTYPE html>
   <html>
@@ -150,7 +150,7 @@
       <div>
         <div style="font-weight: bold; font-size: 16px; margin-bottom: 5px; color: #222;">UAB „Kartono projektai“</div>
         <h1 style="margin: 0 0 10px 0;">{{ .Title }}</h1>
-        <div class="meta"><strong>Kodas:</strong> {{ .Params.offer_code }} | <strong>Kaina:</strong> {{ .Params.price }} EUR | <strong>Būsena:</strong> {{ .Params.status }}</div>
+        <div class="meta"><strong>Pasiūlymo kodas:</strong> {{ .Params.offer_code }} | <strong>Kaina:</strong> {{ .Params.price }} EUR | <strong>Būsena:</strong> {{ .Params.status }}</div>
       </div>
       <div class="qr-box">
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ .Permalink }}" alt="QR Kodas">
@@ -200,13 +200,25 @@
     {{ end }}
 
     <div class="footer">
-      <p>Šis dokumentas yra viena iš aktualiatų ofertų <strong>UAB „Kartono projektai“ sandėlyje</strong>.</p>
-      <p>Kviečiame suinteresuotus asmenis susisiekti su mumis, susipažinti su šia oferta internete nuskenuojant aukščiau esantį QR kodą, peržiūrėti kitas specialias pasiūlymų okazijas bei pasikonsultuoti dėl visos bendros <strong>Kartono projektai</strong> siūlomos produkcijos: kartoninių pakuočių, stendų, POSM bei CNC paslaugų Kaune.</p>
+      <p>Šis dokumentas yra vienas iš aktualių UAB „Kartono projektai“ sandėlio pasiūlymų.</p>
+      <p>Nuskenavę QR kodą galite susipažinti su šiuo pasiūlymu Kartono projektų puslapyje, peržiūrėti kitus aktualius sandėlio pasiūlymus, susisiekti dėl Kartono projektai siūlomos produkcijos: kartoninių pakuočių, stendų, POSM ar CNC paslaugų Kaune.</p>
       <p style="margin-top: 15px; font-weight: bold;">Kontaktai:</p>
-      <p>UAB „Kartono projektai“ | Kaunas, Lietuva | El. paštas: info@kartonoprojektai.lt | Tel. +370 ... | Interneto svetainė: <a href="https://kartonoprojektai.lt">kartonoprojektai.lt</a></p>
+      <p>UAB „Kartono projektai“ | Raudondvario pl. 164, Kaunas, Lietuva | Tel. +370 652 85223 | El. paštas: info@kartonoprojektai.lt | Interneto svetainė: <a href="https://kartonoprojektai.lt">kartonoprojektai.lt</a></p>
     </div>
-    <script>window.print();</script>
   </body>
   </html>
 </div>
+
+<script>
+document.getElementById('print-pdf-btn').addEventListener('click', function() {
+    var printContent = document.getElementById('printable-leaflet').innerHTML;
+    var printWindow = window.open('', '_blank');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(function() {
+        printWindow.print();
+    }, 250);
+});
+</script>
 {{ end }}
