@@ -2,7 +2,8 @@ backend:
   name: github
   repo: kartonoprojektailt/2027
   branch: main
-  base_url: https://2027-2de.pages.dev
+  base_url: http://localhost:1313  # Gdy testujesz lokalnie, wpisz localhost. Na produkcji zmieni się na Twoją domenę.
+  site_url: http://localhost:1313
 
 media_folder: "content/sandelyje/images"
 public_folder: "/images"
