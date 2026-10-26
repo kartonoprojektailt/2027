@@ -427,14 +427,12 @@
     const title = document.getElementById('title').value;
     if(!title) { alert('Įveskite pavadinimą!'); return; }
 
-    const todayDate = new Date().toISOString().split('T')[0]; // yyyy-mm-dd
+    const todayDate = new Date().toISOString().split('T')[0];
     const cleanTitleSlug = slugify(title);
     
-    // Generowanie sluga wg formatu: KP[data]-[title]
     const editSlug = document.getElementById('editSlug').value;
     const slug = editSlug ? editSlug : `kp-${todayDate}-${cleanTitleSlug}`;
 
-    // Generowanie SKU wg formatu: KP[data]-[title] jeśli pole jest puste
     let offer_code = document.getElementById('offer_code').value;
     if (!offer_code) {
       offer_code = `KP-${todayDate}-${cleanTitleSlug.toUpperCase()}`;
@@ -470,7 +468,7 @@
       const dimensions = document.getElementById('dimensions').value;
       let description = document.getElementById('description').value;
 
-      // Automatyczne dołączanie linków do plików PDF/CAD w treści opisu, aby były widoczne na stronie
+      // Dodawanie sekcji dokumentów bezpośrednio do treści opisu (Markdown)
       if(docsList.length > 0) {
         description += `\n\n### Dokumentai ir brėžiniai:\n`;
         docsList.forEach(doc => {
@@ -493,10 +491,12 @@ condition: "${condition}"
 `;
       if(dimensions) mdContent += `dimensions: "${dimensions}"\n`;
       
+      // Kluczowe dla PaperMod: dodanie bloku cover, aby lista widziała miniaturkę
       if(imagesList.length > 0) {
         mdContent += `images:\n`;
         imagesList.forEach(img => mdContent += `  - "${img}"\n`);
         mdContent += `image: "${imagesList[0]}"\n`;
+        mdContent += `cover:\n  image: "${imagesList[0]}"\n`;
       }
 
       mdContent += `date: ${todayDate}
@@ -508,7 +508,7 @@ ${description}
       const mdFile = new File([mdContent], `index.md`, { type: 'text/markdown' });
       await uploadFileToGitHub(mdFile, `content/sandelyje/${slug}/index.md`, repo, token);
 
-      alert('🎉 Skelbimas su SKU, nuotraukomis ir dokumentais sėkmingai išsaugotas!');
+      alert('🎉 Skelbimas su miniaturka (cover) ir dokumentais sėkmingai išsaugotas!');
       resetForm();
       loadOffers();
     } catch(err) {
