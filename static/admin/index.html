@@ -148,7 +148,13 @@
 
       <label>Nuotraukos / GIF (pasirinkite per Browse)
         <input type="file" id="imagesInput" multiple accept="image/*,.gif">
-        <div class="file-info" id="imgInfo">Pasirinkta failų: 0</div>
+        <div class="file-info" id="imgInfo">Pasirinkta nuotraukų: 0</div>
+      </label>
+
+      <!-- PRZYWRÓCONE POLE NA DOKUMENTY PDF / CAD -->
+      <label>Dokumentai / CAD / PDF (pasirinkite per Browse)
+        <input type="file" id="docsInput" multiple accept=".pdf,.dwg,.dxf,.step,.stp,.zip">
+        <div class="file-info" id="docInfo">Pasirinkta dokumentų: 0</div>
       </label>
 
       <label>Aprašymas
@@ -200,7 +206,11 @@
   }
 
   document.getElementById('imagesInput').addEventListener('change', function() {
-    document.getElementById('imgInfo').textContent = `Pasirinkta failų: ${this.files.length}`;
+    document.getElementById('imgInfo').textContent = `Pasirinkta nuotraukų: ${this.files.length}`;
+  });
+
+  document.getElementById('docsInput').addEventListener('change', function() {
+    document.getElementById('docInfo').textContent = `Pasirinkta dokumentų: ${this.files.length}`;
   });
 
   function slugify(text) {
@@ -257,20 +267,26 @@
 
     const btn = document.getElementById('pubBtn');
     btn.disabled = true;
-    btn.textContent = '⏳ Kuriamas katalogas ir siunčiama...';
+    btn.textContent = '⏳ Kuriamas katalogas ir siunčiami failai...';
 
     try {
       const imgFiles = document.getElementById('imagesInput').files;
+      const docFiles = document.getElementById('docsInput').files;
       const slug = slugify(title);
       let imagesList = [];
 
-      // 1. Wysyłamy zdjęcia bezpośrednio do dedykowanego folderu oferty w content/sandelyje/[slug]/
+      // 1. Wysyłamy zdjęcia do folderu oferty
       for(let file of imgFiles) {
         await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
         imagesList.push(file.name);
       }
 
-      // 2. Budujemy zawartość pliku index.md w tym samym folderze
+      // 2. Wysyłamy dokumenty PDF/CAD do tego samego folderu oferty
+      for(let file of docFiles) {
+        await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
+      }
+
+      // 3. Budujemy zawartość pliku index.md w tym samym folderze
       const offer_code = document.getElementById('offer_code').value;
       const condition = document.getElementById('condition').value;
       const category = document.getElementById('category').value;
@@ -310,11 +326,11 @@ condition: "${condition}"
 ${description}
 `;
 
-      // 3. Wysyłamy index.md do folderu content/sandelyje/[slug]/index.md
+      // 4. Wysyłamy index.md do folderu
       const mdFile = new File([mdContent], `index.md`, { type: 'text/markdown' });
       await uploadFileToGitHub(mdFile, `content/sandelyje/${slug}/index.md`, repo, token);
 
-      alert('🎉 Valio! Prekė paskelbta kaip pilna paczką (folder + index.md + zdjęcia). Storage atsinaujins per ~30 sekundžių.');
+      alert('🎉 Valio! Prekė su nuotraukomis ir PDF dokumentais sėkmingai paskelbta!');
       clearForm();
     } catch(err) {
       alert('Klaida publikuojant: ' + err.message);
@@ -332,7 +348,9 @@ ${description}
     document.getElementById('stock').value = '';
     document.getElementById('dimensions').value = '';
     document.getElementById('imagesInput').value = '';
-    document.getElementById('imgInfo').textContent = 'Pasirinkta failų: 0';
+    document.getElementById('docsInput').value = '';
+    document.getElementById('imgInfo').textContent = 'Pasirinkta nuotraukų: 0';
+    document.getElementById('docInfo').textContent = 'Pasirinkta dokumentų: 0';
     document.getElementById('description').value = '';
   }
 </script>
