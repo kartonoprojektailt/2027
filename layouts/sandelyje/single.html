@@ -37,13 +37,33 @@
             {{ if .Params.offer_code }}
             <span style="background: var(--code-bg, #eee); padding: 4px 10px; border-radius: 4px; font-family: monospace;">Kod: {{ .Params.offer_code }}</span>
             {{ end }}
+            {{ if .Params.category }}
+            <span style="background: #e2e8f0; padding: 4px 10px; border-radius: 4px;">Kategorija: {{ .Params.category }}</span>
+            {{ end }}
+            {{ if .Params.price }}
+            <span style="background: #c6f6d5; color: #22543d; padding: 4px 10px; border-radius: 4px; font-weight: bold;">Kaina: {{ .Params.price }} EUR</span>
+            {{ end }}
+            {{ if .Params.stock }}
+            <span style="background: #feebc8; color: #744210; padding: 4px 10px; border-radius: 4px;">Likutis: {{ .Params.stock }} vnt.</span>
+            {{ end }}
+            {{ if .Params.status }}
+            <span style="background: #e2e8f0; padding: 4px 10px; border-radius: 4px;">Būsena: {{ .Params.status }}</span>
+            {{ end }}
         </div>
-        <h1 class="post-title" itemprop="name">
-            {{ .Title }}
-        </h1>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <h1 class="post-title" itemprop="name" style="margin: 0;">
+                {{ .Title }}
+            </h1>
+            
+            <!-- Przycisk Skelbimo PDF su QR -->
+            <a href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ .Permalink }}" target="_blank" style="background: #3182ce; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;">
+                🖨️ Skelbimo PDF su QR
+            </a>
+        </div>
     </header>
 
-    <div class="post-content" itemprop="description">
+    <div class="post-content" itemprop="description" style="margin-top: 20px;">
         {{ .Content }}
 
         <!-- Galeria zdjęć produktu -->
