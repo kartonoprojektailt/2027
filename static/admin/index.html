@@ -7,7 +7,7 @@
 <style>
   :root { --bg: #f4f6f8; --card: #ffffff; --primary: #2b6cb0; --primary-hover: #234e70; --text: #2d3748; --border: #cbd5e0; }
   body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-  .container { max-width: 800px; margin: 0 auto; }
+  .container { max-width: 850px; margin: 0 auto; }
   .card { background: var(--card); padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
   h1, h2 { margin-top: 0; font-size: 1.5rem; color: #1a202c; }
   label { display: block; margin-top: 14px; font-weight: 600; font-size: 0.9rem; }
@@ -21,11 +21,15 @@
   .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
   .badge.active { background: #c6f6d5; color: #22543d; }
   .badge.parduota { background: #fed7d7; color: #742a2a; }
+  .badge.sale { background: #feebc8; color: #9c4221; }
   .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; margin: 0 4px; }
   .btn-danger { background: #e53e3e; }
   .btn-danger:hover { background: #c53030; }
+  .btn-success { background: #38a169; }
+  .btn-success:hover { background: #2f855a; }
   .flex { display: flex; gap: 10px; }
-  .file-info { font-size: 0.85rem; color: #666; margin-top: 4px; }
+  .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 16px; background: #fffaf0; padding: 12px; border-radius: 6px; border: 1px solid #fbd38d; }
+  .checkbox-group input { width: auto; margin-top: 0; }
 </style>
 </head>
 <body>
@@ -44,20 +48,36 @@
   <div id="adminScreen" class="hidden">
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>Sandėlio Valdymas</h1>
+        <h1>Sandėlio Valdymas (Išpardavimas)</h1>
         <button onclick="logout()" class="btn-sm btn-danger" style="margin-top: 0;">Atsijungti</button>
       </div>
-      <p style="font-size: 0.9rem; color: #666;">Pridėkite naują prekę arba keiskite esamas.</p>
+      <p style="font-size: 0.9rem; color: #666;">Sukurkite prekę, įkelkite media failus ir parsisiųskite `.md` failą.</p>
     </div>
 
-    <!-- FORMULARZ DODAWANIA / EDYCJI -->
+    <!-- FORMULARZ TWORZENIA / EDYCJI -->
     <div class="card">
-      <h2 id="formTitle">Pridėti naują prekę</h2>
-      <input type="hidden" id="editIndex" value="-1">
+      <h2 id="formTitle">Sukurti naują pasiūlymą</h2>
       
       <label>Pavadinimas (Title)
-        <input type="text" id="title" placeholder="pvz. Baltas kartoninis stovas">
+        <input type="text" id="title" placeholder="pvz. Baltas kartoninis stovas A2">
       </label>
+
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Unikalus kodas (SKU)
+            <input type="text" id="offer_code" placeholder="pvz. KP-ST-A2">
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Būklė (Condition)
+            <select id="condition">
+              <option value="NewCondition">Naujas (New)</option>
+              <option value="UsedCondition">Naudotas (Used)</option>
+              <option value="RefurbishedCondition">Atnaujintas</option>
+            </select>
+          </label>
+        </div>
+      </div>
 
       <div class="flex">
         <div style="flex: 1;">
@@ -80,39 +100,60 @@
         </div>
       </div>
 
+      <!-- SEKCJA CEN I WYPRZEDAŻY (SCHEMA.ORG CLEARANCE) -->
       <div class="flex">
         <div style="flex: 1;">
-          <label>Kaina (EUR)
-            <input type="number" step="0.01" id="price" placeholder="15.00">
+          <label>Akcijonė / Dabartinė Kaina (EUR)
+            <input type="number" step="0.01" id="price" placeholder="10.00">
           </label>
         </div>
+        <div style="flex: 1;">
+          <label>Sena / Pradinė Kaina (jei wyprzedaż, np. 15.00)
+            <input type="number" step="0.01" id="original_price" placeholder="15.00">
+          </label>
+        </div>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="is_sale" checked>
+        <label for="is_sale" style="margin-top: 0; cursor: pointer;">
+          <strong>Išpardavimas / Akcija (Clearance / Special Sale)</strong><br>
+          <small style="color: #666;">Žymi prekę kaip ypatingą sandėlio pasiūlymą (Schema.org SalePrice)</small>
+        </label>
+      </div>
+
+      <div class="flex">
         <div style="flex: 1;">
           <label>Likutis (vnt.)
             <input type="number" id="stock" placeholder="5">
           </label>
         </div>
+        <div style="flex: 1;">
+          <label>Matmenys (Dimensions)
+            <input type="text" id="dimensions" placeholder="600x420x10 mm">
+          </label>
+        </div>
       </div>
 
-      <label>Nuotraukos (galima pasirinkti kelias: JPG, PNG, GIF)
-        <input type="file" id="images" multiple accept="image/*">
-        <div class="file-info" id="imgInfo">Pasirinkti failai: 0</div>
+      <!-- MEDIA, FOTO, CAD, PDF, VIDEO -->
+      <label>Nuotraukos / GIF failų pavadinimai (atskirti kableliais)
+        <input type="text" id="images" placeholder="stovas-a2.jpg, stovas-detal.gif">
       </label>
 
-      <label>Brėžiniai, PDF arba Video (MP4)
-        <input type="file" id="documents" multiple accept=".pdf,video/mp4,video/webm">
-        <div class="file-info" id="docInfo">Pasirinkti failai: 0</div>
+      <label>Dokumentai / CAD brėžiniai / PDF / Video failai (atskirti kableliais)
+        <input type="text" id="documents" placeholder="brezinys.pdf, instrukcija.dwg, preke.mp4">
       </label>
 
       <label>Aprašymas
-        <textarea id="description" placeholder="Trumpas prekės aprašymas, matmenys..."></textarea>
+        <textarea id="description" placeholder="Detalus prekės aprašymas, paskirtis..."></textarea>
       </label>
 
-      <button onclick="saveItem()">Išsaugoti prekę</button>
+      <button onclick="generateMarkdownFile()" class="btn-success">Generuoti ir parsisiųsti Hugo `.md` failą</button>
     </div>
 
-    <!-- LISTA AKTUALNYCH PRODUKTÓW -->
+    <!-- LISTA LOKALNA -->
     <div class="card">
-      <h2>Esamos prekės sandėlyje</h2>
+      <h2>Išsaugoti lokaliai naršyklėje</h2>
       <div id="itemsList"></div>
     </div>
   </div>
@@ -120,7 +161,7 @@
 
 <script>
   const ADMIN_PASS = "kartonas2027";
-  let items = JSON.parse(localStorage.getItem('kp_warehouse') || '[]');
+  let items = JSON.parse(localStorage.getItem('kp_warehouse_v4') || '[]');
 
   function tryLogin() {
     const p = document.getElementById('passInput').value;
@@ -147,85 +188,127 @@
     showAdmin();
   }
 
-  // Nasłuchiwanie wyboru plików, aby pokazać liczbę
-  document.getElementById('images').addEventListener('change', function() {
-    document.getElementById('imgInfo').textContent = `Pasirinkta failų: ${this.files.length}`;
-  });
-  document.getElementById('documents').addEventListener('change', function() {
-    document.getElementById('docInfo').textContent = `Pasirinkta failų: ${this.files.length}`;
-  });
+  function slugify(text) {
+    return text.toString().toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-');
+  }
 
-  function saveItem() {
+  function generateMarkdownFile() {
     const title = document.getElementById('title').value;
     if(!title) { alert('Įveskite pavadinimą!'); return; }
 
-    const imgInput = document.getElementById('images');
-    const docInput = document.getElementById('documents');
+    const offer_code = document.getElementById('offer_code').value;
+    const condition = document.getElementById('condition').value;
+    const category = document.getElementById('category').value;
+    const status = document.getElementById('status').value;
+    const price = document.getElementById('price').value || 0;
+    const original_price = document.getElementById('original_price').value;
+    const is_sale = document.getElementById('is_sale').checked;
+    const stock = document.getElementById('stock').value || 0;
+    const dimensions = document.getElementById('dimensions').value;
+    const imagesStr = document.getElementById('images').value;
+    const docsStr = document.getElementById('documents').value;
+    const description = document.getElementById('description').value;
 
-    // Pobieramy nazwy wybranych plików
-    const imgNames = Array.from(imgInput.files).map(f => f.name);
-    const docNames = Array.from(docInput.files).map(f => f.name);
+    const slug = slugify(title);
 
-    const item = {
-      title: title,
-      category: document.getElementById('category').value,
-      status: document.getElementById('status').value,
-      price: document.getElementById('price').value,
-      stock: document.getElementById('stock').value,
-      description: document.getElementById('description').value,
-      images: imgNames,
-      documents: docNames
-    };
+    // Przetwarzanie plików na tablice w YAML
+    const imagesList = imagesStr ? imagesStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+    const docsList = docsStr ? docsStr.split(',').map(s => s.trim()).filter(Boolean) : [];
 
-    const editIndex = document.getElementById('editIndex').value;
-    if(editIndex == -1) {
-      items.push(item);
-    } else {
-      items[editIndex] = item;
-      document.getElementById('editIndex').value = -1;
-      document.getElementById('formTitle').textContent = 'Pridėti naują prekę';
+    // Format Hugo Frontmatter z pełnym Schema.org dla Išpardavimas / Sale
+    let mdContent = `---
+title: "${title}"
+`;
+    if(offer_code) mdContent += `offer_code: "${offer_code}"\n`;
+    mdContent += `category: "${category}"
+status: "${status}"
+price: ${price}
+`;
+    if(original_price) mdContent += `original_price: ${original_price}\n`;
+    mdContent += `currency: "EUR"
+is_sale: ${is_sale}
+stock: ${stock}
+condition: "${condition}"
+`;
+    if(dimensions) mdContent += `dimensions: "${dimensions}"\n`;
+    
+    if(imagesList.length > 0) {
+      mdContent += `images:\n`;
+      imagesList.forEach(img => mdContent += `  - "${img}"\n`);
+      mdContent += `image: "${imagesList[0]}"\n`; // główna dla kompatybilności
     }
 
-    localStorage.setItem('kp_warehouse', JSON.stringify(items));
-    clearForm();
+    if(docsList.length > 0) {
+      mdContent += `documents:\n`;
+      docsList.forEach(doc => mdContent += `  - "${doc}"\n`);
+    }
+
+    mdContent += `date: ${new Date().toISOString().split('T')[0]}
+---
+
+${description}
+`;
+
+    const item = { title, category, status, price, is_sale, slug };
+    items.push(item);
+    localStorage.setItem('kp_warehouse_v4', JSON.stringify(items));
     renderList();
+
+    const blob = new Blob([mdContent], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${slug}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    alert(`Failas "${slug}.md" sugeneruotas su išpardavimo ir media duomenimis!`);
+    clearForm();
   }
 
   function clearForm() {
     document.getElementById('title').value = '';
+    document.getElementById('offer_code').value = '';
     document.getElementById('price').value = '';
+    document.getElementById('original_price').value = '';
     document.getElementById('stock').value = '';
-    document.getElementById('description').value = '';
+    document.getElementById('dimensions').value = '';
     document.getElementById('images').value = '';
     document.getElementById('documents').value = '';
-    document.getElementById('imgInfo').textContent = 'Pasirinkti failai: 0';
-    document.getElementById('docInfo').textContent = 'Pasirinkti failai: 0';
+    document.getElementById('description').value = '';
   }
 
   function renderList() {
     const listDiv = document.getElementById('itemsList');
     if(items.length === 0) {
-      listDiv.innerHTML = '<p style="color: #666; font-size: 0.9rem;">Sandėlyje kol kas nėra prekių.</p>';
+      listDiv.innerHTML = '<p style="color: #666; font-size: 0.9rem;">Lokalių įrašų nėra.</p>';
       return;
     }
     
     let html = '';
     items.forEach((item, index) => {
-      const badgeClass = item.status === 'parduota' ? 'parduota' : 'active';
-      const badgeText = item.status === 'parduota' ? 'Parduota' : 'Galioja';
-      const imgCount = item.images ? item.images.length : 0;
-      const docCount = item.documents ? item.documents.length : 0;
+      let badgeClass = item.status === 'parduota' ? 'parduota' : 'active';
+      let badgeText = item.status === 'parduota' ? 'Parduota' : 'Galioja';
+      if(item.is_sale && item.status !== 'parduota') {
+        badgeClass = 'sale';
+        badgeText = 'Išpardavimas';
+      }
 
       html += `
         <div class="item-row">
           <div>
             <strong>${item.title}</strong> (${item.category})<br>
-            <small style="color: #666;">Kaina: ${item.price || 0} EUR | Likutis: ${item.stock || 0} vnt. | Nuotraukų: ${imgCount}, Failų/Video: ${docCount}</small>
+            <small style="color: #666;">Kaina: ${item.price} EUR</small>
           </div>
           <div>
             <span class="badge ${badgeClass}">${badgeText}</span>
-            <button onclick="editItem(${index})" class="btn-sm" style="background:#3182ce;">Redaguoti</button>
-            <button onclick="deleteItem(${index})" class="btn-sm btn-danger">Trinti</button>
+            <button onclick="deleteItem(${index})" class="btn-sm btn-danger">Šalinti</button>
           </div>
         </div>
       `;
@@ -234,9 +317,9 @@
   }
 
   function deleteItem(index) {
-    if(confirm('Ar tikrai norite ištrinti šią prekę?')) {
+    if(confirm('Ar tikrai norite pašalinti?')) {
       items.splice(index, 1);
-      localStorage.setItem('kp_warehouse', JSON.stringify(items));
+      localStorage.setItem('kp_warehouse_v4', JSON.stringify(items));
       renderList();
     }
   }
