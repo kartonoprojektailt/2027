@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kartono Projektai - Valdymo pultas</title>
+<style>
+  :root { --bg: #f4f6f8; --card: #ffffff; --primary: #2b6cb0; --primary-hover: #234e70; --text: #2d3748; --border: #cbd5e0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+  .container { max-width: 850px; margin: 0 auto; }
+  .card { background: var(--card); padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+  h1, h2 { margin-top: 0; font-size: 1.5rem; color: #1a202c; }
+  label { display: block; margin-top: 14px; font-weight: 600; font-size: 0.9rem; }
+  input, select, textarea { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+  textarea { min-height: 120px; resize: vertical; }
+  button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 1rem; cursor: pointer; margin-top: 20px; width: 100%; font-weight: bold; }
+  button:hover { background: var(--primary-hover); }
+  .login-box { max-width: 400px; margin: 80px auto; text-align: center; }
+  .hidden { display: none !important; }
+  .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #e2e8f0; }
+  .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+  .badge.active { background: #c6f6d5; color: #22543d; }
+  .badge.parduota { background: #fed7d7; color: #742a2a; }
+  .badge.sale { background: #feebc8; color: #9c4221; }
+  .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; margin: 0 4px; }
+  .btn-danger { background: #e53e3e; }
+  .btn-danger:hover { background: #c53030; }
+  .btn-success { background: #38a169; }
+  .btn-success:hover { background: #2f855a; }
+  .flex { display: flex; gap: 10px; }
+  .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 16px; background: #fffaf0; padding: 12px; border-radius: 6px; border: 1px solid #fbd38d; }
+  .checkbox-group input { width: auto; margin-top: 0; }
+  .file-info { font-size: 0.85rem; color: #666; margin-top: 4px; }
+  .settings-box { background: #edf2f7; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- EKRAN LOGOWANIA -->
+  <div id="loginScreen" class="card login-box">
+    <h2>Valdymo Pultas</h2>
+    <p style="font-size: 0.9rem; color: #666;">Įveskite administratoriaus slaptažodį</p>
+    <input type="password" id="passInput" placeholder="Slaptažodis...">
+    <button onclick="tryLogin()">Prisijungti</button>
+    <p id="loginError" style="color: #e53e3e; font-size: 0.85rem; margin-top: 10px; display: none;">Neteisingas slaptažodis!</p>
+  </div>
+
+  <!-- PANEL ZARZĄDZANIA -->
+  <div id="adminScreen" class="hidden">
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Sandėlio Valdymas (Auto Publish)</h1>
+        <button onclick="logout()" class="btn-sm btn-danger" style="margin-top: 0;">Atsijungti</button>
+      </div>
+      <p style="font-size: 0.9rem; color: #666;">Užpildykite duomenis, pasirinkite failus ir spauskite publikuoti.</p>
+    </div>
+
+    <!-- KONFIGURACJA GITHUB API (USTAWIANA RAZ) -->
+    <div class="card settings-box">
+      <h3>GitHub Nustatymai (Automatiniam siuntimui)</h3>
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>GitHub Režisierius / Repozitorija (pvz. `vartotojas/repo`)
+            <input type="text" id="ghRepo" placeholder="vardas/pavadinimas">
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>GitHub Token (Personal Access Token)
+            <input type="password" id="ghToken" placeholder="ghp_...">
+          </label>
+        </div>
+      </div>
+      <button onclick="saveSettings()" class="btn-sm" style="margin-top: 10px; width: auto; background: #4a5568;">Išsaugoti nustatymus</button>
+    </div>
+
+    <!-- FORMULARZ TWORZENIA -->
+    <div class="card">
+      <h2 id="formTitle">Sukurti ir paskelbti naują pasiūlymą</h2>
+      
+      <label>Pavadinimas (Title)
+        <input type="text" id="title" placeholder="pvz. Baltas kartoninis stovas A2">
+      </label>
+
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Unikalus kodas (SKU)
+            <input type="text" id="offer_code" placeholder="pvz. KP-ST-A2">
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Būklė (Condition)
+            <select id="condition">
+              <option value="NewCondition">Naujas (New)</option>
+              <option value="UsedCondition">Naudotas (Used)</option>
+              <option value="RefurbishedCondition">Atnaujintas</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Kategorija
+            <select id="category">
+              <option value="Stovai">Stovai</option>
+              <option value="Pakuotės">Pakuotės</option>
+              <option value="Medžiagos">Medžiagos</option>
+              <option value="Paslaugos">Paslaugos</option>
+            </select>
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Statusas
+            <select id="status">
+              <option value="active">Galioja</option>
+              <option value="parduota">Parduota</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Akcijinė / Dabartinė Kaina (EUR)
+            <input type="number" step="0.01" id="price" placeholder="10.00">
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Sena / Pradinė Kaina (jei wyprzedaż)
+            <input type="number" step="0.01" id="original_price" placeholder="15.00">
+          </label>
+        </div>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="is_sale" checked>
+        <label for="is_sale" style="margin-top: 0; cursor: pointer;">
+          <strong>Išpardavimas / Akcija (Clearance / Special Sale)</strong><br>
+          <small style="color: #666;">Žymi prekę kaip ypatingą sandėlio pasiūlymą</small>
+        </label>
+      </div>
+
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Likutis (vnt.)
+            <input type="number" id="stock" placeholder="5">
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Matmenys (Dimensions)
+            <input type="text" id="dimensions" placeholder="600x420x10 mm">
+          </label>
+        </div>
+      </div>
+
+      <label>Nuotraukos / GIF (pasirinkite per Browse)
+        <input type="file" id="imagesInput" multiple accept="image/*,.gif">
+        <div class="file-info" id="imgInfo">Pasirinkta failų: 0</div>
+      </label>
+
+      <label>Dokumentai / CAD / PDF / Video (pasirinkite per Browse)
+        <input type="file" id="docsInput" multiple accept=".pdf,.dwg,.dxf,video/mp4">
+        <div class="file-info" id="docInfo">Pasirinkta failų: 0</div>
+      </label>
+
+      <label>Aprašymas
+        <textarea id="description" placeholder="Detalus prekės aprašymas, matmenys..."></textarea>
+      </label>
+
+      <button onclick="publishToGitHub()" class="btn-success" id="pubBtn">🚀 Paskelbti automatiškai į svetainę</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ADMIN_PASS = "kartonas2027";
+
+  function tryLogin() {
+    const p = document.getElementById('passInput').value;
+    if(p === ADMIN_PASS) {
+      localStorage.setItem('kp_logged', 'true');
+      showAdmin();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('kp_logged');
+    location.reload();
+  }
+
+  function showAdmin() {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('adminScreen').classList.remove('hidden');
+    loadSettings();
+  }
+
+  if(localStorage.getItem('kp_logged') === 'true') {
+    showAdmin();
+  }
+
+  function saveSettings() {
+    localStorage.setItem('kp_repo', document.getElementById('ghRepo').value);
+    localStorage.setItem('kp_token', document.getElementById('ghToken').value);
+    alert('Nustatymai išsaugoti!');
+  }
+
+  function loadSettings() {
+    document.getElementById('ghRepo').value = localStorage.getItem('kp_repo') || '';
+    document.getElementById('ghToken').value = localStorage.getItem('kp_token') || '';
+  }
+
+  document.getElementById('imagesInput').addEventListener('change', function() {
+    document.getElementById('imgInfo').textContent = `Pasirinkta failų: ${this.files.length}`;
+  });
+  document.getElementById('docsInput').addEventListener('change', function() {
+    document.getElementById('docInfo').textContent = `Pasirinkta failų: ${this.files.length}`;
+  });
+
+  function slugify(text) {
+    return text.toString().toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-');
+  }
+
+  // Funkcja pomocnicza do konwersji pliku na Base64 dla GitHub API
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
+        if ((encoded.length % 4) > 0) {
+          encoded += '='.repeat(4 - (encoded.length % 4));
+        }
+        resolve(encoded);
+      };
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  async function uploadFileToGitHub(file, path, repo, token) {
+    const content = await fileToBase64(file);
+    const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+    
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: `Admin upload: ${file.name}`,
+        content: content
+      })
+    });
+    if (!response.ok) throw new Error(`Klaida įkeliant failą ${file.name}`);
+  }
+
+  async function publishToGitHub() {
+    const repo = localStorage.getItem('kp_repo');
+    const token = localStorage.getItem('kp_token');
+    if(!repo || !token) {
+      alert('Prašome pirma įvesti ir išsaugoti GitHub nustatymus (Repo ir Token)!');
+      return;
+    }
+
+    const title = document.getElementById('title').value;
+    if(!title) { alert('Įveskite pavadinimą!'); return; }
+
+    const btn = document.getElementById('pubBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Siunčiama į GitHub ir publikuojama...';
+
+    try {
+      const imgFiles = document.getElementById('imagesInput').files;
+      const docFiles = document.getElementById('docsInput').files;
+      const slug = slugify(title);
+
+      let imagesList = [];
+      let docsList = [];
+
+      // 1. Wysyłamy zdjęcia do static/images/
+      for(let file of imgFiles) {
+        await uploadFileToGitHub(file, `static/images/${file.name}`, repo, token);
+        imagesList.push(file.name);
+      }
+
+      // 2. Wysyłamy dokumenty do static/documents/
+      for(let file of docFiles) {
+        await uploadFileToGitHub(file, `static/documents/${file.name}`, repo, token);
+        docsList.push(file.name);
+      }
+
+      // 3. Budujemy treść pliku Markdown
+      const offer_code = document.getElementById('offer_code').value;
+      const condition = document.getElementById('condition').value;
+      const category = document.getElementById('category').value;
+      const status = document.getElementById('status').value;
+      const price = document.getElementById('price').value || 0;
+      const original_price = document.getElementById('original_price').value;
+      const is_sale = document.getElementById('is_sale').checked;
+      const stock = document.getElementById('stock').value || 0;
+      const dimensions = document.getElementById('dimensions').value;
+      const description = document.getElementById('description').value;
+
+      let mdContent = `---
+title: "${title}"
+`;
+      if(offer_code) mdContent += `offer_code: "${offer_code}"\n`;
+      mdContent += `category: "${category}"
+status: "${status}"
+price: ${price}
+`;
+      if(original_price) mdContent += `original_price: ${original_price}\n`;
+      mdContent += `currency: "EUR"
+is_sale: ${is_sale}
+stock: ${stock}
+condition: "${condition}"
+`;
+      if(dimensions) mdContent += `dimensions: "${dimensions}"\n`;
+      
+      if(imagesList.length > 0) {
+        mdContent += `images:\n`;
+        imagesList.forEach(img => mdContent += `  - "${img}"\n`);
+        mdContent += `image: "${imagesList[0]}"\n`;
+      }
+
+      if(docsList.length > 0) {
+        mdContent += `documents:\n`;
+        docsList.forEach(doc => mdContent += `  - "${doc}"\n`);
+      }
+
+      mdContent += `date: ${new Date().toISOString().split('T')[0]}
+---
+
+${description}
+`;
+
+      // 4. Wysyłamy plik .md do content/sandelyje/
+      const mdFile = new File([mdContent], `${slug}.md`, { type: 'text/markdown' });
+      await uploadFileToGitHub(mdFile, `content/sandelyje/${slug}.md`, repo, token);
+
+      alert('🎉 Valio! Prekė sėkmingai paskelbta! Cloudflare Pages atnaujins svetainę per ~30 sekundžių.');
+      clearForm();
+    } catch(err) {
+      alert('Klaida publikuojant: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🚀 Paskelbti automatiškai į svetainę';
+    }
+  }
+
+  function clearForm() {
+    document.getElementById('title').value = '';
+    document.getElementById('offer_code').value = '';
+    document.getElementById('price').value = '';
+    document.getElementById('original_price').value = '';
+    document.getElementById('stock').value = '';
+    document.getElementById('dimensions').value = '';
+    document.getElementById('imagesInput').value = '';
+    document.getElementById('docsInput').value = '';
+    document.getElementById('imgInfo').textContent = 'Pasirinkta failų: 0';
+    document.getElementById('docInfo').textContent = 'Pasirinkta failų: 0';
+    document.getElementById('description').value = '';
+  }
+</script>
+</body>
+</html>
