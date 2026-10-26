@@ -162,7 +162,7 @@
     </div>
 </article>
 
-<!-- SEKCJA: Kiti galiojantys Kartono projektų sandėlio pasiūlymai -->
+<!-- SEKCJA: Kiti galiojantys Kartono projektų sandėlio pasiūlymai (Czysta wersja tekstowa) -->
 <div style="margin-top: 50px; padding: 24px; border: 1px solid var(--border); border-radius: 8px; background: var(--entry);">
     <h3 style="margin-top: 0; font-size: 1.3rem; color: var(--primary); margin-bottom: 16px;">
         Kiti <a href="/sandelyje/" style="color: var(--primary); text-decoration: underline;">galiojantys Kartono projektų sandėlio pasiūlymai</a>:
@@ -173,41 +173,13 @@
         {{ range where site.RegularPages "Section" "sandelyje" }}
             {{ $isSold := or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
             {{ if and (ne .Permalink $currentPath) (not $isSold) }}
-                
-                {{/* Robusty pobieranie miniatury dla każdej strony w pętli */}}
-                {{ $thumbImg := "" }}
-                {{ $itemImgs := .Resources.ByType "image" }}
-                {{ if not $itemImgs }}{{ $itemImgs = .Resources.Match "images/*" }}{{ end }}
-                {{ if not $itemImgs }}{{ $itemImgs = .Params.images }}{{ end }}
-                {{ if not $itemImgs }}{{ with .Params.image }}{{ $itemImgs = slice . }}{{ end }}{{ end }}
-                
-                {{ with index $itemImgs 0 }}
-                    {{ if reflect.IsMap . }}
-                        {{ $thumbImg = .Permalink }}
-                    {{ else }}
-                        {{ $rawImg := printf "%s" . }}
-                        {{ if strings.HasPrefix $rawImg "http" }}
-                            {{ $thumbImg = $rawImg }}
-                        {{ else if strings.HasPrefix $rawImg "/" }}
-                            {{ $thumbImg = $rawImg | absURL }}
-                        {{ else }}
-                            {{ $thumbImg = printf "%s/%s" .RelPermalink (strings.TrimPrefix "./" $rawImg) | absURL }}
-                        {{ end }}
-                    {{ end }}
-                {{ end }}
-
-                <a href="{{ .Permalink }}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: inherit; gap: 12px; transition: background 0.2s;" onmouseover="this.style.background='var(--entry)';" onmouseout="this.style.background='var(--theme)';">
+                <a href="{{ .Permalink }}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: inherit; gap: 12px; transition: background 0.2s;" onmouseover="this.style.background='var(--entry)';" onmouseout="this.style.background='var(--theme)';">
                     
-                    <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
-                        {{ if $thumbImg }}
-                        <img src="{{ $thumbImg }}" alt="" style="width: 45px; height: 45px; object-fit: cover; border-radius: 4px; flex-shrink: 0; border: 1px solid var(--border);" onerror="this.style.display='none';">
+                    <div style="display: flex; flex-direction: column; gap: 2px; overflow: hidden;">
+                        {{ if .Params.category }}
+                        <span style="font-size: 0.75rem; color: var(--secondary);">{{ .Params.category }}</span>
                         {{ end }}
-                        <div style="display: flex; flex-direction: column; gap: 2px; overflow: hidden;">
-                            {{ if .Params.category }}
-                            <span style="font-size: 0.7rem; color: var(--secondary);">{{ .Params.category }}</span>
-                            {{ end }}
-                            <strong style="font-size: 0.95rem; color: var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ .Title }}</strong>
-                        </div>
+                        <strong style="font-size: 0.95rem; color: var(--primary);">{{ .Title }}</strong>
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 12px; font-size: 0.9rem; font-weight: 600; flex-shrink: 0;">
