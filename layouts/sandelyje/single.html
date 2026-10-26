@@ -34,112 +34,136 @@
 </script>
 
 <article class="post-single" itemscope itemtype="https://schema.org/Product" style="border: 1px solid var(--border); padding: 24px; border-radius: 8px; background: var(--entry);">
-    <header class="post-header">
-        <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 0.85rem;">
-            {{ if .Params.offer_code }}
-            <span style="border: 1px solid var(--border); background: var(--theme); color: var(--primary); padding: 4px 10px; border-radius: 4px; font-family: monospace;">Pasiūlymo kodas: {{ .Params.offer_code }}</span>
-            {{ end }}
-            
-            {{ if .Params.category }}
-              {{ $cat := .Params.category }}
-              {{ $catLower := lower $cat }}
-              {{ $catUrl := "/uab-kartono-projektai/" }}
-              {{ if or (eq $catLower "pakuotės") (eq $catLower "pakuotes") }}
-                {{ $catUrl = "/pakuotes/" }}
-              {{ else if or (eq $catLower "stovai") (eq $catLower "reklaminiai stovai") }}
-                {{ $catUrl = "/reklaminiai-stendai-stovai/" }}
-              {{ end }}
-              <a href="{{ $catUrl }}" style="border: 1px solid var(--border); background: var(--theme); color: var(--primary); padding: 4px 10px; border-radius: 4px; text-decoration: none;">Kategorija: {{ $cat }}</a>
-            {{ end }}
+    
+    <!-- NAGŁÓWEK I METADANE -->
+    <header class="post-header" style="margin-bottom: 20px;">
+        <!-- 1. H1 Nazwa produktu -->
+        <h1 class="post-title" itemprop="name" style="margin: 0 0 8px 0; font-size: 1.8rem;">
+            {{ .Title }}
+        </h1>
 
+        <!-- 2. Kategoria -->
+        {{ if .Params.category }}
+          {{ $cat := .Params.category }}
+          {{ $catLower := lower $cat }}
+          {{ $catUrl := "/uab-kartono-projektai/" }}
+          {{ if or (eq $catLower "pakuotės") (eq $catLower "pakuotes") }}
+            {{ $catUrl = "/pakuotes/" }}
+          {{ else if or (eq $catLower "stovai") (eq $catLower "reklaminiai stovai") }}
+            {{ $catUrl = "/reklaminiai-stendai-stovai/" }}
+          {{ end }}
+          <div style="margin-bottom: 10px; font-size: 0.9rem;">
+            <a href="{{ $catUrl }}" style="color: var(--secondary); text-decoration: underline;">{{ .Params.category }}</a>
+          </div>
+        {{ end }}
+
+        <!-- 3. Cena i Likutis w tym samym wierszu -->
+        <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 12px; font-size: 1.1rem; font-weight: bold;">
             {{ if .Params.price }}
-            <span style="border: 1px solid var(--border); background: var(--theme); color: var(--primary); padding: 4px 10px; border-radius: 4px; font-weight: 600;">Kaina: {{ .Params.price }} EUR</span>
+            <span style="color: var(--primary);">Kaina: {{ .Params.price }} EUR</span>
             {{ end }}
             {{ if .Params.stock }}
-            <span style="border: 1px solid var(--border); background: var(--theme); color: var(--primary); padding: 4px 10px; border-radius: 4px;">Likutis: {{ .Params.stock }} vnt.</span>
-            {{ end }}
-
-            <!-- Statusy -->
-            {{ if or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
-            <span style="background: #e53e3e; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold;">Pasiūlymas nebegaliojantis</span>
-            {{ else }}
-            <span style="background: #38a169; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold;">Pasiūlymas galiojantis</span>
+            <span style="color: var(--secondary); font-weight: normal;">Likutis: {{ .Params.stock }} vnt.</span>
             {{ end }}
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px;">
-            <h1 class="post-title" itemprop="name" style="margin: 0; font-size: 1.8rem;">
-                {{ .Title }}
-            </h1>
+        <!-- 4. Pasiūlymo kodas oraz status obok -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 0;">
+            <div style="font-family: monospace; font-size: 0.9rem; color: var(--primary);">
+                Kodas: <strong>{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}</strong>
+            </div>
             
-            <a href="#pdf-pasiulymas" onclick="generatePDF(); return false;" style="border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">
-                📄 Pasiūlymo PDF su QR
-            </a>
+            <!-- Statusy: Zielony (galioja) / Szary uniwersalny (nebegalioja) -->
+            {{ if or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
+            <span style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">
+                Pasiūlymas nebegaliojantis
+            </span>
+            {{ else }}
+            <span style="background: #276749; color: #fff; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">
+                Pasiūlymas galioja
+            </span>
+            {{ end }}
         </div>
     </header>
 
-    <div class="post-content" itemprop="description" style="margin-top: 20px; line-height: 1.6;">
-        {{ .Content }}
-
-        <!-- Galeria zdjęć (Lightbox) -->
-        {{ $imgs := .Resources.ByType "image" }}
-        {{ if not $imgs }}{{ $imgs = .Resources.Match "images/*" }}{{ end }}
-        {{ if not $imgs }}{{ $imgs = .Params.images }}{{ end }}
-        {{ if $imgs }}
-        <div class="product-gallery" style="margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
-            {{ range $imgs }}
-                {{ $imgUrl := "" }}
-                {{ if reflect.IsMap . }}{{ $imgUrl = .Permalink }}
-                {{ else }}
-                    {{ $imgUrl = printf "%s" . }}
-                    {{ if not (strings.HasPrefix $imgUrl "http") }}
-                        {{ $imgUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $imgUrl) | absURL }}
-                    {{ end }}
+    <!-- GALERIA ZDJĘĆ -->
+    {{ $imgs := .Resources.ByType "image" }}
+    {{ if not $imgs }}{{ $imgs = .Resources.Match "images/*" }}{{ end }}
+    {{ if not $imgs }}{{ $imgs = .Params.images }}{{ end }}
+    {{ if $imgs }}
+    <div class="product-gallery" style="margin-bottom: 25px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
+        {{ range $imgs }}
+            {{ $imgUrl := "" }}
+            {{ if reflect.IsMap . }}{{ $imgUrl = .Permalink }}
+            {{ else }}
+                {{ $imgUrl = printf "%s" . }}
+                {{ if not (strings.HasPrefix $imgUrl "http") }}
+                    {{ $imgUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $imgUrl) | absURL }}
                 {{ end }}
-                <div style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--theme); cursor: pointer;" onclick="openLightbox('{{ $imgUrl }}')">
-                    <img src="{{ $imgUrl }}" alt="Prekės nuotrauka" style="width: 100%; height: 180px; object-fit: cover; display: block;" onerror="this.onerror=null; this.src='/images/placeholder.png';">
-                </div>
             {{ end }}
-        </div>
-        {{ end }}
-
-        <!-- Linki do załączników -->
-        {{ $files := .Resources.Match "files/*" }}
-        {{ if not $files }}{{ $files = .Params.files }}{{ end }}
-        {{ if $files }}
-        <div class="product-files" style="margin-top: 30px; padding: 20px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px;">
-            <h3 style="margin-top: 0; font-size: 1.1rem; color: var(--primary);">Prisegti dokumentai ir brėžiniai:</h3>
-            <ul style="margin: 0; padding-left: 20px;">
-                {{ range $files }}
-                    {{ $fileUrl := "" }}
-                    {{ $fileName := "Atsisiųsti dokumentą" }}
-                    {{ if reflect.IsMap . }}
-                        {{ $fileUrl = .Permalink }}
-                    {{ else }}
-                        {{ $fileUrl = printf "%s" . }}
-                        {{ if not (strings.HasPrefix $fileUrl "http") }}
-                            {{ $fileName = path.Base $fileUrl }}
-                            {{ $fileUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $fileUrl) | absURL }}
-                        {{ end }}
-                    {{ end }}
-                    <li style="margin-bottom: 8px;">
-                        <a href="{{ $fileUrl }}" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: 500;">📄 {{ $fileName }} (Atsisiųsti PDF)</a>
-                    </li>
-                {{ end }}
-            </ul>
-        </div>
+            <div style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--theme); cursor: pointer;" onclick="openLightbox('{{ $imgUrl }}')">
+                <img src="{{ $imgUrl }}" alt="Prekės nuotrauka" style="width: 100%; height: 180px; object-fit: cover; display: block;" onerror="this.onerror=null; this.src='/images/placeholder.png';">
+            </div>
         {{ end }}
     </div>
+    {{ end }}
 
-    <!-- Sekcja kontaktowa z czystym mailto bez widocznych kodów %20 -->
+    <!-- NASTĘPNY WIERSZ: Z lewej dokumenty, z prawej przycisk PDF i QR -->
+    {{ $files := .Resources.Match "files/*" }}
+    {{ if not $files }}{{ $files = .Params.files }}{{ end }}
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; padding: 15px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px;">
+        
+        <!-- Lewa strona: Dokumenty -->
+        <div style="flex: 1; min-width: 250px;">
+            <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary);">Su produktu susiję dokumentai atsisiuntimui:</h4>
+            {{ if $files }}
+                <ul style="margin: 0; padding-left: 18px; font-size: 0.9rem;">
+                    {{ range $files }}
+                        {{ $fileUrl := "" }}
+                        {{ $fileName := "Atsisiųsti dokumentą" }}
+                        {{ if reflect.IsMap . }}
+                            {{ $fileUrl = .Permalink }}
+                        {{ else }}
+                            {{ $fileUrl = printf "%s" . }}
+                            {{ if not (strings.HasPrefix $fileUrl "http") }}
+                                {{ $fileName = path.Base $fileUrl }}
+                                {{ $fileUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $fileUrl) | absURL }}
+                            {{ end }}
+                        {{ end }}
+                        <li style="margin-bottom: 4px;">
+                            <a href="{{ $fileUrl }}" target="_blank" style="color: var(--primary); text-decoration: underline;">📄 {{ $fileName }}</a>
+                        </li>
+                    {{ end }}
+                </ul>
+            {{ else }}
+                <span style="font-size: 0.85rem; color: var(--secondary);">Nėra prisegtų papildomų dokumentų.</span>
+            {{ end }}
+        </div>
+
+        <!-- Prawa strona: Przycisk PDF i QR -->
+        <div>
+            <a href="#pdf-pasiulymas" onclick="generatePDF(); return false;" style="border: 1px solid var(--primary); background: var(--entry); color: var(--primary); padding: 10px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;">
+                📄 Pasiūlymo PDF ir QR
+            </a>
+        </div>
+    </div>
+
+    <!-- OPIS TEKSTOWY -->
+    <div class="post-content" itemprop="description" style="margin-top: 20px; line-height: 1.6;">
+        {{ .Content }}
+    </div>
+
+    <!-- SEKCJA KONTAKTOWA Z NOWĄ TREŚCIĄ E-MAILA -->
     <div style="margin-top: 40px; padding: 24px; border: 1px solid var(--border); border-radius: 6px; background: var(--theme); text-align: center;">
-        <h3 style="margin-top: 0; font-size: 1.2rem; color: var(--primary);">Susisiekti dėl šio pasiūlymo:</h3>
+        <h3 style="margin-top: 0; font-size: 1.2rem; color: var(--primary);">
+            Susisiekti dėl pasiūlymo [{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}]:
+        </h3>
         <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 15px; font-size: 1.05rem;">
             <a href="tel:+37065285223" class="mobile-phone-link" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
                 📞 +370 652 85223
             </a>
-            <!-- Naprawione kodowanie mailto dla pełnej czystości w mobilnych aplikacjach pocztowych -->
-            <a href="mailto:info@kartonoprojektai.lt?subject=KP%20sandėlio%20pasiūlymas%20{{ .Params.offer_code }}&body=Sveiki,%0A%0Ateiraujuosi%20dėl%20pasiūlymo%20{{ .Params.offer_code }}." style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
+            <!-- Zaktualizowany temat oraz treść e-maila -->
+            <a href="mailto:info@kartonoprojektai.lt?subject=KP%20sandėlio%20pasiūlymas%20{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}&body=Laba%20diena,%20norėčiau%20pasiteirauti%20dėl%20Kartono%20projektų%20sandėlio%20pasiūlymo%20{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}." style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
                 ✉️ info@kartonoprojektai.lt
             </a>
         </div>
@@ -157,20 +181,33 @@
         {{ range where site.RegularPages "Section" "sandelyje" }}
             {{ $isSold := or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
             {{ if and (ne .Permalink $currentPath) (not $isSold) }}
-                <a href="{{ .Permalink }}" style="display: flex; flex-direction: column; padding: 12px 16px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: inherit; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--entry)';" onmouseout="this.style.background='var(--theme)';">
+                
+                {{ $thumbImg := "" }}
+                {{ $itemImgs := .Resources.ByType "image" }}
+                {{ if not $itemImgs }}{{ $itemImgs = .Resources.Match "images/*" }}{{ end }}
+                {{ if not $itemImgs }}{{ $itemImgs = .Params.images }}{{ end }}
+                {{ with index $itemImgs 0 }}
+                    {{ if reflect.IsMap . }}{{ $thumbImg = .Permalink }}
+                    {{ else }}{{ $thumbImg = printf "%s" . | absURL}{{ end }}
+                {{ end }}
+
+                <a href="{{ .Permalink }}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: inherit; gap: 12px; transition: background 0.2s;" onmouseover="this.style.background='var(--entry)';" onmouseout="this.style.background='var(--theme)';">
                     
-                    <!-- Górna linia kafelka: Kategoria oraz Tytuł z pełną elastycznością -->
-                    <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
-                        {{ if .Params.category }}
-                        <span style="font-size: 0.75rem; padding: 3px 8px; background: var(--border); border-radius: 4px; white-space: nowrap; flex-shrink: 0; font-weight: 500;">{{ .Params.category }}</span>
+                    <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
+                        {{ if $thumbImg }}
+                        <img src="{{ $thumbImg }}" alt="" style="width: 45px; height: 45px; object-fit: cover; border-radius: 4px; flex-shrink: 0; border: 1px solid var(--border);">
                         {{ end }}
-                        <strong style="font-size: 0.95rem; color: var(--primary); overflow: hidden; text-overflow: ellipsis;">{{ .Title }}</strong>
+                        <div style="display: flex; flex-direction: column; gap: 2px; overflow: hidden;">
+                            {{ if .Params.category }}
+                            <span style="font-size: 0.7rem; color: var(--secondary);">{{ .Params.category }}</span>
+                            {{ end }}
+                            <strong style="font-size: 0.95rem; color: var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ .Title }}</strong>
+                        </div>
                     </div>
 
-                    <!-- Dolna linia kafelka: Cena i ilość zablokowane razem po prawej -->
-                    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px; width: 100%; font-size: 0.9rem; font-weight: 600; border-top: 1px dashed var(--border); padding-top: 6px; margin-top: 2px;">
-                        {{ if .Params.price }}<span style="white-space: nowrap; color: var(--primary);">{{ .Params.price }} EUR</span>{{ end }}
-                        {{ if .Params.stock }}<span style="color: var(--secondary); white-space: nowrap; font-weight: normal;">({{ .Params.stock }} vnt.)</span>{{ end }}
+                    <div style="display: flex; align-items: center; gap: 12px; font-size: 0.9rem; font-weight: 600; flex-shrink: 0;">
+                        {{ if .Params.price }}<span style="color: var(--primary);">{{ .Params.price }} EUR</span>{{ end }}
+                        {{ if .Params.stock }}<span style="color: var(--secondary); font-weight: normal;">({{ .Params.stock }} vnt.)</span>{{ end }}
                     </div>
                 </a>
             {{ end }}
@@ -202,7 +239,7 @@
       <div>
         <div style="font-weight: bold; font-size: 13px; text-transform: uppercase; color: #555; margin-bottom: 2px;">UAB „Kartono projektai“ — Sandėlio Pasiūlymas</div>
         <h1 style="margin: 0 0 6px 0; font-size: 20px; color: #111;">{{ .Title }}</h1>
-        <div style="font-size: 12px; color: #444;"><strong>Kodas:</strong> {{ .Params.offer_code }} | <strong>Kaina:</strong> {{ .Params.price }} EUR | <strong>Likutis:</strong> {{ .Params.stock }} vnt.</div>
+        <div style="font-size: 12px; color: #444;"><strong>Kodas:</strong> {{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }} | <strong>Kaina:</strong> {{ .Params.price }} EUR | <strong>Likutis:</strong> {{ .Params.stock }} vnt.</div>
       </div>
       <div>
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ .Permalink }}" alt="QR" style="width: 100px; height: 100px; display: block;">
@@ -254,7 +291,7 @@ function generatePDF() {
     var content = document.getElementById('printable-leaflet').innerHTML;
     var win = window.open('', '_blank', 'width=800,height=900');
     if (win) {
-        var pdfTitle = "{{ .Title }}-{{ .Params.category }}-{{ .Params.offer_code }}-Kartono projektai sandėlio pasiūlymai";
+        var pdfTitle = "{{ .Title }}-{{ .Params.category }}-{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}-Kartono projektai sandėlio pasiūlymai";
         win.document.write('<html><head><title>' + pdfTitle + '</title><style>@page { size: A4; margin: 10mm; }</style></head><body style="margin:0; padding:0; background:#fff;">' + content + '</body></html>');
         win.document.close();
         win.focus();
