@@ -12,6 +12,7 @@ images:
   - "Schematic-diagram-of-the-internal-structure-of-the-Moon-as-revealed-by-various.png"
 image: "Schematic-diagram-of-the-internal-structure-of-the-Moon-as-revealed-by-various.png"
 date: 2026-10-26
+draft: false
 ---
 
 duduuruurudduududu
