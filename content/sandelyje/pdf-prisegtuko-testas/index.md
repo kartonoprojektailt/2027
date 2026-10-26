@@ -6,7 +6,7 @@ price: 12
 currency: "EUR"
 is_sale: false
 stock: 1
-condition: "NewCondition"
+condition: "UsedCondition"
 date: 2026-10-26
 ---
 
