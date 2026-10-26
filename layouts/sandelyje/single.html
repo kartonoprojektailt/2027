@@ -72,7 +72,6 @@
                 {{ .Title }}
             </h1>
             
-            <!-- Czysty przycisk PDF bez ikon drukarki i bez zwisów -->
             <a href="#pdf-pasiulymas" onclick="generatePDF(); return false;" style="border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">
                 📄 Pasiūlymo PDF su QR
             </a>
@@ -104,7 +103,7 @@
         </div>
         {{ end }}
 
-        <!-- Linki do załączników / brėžiniai -->
+        <!-- Linki do załączników -->
         {{ $files := .Resources.Match "files/*" }}
         {{ if not $files }}{{ $files = .Params.files }}{{ end }}
         {{ if $files }}
@@ -132,14 +131,15 @@
         {{ end }}
     </div>
 
-    <!-- Sekcja kontaktowa -->
+    <!-- Sekcja kontaktowa z czystym mailto bez plusów -->
     <div style="margin-top: 40px; padding: 24px; border: 1px solid var(--border); border-radius: 6px; background: var(--theme); text-align: center;">
         <h3 style="margin-top: 0; font-size: 1.2rem; color: var(--primary);">Susisiekti dėl šio pasiūlymo:</h3>
         <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 15px; font-size: 1.05rem;">
             <a href="tel:+37065285223" class="mobile-phone-link" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
                 📞 +370 652 85223
             </a>
-            <a href="mailto:info@kartonoprojektai.lt?subject={{ printf "KP sandėlio pasiūlymas %s" .Params.offer_code | urlquery }}&body={{ printf "Sveiki,\n\nteiraujuosi dėl pasiūlymo %s." .Params.offer_code | urlquery }}" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
+            <!-- Użycie %20 zamiast urlquery, aby uniknąć plusów w temacie i treści maila -->
+            <a href="mailto:info@kartonoprojektai.lt?subject={{ printf "KP sandėlio pasiūlymas %s" .Params.offer_code | replaceRE " " "%20" }}&body={{ printf "Sveiki,\n\nteiraujuosi dėl pasiūlymo %s." .Params.offer_code | replaceRE " " "%20" | replaceRE "\n" "%0A" }}" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
                 ✉️ info@kartonoprojektai.lt
             </a>
         </div>
@@ -151,7 +151,7 @@
     <img id="lightbox-img" src="" style="max-width:90%; max-height:90%; border-radius:4px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
 </div>
 
-<!-- Ukryty szablon generowania PDF (wersja czysto inżynieryjna) -->
+<!-- Ukryty szablon generowania PDF -->
 <div id="printable-leaflet" style="display:none;">
   <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.4; padding: 25px; max-width: 700px; margin: 0 auto; border: 2px solid #222; background: #fff; border-radius: 6px;">
     
@@ -211,7 +211,8 @@ function generatePDF() {
     var content = document.getElementById('printable-leaflet').innerHTML;
     var win = window.open('', '_blank', 'width=800,height=900');
     if (win) {
-        win.document.write('<html><head><title>{{ .Title }} - Pasiūlymo PDF</title><style>@page { size: A4; margin: 10mm; }</style></head><body style="margin:0; padding:0; background:#fff;">' + content + '</body></html>');
+        var pdfTitle = "{{ .Title }}-{{ .Params.offer_code }}-Kartono projektai sandelio pasiulymas";
+        win.document.write('<html><head><title>' + pdfTitle + '</title><style>@page { size: A4; margin: 10mm; }</style></head><body style="margin:0; padding:0; background:#fff;">' + content + '</body></html>');
         win.document.close();
         win.focus();
         setTimeout(function() {
