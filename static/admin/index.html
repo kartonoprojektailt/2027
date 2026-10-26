@@ -17,21 +17,14 @@
   button:hover { background: var(--primary-hover); }
   .login-box { max-width: 400px; margin: 80px auto; text-align: center; }
   .hidden { display: none !important; }
-  .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #e2e8f0; }
-  .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
-  .badge.active { background: #c6f6d5; color: #22543d; }
-  .badge.parduota { background: #fed7d7; color: #742a2a; }
-  .badge.sale { background: #feebc8; color: #9c4221; }
-  .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; margin: 0 4px; }
-  .btn-danger { background: #e53e3e; }
-  .btn-danger:hover { background: #c53030; }
-  .btn-success { background: #38a169; }
-  .btn-success:hover { background: #2f855a; }
   .flex { display: flex; gap: 10px; }
   .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 16px; background: #fffaf0; padding: 12px; border-radius: 6px; border: 1px solid #fbd38d; }
   .checkbox-group input { width: auto; margin-top: 0; }
   .file-info { font-size: 0.85rem; color: #666; margin-top: 4px; }
   .settings-box { background: #edf2f7; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+  .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; margin: 0; }
+  .btn-danger { background: #e53e3e; }
+  .btn-success { background: #38a169; }
 </style>
 </head>
 <body>
@@ -50,33 +43,33 @@
   <div id="adminScreen" class="hidden">
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>Sandėlio Valdymas (Auto Publish)</h1>
-        <button onclick="logout()" class="btn-sm btn-danger" style="margin-top: 0;">Atsijungti</button>
+        <h1>Sandėlio Valdymas (Page Bundle)</h1>
+        <button onclick="logout()" class="btn-sm btn-danger">Atsijungti</button>
       </div>
       <p style="font-size: 0.9rem; color: #666;">Užpildykite duomenis, pasirinkite failus ir spauskite publikuoti.</p>
     </div>
 
-    <!-- KONFIGURACJA GITHUB API (USTAWIANA RAZ) -->
+    <!-- KONFIGURACJA GITHUB API -->
     <div class="card settings-box">
-      <h3>GitHub Nustatymai (Automatiniam siuntimui)</h3>
+      <h3>GitHub Nustatymai</h3>
       <div class="flex">
         <div style="flex: 1;">
-          <label>GitHub Režisierius / Repozitorija (pvz. `vartotojas/repo`)
+          <label>Repozitorija (`vardas/repo`)
             <input type="text" id="ghRepo" placeholder="vardas/pavadinimas">
           </label>
         </div>
         <div style="flex: 1;">
-          <label>GitHub Token (Personal Access Token)
+          <label>GitHub Token
             <input type="password" id="ghToken" placeholder="ghp_...">
           </label>
         </div>
       </div>
-      <button onclick="saveSettings()" class="btn-sm" style="margin-top: 10px; width: auto; background: #4a5568;">Išsaugoti nustatymus</button>
+      <button onclick="saveSettings()" class="btn-sm" style="margin-top: 10px; background: #4a5568;">Išsaugoti nustatymus</button>
     </div>
 
     <!-- FORMULARZ TWORZENIA -->
     <div class="card">
-      <h2 id="formTitle">Sukurti ir paskelbti naują pasiūlymą</h2>
+      <h2>Sukurti naują pasiūlymą</h2>
       
       <label>Pavadinimas (Title)
         <input type="text" id="title" placeholder="pvz. Baltas kartoninis stovas A2">
@@ -127,7 +120,7 @@
           </label>
         </div>
         <div style="flex: 1;">
-          <label>Sena / Pradinė Kaina (jei wyprzedaż)
+          <label>Sena / Pradinė Kaina
             <input type="number" step="0.01" id="original_price" placeholder="15.00">
           </label>
         </div>
@@ -136,8 +129,7 @@
       <div class="checkbox-group">
         <input type="checkbox" id="is_sale" checked>
         <label for="is_sale" style="margin-top: 0; cursor: pointer;">
-          <strong>Išpardavimas / Akcija (Clearance / Special Sale)</strong><br>
-          <small style="color: #666;">Žymi prekę kaip ypatingą sandėlio pasiūlymą</small>
+          <strong>Išpardavimas / Akcija</strong>
         </label>
       </div>
 
@@ -159,13 +151,8 @@
         <div class="file-info" id="imgInfo">Pasirinkta failų: 0</div>
       </label>
 
-      <label>Dokumentai / CAD / PDF / Video (pasirinkite per Browse)
-        <input type="file" id="docsInput" multiple accept=".pdf,.dwg,.dxf,video/mp4">
-        <div class="file-info" id="docInfo">Pasirinkta failų: 0</div>
-      </label>
-
       <label>Aprašymas
-        <textarea id="description" placeholder="Detalus prekės aprašymas, matmenys..."></textarea>
+        <textarea id="description" placeholder="Detalus prekės aprašymas..."></textarea>
       </label>
 
       <button onclick="publishToGitHub()" class="btn-success" id="pubBtn">🚀 Paskelbti automatiškai į svetainę</button>
@@ -215,9 +202,6 @@
   document.getElementById('imagesInput').addEventListener('change', function() {
     document.getElementById('imgInfo').textContent = `Pasirinkta failų: ${this.files.length}`;
   });
-  document.getElementById('docsInput').addEventListener('change', function() {
-    document.getElementById('docInfo').textContent = `Pasirinkta failų: ${this.files.length}`;
-  });
 
   function slugify(text) {
     return text.toString().toLowerCase()
@@ -227,7 +211,6 @@
       .replace(/\-\-+/g, '-');
   }
 
-  // Funkcja pomocnicza do konwersji pliku na Base64 dla GitHub API
   function fileToBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -254,7 +237,7 @@
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        message: `Admin upload: ${file.name}`,
+        message: `Admin bundle upload: ${file.name}`,
         content: content
       })
     });
@@ -265,7 +248,7 @@
     const repo = localStorage.getItem('kp_repo');
     const token = localStorage.getItem('kp_token');
     if(!repo || !token) {
-      alert('Prašome pirma įvesti ir išsaugoti GitHub nustatymus (Repo ir Token)!');
+      alert('Prašome pirma įvesti ir išsaugoti GitHub nustatymus!');
       return;
     }
 
@@ -274,29 +257,20 @@
 
     const btn = document.getElementById('pubBtn');
     btn.disabled = true;
-    btn.textContent = '⏳ Siunčiama į GitHub ir publikuojama...';
+    btn.textContent = '⏳ Kuriamas katalogas ir siunčiama...';
 
     try {
       const imgFiles = document.getElementById('imagesInput').files;
-      const docFiles = document.getElementById('docsInput').files;
       const slug = slugify(title);
-
       let imagesList = [];
-      let docsList = [];
 
-      // 1. Wysyłamy zdjęcia do static/images/
+      // 1. Wysyłamy zdjęcia bezpośrednio do dedykowanego folderu oferty w content/sandelyje/[slug]/
       for(let file of imgFiles) {
-        await uploadFileToGitHub(file, `static/images/${file.name}`, repo, token);
+        await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
         imagesList.push(file.name);
       }
 
-      // 2. Wysyłamy dokumenty do static/documents/
-      for(let file of docFiles) {
-        await uploadFileToGitHub(file, `static/documents/${file.name}`, repo, token);
-        docsList.push(file.name);
-      }
-
-      // 3. Budujemy treść pliku Markdown
+      // 2. Budujemy zawartość pliku index.md w tym samym folderze
       const offer_code = document.getElementById('offer_code').value;
       const condition = document.getElementById('condition').value;
       const category = document.getElementById('category').value;
@@ -330,22 +304,17 @@ condition: "${condition}"
         mdContent += `image: "${imagesList[0]}"\n`;
       }
 
-      if(docsList.length > 0) {
-        mdContent += `documents:\n`;
-        docsList.forEach(doc => mdContent += `  - "${doc}"\n`);
-      }
-
       mdContent += `date: ${new Date().toISOString().split('T')[0]}
 ---
 
 ${description}
 `;
 
-      // 4. Wysyłamy plik .md do content/sandelyje/
-      const mdFile = new File([mdContent], `${slug}.md`, { type: 'text/markdown' });
-      await uploadFileToGitHub(mdFile, `content/sandelyje/${slug}.md`, repo, token);
+      // 3. Wysyłamy index.md do folderu content/sandelyje/[slug]/index.md
+      const mdFile = new File([mdContent], `index.md`, { type: 'text/markdown' });
+      await uploadFileToGitHub(mdFile, `content/sandelyje/${slug}/index.md`, repo, token);
 
-      alert('🎉 Valio! Prekė sėkmingai paskelbta! Cloudflare Pages atnaujins svetainę per ~30 sekundžių.');
+      alert('🎉 Valio! Prekė paskelbta kaip pilna paczką (folder + index.md + zdjęcia). Storage atsinaujins per ~30 sekundžių.');
       clearForm();
     } catch(err) {
       alert('Klaida publikuojant: ' + err.message);
@@ -363,9 +332,7 @@ ${description}
     document.getElementById('stock').value = '';
     document.getElementById('dimensions').value = '';
     document.getElementById('imagesInput').value = '';
-    document.getElementById('docsInput').value = '';
     document.getElementById('imgInfo').textContent = 'Pasirinkta failų: 0';
-    document.getElementById('docInfo').textContent = 'Pasirinkta failų: 0';
     document.getElementById('description').value = '';
   }
 </script>
