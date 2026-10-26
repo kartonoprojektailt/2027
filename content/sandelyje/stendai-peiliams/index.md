@@ -2,22 +2,13 @@
 title: "Stendai peiliams"
 offer_code: "KP-20261017-stendai-peiliams"
 category: "Stovai"
+status: "parduota"
 price: 140
+currency: "EUR"
+is_sale: false
 stock: 200
-status: ""
-draft: false
-date: "2026-10-17T06:32:49.148Z"
-cover:
-  image: "images/Reklaminiai-stendai-prekybai-kartono-projektai.jpg"
-  alt: "Stendai peiliams"
-  relative: true
-images:
-  - "images/Reklaminiai-stendai-prekybai-kartono-projektai.jpg"
-  - "images/Reklaminiai-stendai-kartono-projektai-www.kartonoprojektai.lt.jpg"
-  - "images/Reklaminiai-stendai-kartono-projektai-uzsakymas-internetu.jpg"
-pdf_documents:
-  - title: "FEFCO_katalogas_Kartonoprojektai.lt.pdf"
-    url: "files/FEFCO_katalogas_Kartonoprojektai.lt.pdf"
+condition: "NewCondition"
+date: 2026-10-26
 ---
 
 kartonas, 25kg, lengvas
