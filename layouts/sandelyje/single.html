@@ -7,12 +7,12 @@
   "name": "{{ .Title }}",
   "image": [
     {{ $schemaImgs := .Resources.ByType "image" }}
-    {{ if not $schemaImgs }}{{$schemaImgs = .Resources.Match "images/*" }}{{ end }}
-    {{ if not $schemaImgs }}{{$schemaImgs = .Params.images }}{{ end }}
-    {{ range $index, $element :=$schemaImgs }}
+    {{ if not $schemaImgs }}{{ $schemaImgs = .Resources.Match "images/*" }}{{ end }}
+    {{ if not $schemaImgs }}{{ $schemaImgs = .Params.images }}{{ end }}
+    {{ range $index, $element := $schemaImgs }}
       {{ $imgLink := "" }}
-      {{ if reflect.IsMap . }}{$imgLink = .Permalink}
-      {{ else }}{$imgLink = printf "%s" . | absURL}{{ end }}
+      {{ if reflect.IsMap . }}{{ $imgLink = .Permalink }}
+      {{ else }}{{ $imgLink = printf "%s" . | absURL }}{{ end }}
       {{ if gt $index 0 }},{{ end }}"{{ $imgLink }}"
     {{ end }}
   ],
@@ -37,12 +37,10 @@
     
     <!-- NAGŁÓWEK I METADANE -->
     <header class="post-header" style="margin-bottom: 20px;">
-        <!-- 1. H1 Nazwa produktu -->
         <h1 class="post-title" itemprop="name" style="margin: 0 0 8px 0; font-size: 1.8rem;">
             {{ .Title }}
         </h1>
 
-        <!-- 2. Kategoria -->
         {{ if .Params.category }}
           {{ $cat := .Params.category }}
           {{ $catLower := lower $cat }}
@@ -57,7 +55,6 @@
           </div>
         {{ end }}
 
-        <!-- 3. Cena i Likutis w tym samym wierszu -->
         <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 12px; font-size: 1.1rem; font-weight: bold;">
             {{ if .Params.price }}
             <span style="color: var(--primary);">Kaina: {{ .Params.price }} EUR</span>
@@ -67,13 +64,11 @@
             {{ end }}
         </div>
 
-        <!-- 4. Pasiūlymo kodas oraz status obok -->
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 0;">
             <div style="font-family: monospace; font-size: 0.9rem; color: var(--primary);">
                 Kodas: <strong>{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}</strong>
             </div>
             
-            <!-- Statusy: Zielony (galioja) / Szary uniwersalny (nebegalioja) -->
             {{ if or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
             <span style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">
                 Pasiūlymas nebegaliojantis
@@ -108,12 +103,11 @@
     </div>
     {{ end }}
 
-    <!-- NASTĘPNY WIERSZ: Z lewej dokumenty, z prawej przycisk PDF i QR -->
+    <!-- DOKUMENTY ORAZ PRZYCISK PDF -->
     {{ $files := .Resources.Match "files/*" }}
     {{ if not $files }}{{ $files = .Params.files }}{{ end }}
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; padding: 15px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px;">
         
-        <!-- Lewa strona: Dokumenty -->
         <div style="flex: 1; min-width: 250px;">
             <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; color: var(--primary);">Su produktu susiję dokumentai atsisiuntimui:</h4>
             {{ if $files }}
@@ -140,7 +134,6 @@
             {{ end }}
         </div>
 
-        <!-- Prawa strona: Przycisk PDF i QR -->
         <div>
             <a href="#pdf-pasiulymas" onclick="generatePDF(); return false;" style="border: 1px solid var(--primary); background: var(--entry); color: var(--primary); padding: 10px 16px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;">
                 📄 Pasiūlymo PDF ir QR
@@ -153,7 +146,7 @@
         {{ .Content }}
     </div>
 
-    <!-- SEKCJA KONTAKTOWA Z NOWĄ TREŚCIĄ E-MAILA -->
+    <!-- SEKCJA KONTAKTOWA -->
     <div style="margin-top: 40px; padding: 24px; border: 1px solid var(--border); border-radius: 6px; background: var(--theme); text-align: center;">
         <h3 style="margin-top: 0; font-size: 1.2rem; color: var(--primary);">
             Susisiekti dėl pasiūlymo [{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}]:
@@ -162,7 +155,6 @@
             <a href="tel:+37065285223" class="mobile-phone-link" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
                 📞 +370 652 85223
             </a>
-            <!-- Zaktualizowany temat oraz treść e-maila -->
             <a href="mailto:info@kartonoprojektai.lt?subject=KP%20sandėlio%20pasiūlymas%20{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}&body=Laba%20diena,%20norėčiau%20pasiteirauti%20dėl%20Kartono%20projektų%20sandėlio%20pasiūlymo%20{{ with .Params.offer_code }}{{ . }}{{ else }}{{ .File.BaseFileName }}{{ end }}." style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
                 ✉️ info@kartonoprojektai.lt
             </a>
@@ -188,7 +180,7 @@
                 {{ if not $itemImgs }}{{ $itemImgs = .Params.images }}{{ end }}
                 {{ with index $itemImgs 0 }}
                     {{ if reflect.IsMap . }}{{ $thumbImg = .Permalink }}
-                    {{ else }}{{ $thumbImg = printf "%s" . | absURL}{{ end }}
+                    {{ else }}{{ $thumbImg = printf "%s" . | absURL }}{{ end }}
                 {{ end }}
 
                 <a href="{{ .Permalink }}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: inherit; gap: 12px; transition: background 0.2s;" onmouseover="this.style.background='var(--entry)';" onmouseout="this.style.background='var(--theme)';">
