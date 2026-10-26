@@ -30,25 +30,22 @@ def sanitize_text(text):
     return text.strip()
 
 for index, row in df.iterrows():
-    # Naujos struktūros stulpeliai pagal tavo sheet vaizdą
     slug = sanitize_text(str(row.get('parent_slug', '')))
     title = sanitize_text(str(row.get('title', '')))
-    menu_title = sanitize_text(str(row.get('menu_title', '')))
     description = sanitize_text(str(row.get('meta_description', '')))
     content_body = sanitize_text(str(row.get('content_body', '')))
     
     if not title:
         continue
         
-    # Sugeneruojame failo kelią (pvz., content/reklaminiai-stendai-stovai/index.md)
-    if slug:
-        file_path = f"content/{slug}/index.md"
+    # Jei tai pagrindinis puslapis (tuščias slug), rašom į _index.md arba index.md
+    if not slug or slug == '/':
+        file_path = "content/_index.md"
     else:
-        file_path = "content/index.md"
+        file_path = f"content/{slug}/index.md"
 
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-    # Markdown failo šablonas su viskuo iš content_body
     markdown_content = f"""---
 title: "{title}"
 description: "{description}"
@@ -68,7 +65,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Auto-update: sync pages and content_body from Master Google Sheet"], check=True)
+        subprocess.run(["git", "commit", "-m", "Auto-update: sync pages with proper paths from Master Google Sheet"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Pakeitimai iškeliavo į GitHub ir Cloudflare.")
     else:
