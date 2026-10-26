@@ -179,8 +179,16 @@
                 {{ if not $itemImgs }}{{ $itemImgs = .Resources.Match "images/*" }}{{ end }}
                 {{ if not $itemImgs }}{{ $itemImgs = .Params.images }}{{ end }}
                 {{ with index $itemImgs 0 }}
-                    {{ if reflect.IsMap . }}{{ $thumbImg = .Permalink }}
-                    {{ else }}{{ $thumbImg = printf "%s" . | absURL }}{{ end }}
+                    {{ if reflect.IsMap . }}
+                        {{ $thumbImg = .Permalink }}
+                    {{ else }}
+                        {{ $rawImg := printf "%s" . }}
+                        {{ if strings.HasPrefix $rawImg "http" }}
+                            {{ $thumbImg = $rawImg }}
+                        {{ else }}
+                            {{ $thumbImg = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $rawImg) | absURL }}
+                        {{ end }}
+                    {{ end }}
                 {{ end }}
 
                 <a href="{{ .Permalink }}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: inherit; gap: 12px; transition: background 0.2s;" onmouseover="this.style.background='var(--entry)';" onmouseout="this.style.background='var(--theme)';">
