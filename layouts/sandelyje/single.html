@@ -1,4 +1,49 @@
-<div class="post-content" itemprop="description">
+{{ define "main" }}
+<!-- Schema.org Structured Data for AI & Google Search -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ .Title }}",
+  "image": [
+    {{ $schemaImgs := .Resources.ByType "image" }}
+    {{ if not $schemaImgs }}{{$schemaImgs = .Resources.Match "images/*" }}{{ end }}
+    {{ if not $schemaImgs }}{{$schemaImgs = .Params.images }}{{ end }}
+    {{ range $index, $element :=$schemaImgs }}
+      {{ $imgLink := "" }}
+      {{ if reflect.IsMap . }}{$imgLink = .Permalink}
+      {{ else }}{$imgLink = printf "%s" . | absURL}{{ end }}
+      {{ if gt $index 0 }},{{ end }}"{{ $imgLink }}"
+    {{ end }}
+  ],
+  "description": "{{ .Description }}",
+  "sku": "{{ .Params.offer_code }}",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "EUR",
+    "price": "{{ .Params.price }}",
+    "availability": "{{ if or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}https://schema.org/SoldOut{{ else }}https://schema.org/InStock{{ end }}",
+    "seller": {
+      "@type": "Organization",
+      "name": "UAB „Kartono projektai“"
+    }
+  }
+}
+</script>
+
+<article class="post-single" itemscope itemtype="https://schema.org/Product">
+    <header class="post-header">
+        <div style="margin-bottom: 15px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; font-size: 0.9rem;">
+            {{ if .Params.offer_code }}
+            <span style="background: var(--code-bg, #eee); padding: 4px 10px; border-radius: 4px; font-family: monospace;">Kod: {{ .Params.offer_code }}</span>
+            {{ end }}
+        </div>
+        <h1 class="post-title" itemprop="name">
+            {{ .Title }}
+        </h1>
+    </header>
+
+    <div class="post-content" itemprop="description">
         {{ .Content }}
 
         <!-- Galeria zdjęć produktu -->
@@ -11,7 +56,6 @@
                 {{ $imgUrl := "" }}
                 {{ if reflect.IsMap . }}{{ $imgUrl = .Permalink }}
                 {{ else }}
-                    {{/* Jeśli ścieżka to nazwa pliku lub względna ścieżka, dopasowujemy ją poprawnie */}}
                     {{ $imgUrl = printf "%s" . }}
                     {{ if not (strings.HasPrefix $imgUrl "http") }}
                         {{ $imgUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $imgUrl) | absURL }}
@@ -33,16 +77,21 @@
             <ul style="margin: 0; padding-left: 20px;">
                 {{ range $files }}
                     {{ $fileUrl := "" }}
-                    {{ if reflect.IsMap . }}{{ $fileUrl = .Permalink }}
+                    {{ $fileName := "Atsisiųsti dokumentą" }}
+                    {{ if reflect.IsMap . }}
+                        {{ $fileUrl = .Permalink }}
                     {{ else }}
                         {{ $fileUrl = printf "%s" . }}
                         {{ if not (strings.HasPrefix $fileUrl "http") }}
+                            {{ $fileName = path.Base $fileUrl }}
                             {{ $fileUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $fileUrl) | absURL }}
                         {{ end }}
                     {{ end }}
-                    <li><a href="{{ $fileUrl }}" target="_blank" style="color: #2b6cb0; text-decoration: none;">Atsisiųsti dokumentą</a></li>
+                    <li><a href="{{ $fileUrl }}" target="_blank" style="color: #2b6cb0; text-decoration: none;">{{ $fileName }}</a></li>
                 {{ end }}
             </ul>
         </div>
         {{ end }}
     </div>
+</article>
+{{ end }}
