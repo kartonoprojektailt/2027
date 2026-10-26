@@ -25,6 +25,7 @@
   .btn-danger { background: #e53e3e; }
   .btn-danger:hover { background: #c53030; }
   .flex { display: flex; gap: 10px; }
+  .file-info { font-size: 0.85rem; color: #666; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -92,6 +93,16 @@
         </div>
       </div>
 
+      <label>Nuotraukos (galima pasirinkti kelias: JPG, PNG, GIF)
+        <input type="file" id="images" multiple accept="image/*">
+        <div class="file-info" id="imgInfo">Pasirinkti failai: 0</div>
+      </label>
+
+      <label>Brėžiniai, PDF arba Video (MP4)
+        <input type="file" id="documents" multiple accept=".pdf,video/mp4,video/webm">
+        <div class="file-info" id="docInfo">Pasirinkti failai: 0</div>
+      </label>
+
       <label>Aprašymas
         <textarea id="description" placeholder="Trumpas prekės aprašymas, matmenys..."></textarea>
       </label>
@@ -102,17 +113,13 @@
     <!-- LISTA AKTUALNYCH PRODUKTÓW -->
     <div class="card">
       <h2>Esamos prekės sandėlyje</h2>
-      <div id="itemsList">
-        <!-- Generowane dynamicznie -->
-      </div>
+      <div id="itemsList"></div>
     </div>
   </div>
 </div>
 
 <script>
-  // USTAW SWOJE HASŁO TUTAJ:
   const ADMIN_PASS = "kartonas2027";
-
   let items = JSON.parse(localStorage.getItem('kp_warehouse') || '[]');
 
   function tryLogin() {
@@ -136,14 +143,28 @@
     renderList();
   }
 
-  // Sprawdź czy już zalogowany
   if(localStorage.getItem('kp_logged') === 'true') {
     showAdmin();
   }
 
+  // Nasłuchiwanie wyboru plików, aby pokazać liczbę
+  document.getElementById('images').addEventListener('change', function() {
+    document.getElementById('imgInfo').textContent = `Pasirinkta failų: ${this.files.length}`;
+  });
+  document.getElementById('documents').addEventListener('change', function() {
+    document.getElementById('docInfo').textContent = `Pasirinkta failų: ${this.files.length}`;
+  });
+
   function saveItem() {
     const title = document.getElementById('title').value;
     if(!title) { alert('Įveskite pavadinimą!'); return; }
+
+    const imgInput = document.getElementById('images');
+    const docInput = document.getElementById('documents');
+
+    // Pobieramy nazwy wybranych plików
+    const imgNames = Array.from(imgInput.files).map(f => f.name);
+    const docNames = Array.from(docInput.files).map(f => f.name);
 
     const item = {
       title: title,
@@ -151,7 +172,9 @@
       status: document.getElementById('status').value,
       price: document.getElementById('price').value,
       stock: document.getElementById('stock').value,
-      description: document.getElementById('description').value
+      description: document.getElementById('description').value,
+      images: imgNames,
+      documents: docNames
     };
 
     const editIndex = document.getElementById('editIndex').value;
@@ -168,6 +191,17 @@
     renderList();
   }
 
+  function clearForm() {
+    document.getElementById('title').value = '';
+    document.getElementById('price').value = '';
+    document.getElementById('stock').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('images').value = '';
+    document.getElementById('documents').value = '';
+    document.getElementById('imgInfo').textContent = 'Pasirinkti failai: 0';
+    document.getElementById('docInfo').textContent = 'Pasirinkti failai: 0';
+  }
+
   function renderList() {
     const listDiv = document.getElementById('itemsList');
     if(items.length === 0) {
@@ -179,11 +213,14 @@
     items.forEach((item, index) => {
       const badgeClass = item.status === 'parduota' ? 'parduota' : 'active';
       const badgeText = item.status === 'parduota' ? 'Parduota' : 'Galioja';
+      const imgCount = item.images ? item.images.length : 0;
+      const docCount = item.documents ? item.documents.length : 0;
+
       html += `
         <div class="item-row">
           <div>
             <strong>${item.title}</strong> (${item.category})<br>
-            <small style="color: #666;">Kaina: ${item.price || 0} EUR | Likutis: ${item.stock || 0} vnt.</small>
+            <small style="color: #666;">Kaina: ${item.price || 0} EUR | Likutis: ${item.stock || 0} vnt. | Nuotraukų: ${imgCount}, Failų/Video: ${docCount}</small>
           </div>
           <div>
             <span class="badge ${badgeClass}">${badgeText}</span>
@@ -194,20 +231,6 @@
       `;
     });
     listDiv.innerHTML = html;
-  }
-
-  function editItem(index) {
-    const item = items[index];
-    document.getElementById('title').value = item.title;
-    document.getElementById('category').value = item.category;
-    document.getElementById('status').value = item.status;
-    document.getElementById('price').value = item.price;
-    document.getElementById('stock').value = item.stock;
-    document.getElementById('description').value = item.description;
-    
-    document.getElementById('editIndex').value = index;
-    document.getElementById('formTitle').textContent = 'Redaguoti prekę: ' + item.title;
-    window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
   function deleteItem(index) {
