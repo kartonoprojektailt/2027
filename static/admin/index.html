@@ -15,7 +15,6 @@
   textarea { min-height: 120px; resize: vertical; }
   button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 1rem; cursor: pointer; margin-top: 20px; width: 100%; font-weight: bold; }
   button:hover { background: var(--primary-hover); }
-  .login-box { max-width: 400px; margin: 80px auto; text-align: center; }
   .hidden { display: none !important; }
   .flex { display: flex; gap: 10px; }
   .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 16px; background: #fffaf0; padding: 12px; border-radius: 6px; border: 1px solid #fbd38d; }
@@ -35,21 +34,11 @@
 <body>
 
 <div class="container">
-  <!-- EKRAN LOGOWANIA -->
-  <div id="loginScreen" class="card login-box">
-    <h2>Valdymo Pultas</h2>
-    <p style="font-size: 0.9rem; color: #666;">Įveskite administratoriaus slaptažodį</p>
-    <input type="password" id="passInput" placeholder="Slaptažodis...">
-    <button onclick="tryLogin()">Prisijungti</button>
-    <p id="loginError" style="color: #e53e3e; font-size: 0.85rem; margin-top: 10px; display: none;">Neteisingas slaptažodis!</p>
-  </div>
-
   <!-- PANEL ZARZĄDZANIA -->
-  <div id="adminScreen" class="hidden">
+  <div id="adminScreen">
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h1>Sandėlio Valdymas</h1>
-        <button onclick="logout()" class="btn-sm btn-danger">Atsijungti</button>
       </div>
       <p style="font-size: 0.9rem; color: #666;">Valdykite esamus skelbimus arba kurkite naujus.</p>
     </div>
@@ -194,33 +183,10 @@
 </div>
 
 <script>
-  const ADMIN_PASS = "kartonas2027";
-
-  function tryLogin() {
-    const p = document.getElementById('passInput').value;
-    if(p === ADMIN_PASS) {
-      localStorage.setItem('kp_logged', 'true');
-      showAdmin();
-    } else {
-      document.getElementById('loginError').style.display = 'block';
-    }
-  }
-
-  function logout() {
-    localStorage.removeItem('kp_logged');
-    location.reload();
-  }
-
-  function showAdmin() {
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('adminScreen').classList.remove('hidden');
+  window.onload = function() {
     loadSettings();
     loadOffers();
-  }
-
-  if(localStorage.getItem('kp_logged') === 'true') {
-    showAdmin();
-  }
+  };
 
   function saveSettings() {
     localStorage.setItem('kp_repo', document.getElementById('ghRepo').value);
@@ -268,7 +234,6 @@
     const content = await fileToBase64(file);
     const url = `https://api.github.com/repos/${repo}/contents/${path}`;
     
-    // Sprawdzamy czy plik już istnieje, aby pobrać jego SHA (wymagane przez GitHub API przy nadpisywaniu)
     let sha = null;
     const existing = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
     if (existing.ok) {
@@ -347,7 +312,6 @@
       const fileData = await res.json();
       const content = decodeURIComponent(escape(atob(fileData.content)));
 
-      // Zamieniamy status na parduota
       let updatedContent = content;
       if (updatedContent.includes('status:')) {
         updatedContent = updatedContent.replace(/status:\s*"?[a-zA-Z]+"?[ \t]*/, 'status: "parduota"\n');
@@ -376,14 +340,13 @@
     if(!confirm(`⚠️ Ar tikrai norite VISAM LAIKUI ištrinti skelbimą „${slug}“ (kartu su visais failais)?`)) return;
 
     try {
-      // Pobieramy zawartość folderu aby usunąć każdy plik z osobna (wymóg GitHub API)
       const url = `https://api.github.com/repos/${repo}/contents/content/sandelyje/${slug}`;
       const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
       if(!res.ok) throw new Error('Nepavyko rasti aplanko.');
       const files = await res.json();
 
       for(let file of files) {
-        const delRes = await fetch(`https://api.github.com/repos/${repo}/contents/${file.path}`, {
+        await fetch(`https://api.github.com/repos/${repo}/contents/${file.path}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: `Delete asset: ${file.path}`, sha: file.sha })
@@ -407,12 +370,10 @@
       const fileData = await res.json();
       const text = decodeURIComponent(escape(atob(fileData.content)));
 
-      // Proste wyciąganie danych z frontmatter (YAML) do pól formularza
       document.getElementById('editSlug').value = slug;
       document.getElementById('formTitle').textContent = `Redaguoti skelbimą: ${slug}`;
       document.getElementById('cancelBtn').classList.remove('hidden');
 
-      // Wypełnianie pól na oko / podstawowe parsowanie
       const titleMatch = text.match(/title:\s*"([^"]+)"/);
       if(titleMatch) document.getElementById('title').value = titleMatch[1];
 
@@ -437,7 +398,6 @@
       const dimMatch = text.match(/dimensions:\s*"([^"]+)"/);
       if(dimMatch) document.getElementById('dimensions').value = dimMatch[1];
 
-      // Opis to wszystko poniżej drugiego "---"
       const parts = text.split(/---\s*\n/);
       if(parts.length >= 3) {
         document.getElementById('description').value = parts.slice(2).join('---').trim();
@@ -479,7 +439,6 @@
       const docFiles = document.getElementById('docsInput').files;
       let imagesList = [];
 
-      // Pobieramy istniejącą listę obrazków z repo jeśli edytujemy, albo ładujemy nowe
       for(let file of imgFiles) {
         await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
         imagesList.push(file.name);
@@ -529,4 +488,32 @@ ${description}
 `;
 
       const mdFile = new File([mdContent], `index.md`, { type: 'text/markdown' });
-      await uploadFileToGitHub(
+      await uploadFileToGitHub(mdFile, `content/sandelyje/${slug}/index.md`, repo, token);
+
+      alert('🎉 Skelbimas sėkmingai išsaugotas!');
+      resetForm();
+      loadOffers();
+    } catch(err) {
+      alert('Klaida publikuojant: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🚀 Paskelbti / Išsaugoti pakeitimus';
+    }
+  }
+
+  function clearForm() {
+    document.getElementById('title').value = '';
+    document.getElementById('offer_code').value = '';
+    document.getElementById('price').value = '';
+    document.getElementById('original_price').value = '';
+    document.getElementById('stock').value = '';
+    document.getElementById('dimensions').value = '';
+    document.getElementById('imagesInput').value = '';
+    document.getElementById('docsInput').value = '';
+    document.getElementById('imgInfo').textContent = 'Pasirinkta nuotraukų: 0';
+    document.getElementById('docInfo').textContent = 'Pasirinkta dokumentų: 0';
+    document.getElementById('description').value = '';
+  }
+</script>
+</body>
+</html>
