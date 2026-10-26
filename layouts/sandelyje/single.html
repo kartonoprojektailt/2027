@@ -1,5 +1,5 @@
 {{ define "main" }}
-<!-- Schema.org Structured Data optimized for SEO, UX and AI Crawlers (Stock / Offer) -->
+<!-- Schema.org Structured Data optimized for SEO, UX and AI Crawlers -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org/",
@@ -70,7 +70,6 @@
                 {{ .Title }}
             </h1>
             
-            <!-- Przycisk generowania PDF ulotki -->
             <button id="print-pdf-btn" style="border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;" onmouseover="this.style.background='var(--primary)'; this.style.color='var(--theme)';" onmouseout="this.style.background='transparent'; this.style.color='var(--primary)';">
                 🖨️ Pasiūlymo PDF su QR
             </button>
@@ -80,7 +79,7 @@
     <div class="post-content" itemprop="description" style="margin-top: 20px; line-height: 1.6;">
         {{ .Content }}
 
-        <!-- Galeria zdjęć produktu -->
+        <!-- Galeria zdjęć (Lightbox na tej samej stronie) -->
         {{ $imgs := .Resources.ByType "image" }}
         {{ if not $imgs }}{{ $imgs = .Resources.Match "images/*" }}{{ end }}
         {{ if not $imgs }}{{ $imgs = .Params.images }}{{ end }}
@@ -95,14 +94,14 @@
                         {{ $imgUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $imgUrl) | absURL }}
                     {{ end }}
                 {{ end }}
-                <a href="{{ $imgUrl }}" target="_blank" style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden; display: block;">
+                <div style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--theme); cursor: pointer;" onclick="openLightbox('{{ $imgUrl }}')">
                     <img src="{{ $imgUrl }}" alt="Prekės nuotrauka" style="width: 100%; height: 180px; object-fit: cover; display: block;" onerror="this.onerror=null; this.src='/images/placeholder.png';">
-                </a>
+                </div>
             {{ end }}
         </div>
         {{ end }}
 
-        <!-- Załączniki, dokumenty i podgląd (preview/embedded) -->
+        <!-- Załączniki i podgląd PDF w ogłoszeniu -->
         {{ $files := .Resources.Match "files/*" }}
         {{ if not $files }}{{ $files = .Params.files }}{{ end }}
         {{ if $files }}
@@ -127,7 +126,6 @@
                 {{ end }}
             </ul>
 
-            <!-- Wbudowany podgląd dokumentów PDF w ofercie -->
             <div style="margin-top: 15px;">
                 {{ range $files }}
                     {{ $fileUrl := "" }}
@@ -147,30 +145,32 @@
         {{ end }}
     </div>
 
-    <!-- Sekcja kontaktowa / Call to Action na dole ogłoszenia -->
+    <!-- Sekcja kontaktowa -->
     <div style="margin-top: 40px; padding: 24px; border: 1px solid var(--border); border-radius: 6px; background: var(--theme); text-align: center;">
         <h3 style="margin-top: 0; font-size: 1.2rem; color: var(--primary);">Susisiekti dėl šio pasiūlymo:</h3>
         <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 15px; font-size: 1.05rem;">
-            <!-- Telefon: linktelny tel: link tylko na mobile -->
             <a href="tel:+37065285223" class="mobile-phone-link" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
                 📞 +370 652 85223
             </a>
-            <!-- Email: predefiniowany mailto z kodem w temacie i treści -->
-            <a href="mailto:info@kartonoprojektai.lt?subject={{ urlquery (printf "KP sandėlio pasiūlymas %s" .Params.offer_code) }}&body={{ urlquery (printf "Sveiki,\n\nteiraujuosi dėl pasiūlymo %s." .Params.offer_code) }}" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
+            <a href="mailto:info@kartonoprojektai.lt?subject={{ printf "KP sandėlio pasiūlymas %s" .Params.offer_code | urlquery }}&body={{ printf "Sveiki,\n\nteiraujuosi dėl pasiūlymo %s." .Params.offer_code | urlquery }}" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
                 ✉️ info@kartonoprojektai.lt
             </a>
         </div>
     </div>
 </article>
 
-<!-- Ukryty szablon minimalistycznej, inżynieryjnej ulotki PDF z ramkami i QR -->
+<!-- Lightbox Modal -->
+<div id="img-lightbox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; cursor:pointer;" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" style="max-width:90%; max-height:90%; border-radius:4px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+</div>
+
+<!-- Inżynieryjny szablon PDF z pełną szerokością i osadzonymi dokumentami -->
 <div id="printable-leaflet" style="display:none;">
-  <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.5; padding: 30px; max-width: 750px; margin: 0 auto; border: 2px solid #222; border-radius: 6px;">
+  <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.5; padding: 20px; width: 100%; box-sizing: border-box; border: 2px solid #222; border-radius: 6px; background: #fff;">
     
-    <!-- Header ulotki -->
     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #222; padding-bottom: 15px; margin-bottom: 20px;">
       <div>
-        <div style="font-weight: bold; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; color: #444; margin-bottom: 4px;">UAB „Kartono projektai“ — Sandėlio Pasiūlymas</div>
+        <div style="font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #444; margin-bottom: 4px;">UAB „Kartono projektai“ — Sandėlio Pasiūlymas</div>
         <h1 style="margin: 0 0 8px 0; font-size: 22px; color: #111;">{{ .Title }}</h1>
         <div style="font-size: 13px; color: #555;"><strong>Pasiūlymo kodas:</strong> {{ .Params.offer_code }} | <strong>Kaina:</strong> {{ .Params.price }} EUR | <strong>Likutis:</strong> {{ .Params.stock }} vnt.</div>
       </div>
@@ -179,13 +179,11 @@
       </div>
     </div>
 
-    <!-- Opis -->
     <div style="margin-bottom: 25px; font-size: 14px;">
       <h3 style="font-size: 15px; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 8px;">Pasiūlymo aprašymas:</h3>
       <div>{{ .Content }}</div>
     </div>
 
-    <!-- Zdjęcia -->
     {{ if $imgs }}
     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 25px;">
       {{ range $imgs }}
@@ -202,29 +200,26 @@
     </div>
     {{ end }}
 
-    <!-- Dokumenty -->
+    <!-- Osadzone dokumenty / podgląd PDF w generowanej ulotce PDF -->
     {{ if $files }}
-    <div style="background: #fcfcfc; border: 1px solid #ddd; padding: 12px; border-radius: 4px; margin-bottom: 25px; font-size: 13px;">
-      <strong>Prisegti dokumentai / specifikacijos:</strong>
-      <ul style="margin: 4px 0 0 18px; padding: 0;">
-        {{ range $files }}
-          {{ $fileUrl := "" }}
-          {{ $fileName := "Dokumentas" }}
-          {{ if reflect.IsMap . }}{{ $fileUrl = .Permalink }}
-          {{ else }}
-            {{ $fileUrl = printf "%s" . }}
-            {{ if not (strings.HasPrefix $fileUrl "http") }}
-              {{ $fileName = path.Base $fileUrl }}
-              {{ $fileUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $fileUrl) | absURL }}
-            {{ end }}
+    <div style="margin-bottom: 25px;">
+      <h3 style="font-size: 15px; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 10px;">Prisegti dokumentai ir specifikacijos:</h3>
+      {{ range $files }}
+        {{ $fileUrl := "" }}
+        {{ if reflect.IsMap . }}{{ $fileUrl = .Permalink }}
+        {{ else }}
+          {{ $fileUrl = printf "%s" . }}
+          {{ if not (strings.HasPrefix $fileUrl "http") }}
+            {{ $fileUrl = printf "%s/%s" $.RelPermalink (strings.TrimPrefix "./" $fileUrl) | absURL }}
           {{ end }}
-          <li><a href="{{ $fileUrl }}" target="_blank" style="color: #0056b3;">{{ $fileName }}</a></li>
         {{ end }}
-      </ul>
+        <div style="margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; overflow: hidden; background: #fff;">
+          <iframe src="{{ $fileUrl }}" style="width: 100%; height: 500px; border: none;" title="PDF Attachment"></iframe>
+        </div>
+      {{ end }}
     </div>
     {{ end }}
 
-    <!-- Stopka PDF -->
     <div style="border-top: 1px solid #ccc; padding-top: 15px; font-size: 12px; color: #333;">
       <p style="margin: 0 0 6px 0;">Šis dokumentas yra vienas iš aktualių UAB „Kartono projektai“ sandėlio pasiūlymų.</p>
       <p style="margin: 0 0 10px 0;">Nuskenavę QR kodą galite susipažinti su šiuo pasiūlymu Kartono projektų puslapyje, peržiūrėti kitus aktualius sandėlio pasiūlymus, susisiekti dėl Kartono projektai siūlomos produkcijos: kartoninių pakuočių, stendų, POSM ar CNC paslaugų Kaune.</p>
@@ -233,22 +228,28 @@
   </div>
 </div>
 
-<!-- Skrypt obsługujący wyłącznie kliknięcie przycisku PDF bez otwierania zbędnych okien głównych stron -->
 <script>
+function openLightbox(url) {
+    document.getElementById('lightbox-img').src = url;
+    document.getElementById('img-lightbox').style.display = 'flex';
+}
+function closeLightbox() {
+    document.getElementById('img-lightbox').style.display = 'none';
+}
+
 document.getElementById('print-pdf-btn').addEventListener('click', function() {
     var printContent = document.getElementById('printable-leaflet').innerHTML;
-    var printWindow = window.open('', '_blank', 'width=850,height=900');
+    var printWindow = window.open('', '_blank', 'width=900,height=950');
     if (printWindow) {
-        printWindow.document.write('<html><head><title>{{ .Title }} - Pasiūlymo PDF</title></head><body style="margin:20px; background:#fff;">' + printContent + '</body></html>');
+        printWindow.document.write('<html><head><title>{{ .Title }} - Pasiūlymo PDF</title><style>@page { size: A4; margin: 10mm; }</style></head><body style="margin:0; padding:0; background:#fff;">' + printContent + '</body></html>');
         printWindow.document.close();
         printWindow.focus();
         setTimeout(function() {
             printWindow.print();
-        }, 300);
+        }, 500);
     }
 });
 
-// Warunkowe ograniczenie linku tel: tylko dla wersji mobilnych (UX / UI safeguard)
 document.addEventListener("DOMContentLoaded", function() {
     var phoneLink = document.querySelector('.mobile-phone-link');
     if (phoneLink) {
