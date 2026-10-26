@@ -1,6 +1,5 @@
 ---
 title: "Rekvizitai"
-description: "Oficialūs UAB Kartono projektai teisiniai ir finansiniai rekvizitai sąskaitų-faktūrų išrašymui."
 draft: false
 ---
 

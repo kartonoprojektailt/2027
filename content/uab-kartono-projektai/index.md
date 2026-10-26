@@ -1,6 +1,5 @@
 ---
 title: "Apie UAB Kartono projektai įmonę"
-description: "Susipažinkite su UAB „Kartono projektai“ Kaune. Gaminame tvarias kartonines pakuotes, reklamines vitrinas ir POS stendus nuo 1 vnt. Greitas pristatymas!"
 draft: false
 ---
 

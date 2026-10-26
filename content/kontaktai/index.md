@@ -1,6 +1,5 @@
 ---
 title: "Kontaktai"
-description: "Susisiekite su UAB Kartono projektai dėl pakuočių, stendų gamybos ir logistikos Kaune."
 draft: false
 ---
 
