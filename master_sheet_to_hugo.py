@@ -30,7 +30,7 @@ def sanitize_text(text):
     return text.strip()
 
 for index, row in df.iterrows():
-    # Naudojame tikslų stulpelio pavadinimą iš tavo lentelemės: 'slug'
+    # Naudojame tikslų stulpelio pavadinimą iš tavo lentelės: 'slug'
     slug = sanitize_text(str(row.get('slug', '')))
     title = sanitize_text(str(row.get('title', '')))
     content_body = sanitize_text(str(row.get('content_body', '')))
@@ -39,7 +39,7 @@ for index, row in df.iterrows():
     if not title and not content_body:
         continue
         
-    # Jei tai pagrindinis puslapis (slug tuščias arba 'index'), rašom į _index.md
+    # Jei tai pagrindinis puslapis (slug tuščias, 'index' arba '/'), rašom į _index.md
     if not slug or slug.lower() == 'index' or slug == '/':
         file_path = "content/_index.md"
     else:
