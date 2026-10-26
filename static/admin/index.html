@@ -94,7 +94,7 @@
       <div class="flex">
         <div style="flex: 1;">
           <label>Unikalus kodas (SKU)
-            <input type="text" id="offer_code" placeholder="pvz. KP-ST-A2">
+            <input type="text" id="offer_code" placeholder="Palikite tuščią – pasigamins automatiškai">
           </label>
         </div>
         <div style="flex: 1;">
@@ -427,8 +427,18 @@
     const title = document.getElementById('title').value;
     if(!title) { alert('Įveskite pavadinimą!'); return; }
 
+    const todayDate = new Date().toISOString().split('T')[0]; // yyyy-mm-dd
+    const cleanTitleSlug = slugify(title);
+    
+    // Generowanie sluga wg formatu: KP[data]-[title]
     const editSlug = document.getElementById('editSlug').value;
-    const slug = editSlug ? editSlug : slugify(title);
+    const slug = editSlug ? editSlug : `kp-${todayDate}-${cleanTitleSlug}`;
+
+    // Generowanie SKU wg formatu: KP[data]-[title] jeśli pole jest puste
+    let offer_code = document.getElementById('offer_code').value;
+    if (!offer_code) {
+      offer_code = `KP-${todayDate}-${cleanTitleSlug.toUpperCase()}`;
+    }
 
     const btn = document.getElementById('pubBtn');
     btn.disabled = true;
@@ -440,19 +450,16 @@
       let imagesList = [];
       let docsList = [];
 
-      // Įkeliame nuotraukas
       for(let file of imgFiles) {
         await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
         imagesList.push(file.name);
       }
 
-      // Įkeliame dokumentus (PDF / CAD / kt.)
       for(let file of docFiles) {
         await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
         docsList.push(file.name);
       }
 
-      const offer_code = document.getElementById('offer_code').value;
       const condition = document.getElementById('condition').value;
       const category = document.getElementById('category').value;
       const status = document.getElementById('status').value;
@@ -461,13 +468,20 @@
       const is_sale = document.getElementById('is_sale').checked;
       const stock = document.getElementById('stock').value || 0;
       const dimensions = document.getElementById('dimensions').value;
-      const description = document.getElementById('description').value;
+      let description = document.getElementById('description').value;
+
+      // Automatyczne dołączanie linków do plików PDF/CAD w treści opisu, aby były widoczne na stronie
+      if(docsList.length > 0) {
+        description += `\n\n### Dokumentai ir brėžiniai:\n`;
+        docsList.forEach(doc => {
+          description += `- [Atsisiųsti / Žiūrėti: ${doc}](./${doc})\n`;
+        });
+      }
 
       let mdContent = `---
 title: "${title}"
-`;
-      if(offer_code) mdContent += `offer_code: "${offer_code}"\n`;
-      mdContent += `category: "${category}"
+offer_code: "${offer_code}"
+category: "${category}"
 status: "${status}"
 price: ${price}
 `;
@@ -485,13 +499,7 @@ condition: "${condition}"
         mdContent += `image: "${imagesList[0]}"\n`;
       }
 
-      // Įrašome dokumentus į Frontmatter, kad Hugo šablonas galėtų juos atvaizduoti
-      if(docsList.length > 0) {
-        mdContent += `documents:\n`;
-        docsList.forEach(doc => mdContent += `  - "${doc}"\n`);
-      }
-
-      mdContent += `date: ${new Date().toISOString().split('T')[0]}
+      mdContent += `date: ${todayDate}
 ---
 
 ${description}
@@ -500,7 +508,7 @@ ${description}
       const mdFile = new File([mdContent], `index.md`, { type: 'text/markdown' });
       await uploadFileToGitHub(mdFile, `content/sandelyje/${slug}/index.md`, repo, token);
 
-      alert('🎉 Skelbimas ir visi failai (nuotraukos bei PDF) sėkmingai išsaugoti!');
+      alert('🎉 Skelbimas su SKU, nuotraukomis ir dokumentais sėkmingai išsaugotas!');
       resetForm();
       loadOffers();
     } catch(err) {
