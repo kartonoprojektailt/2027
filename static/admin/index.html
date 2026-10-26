@@ -1,23 +1,222 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="lt">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kartono Projektai - Valdymo pultas</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kartono Projektai - Valdymo pultas</title>
+<style>
+  :root { --bg: #f4f6f8; --card: #ffffff; --primary: #2b6cb0; --primary-hover: #234e70; --text: #2d3748; --border: #cbd5e0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+  .container { max-width: 800px; margin: 0 auto; }
+  .card { background: var(--card); padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+  h1, h2 { margin-top: 0; font-size: 1.5rem; color: #1a202c; }
+  label { display: block; margin-top: 14px; font-weight: 600; font-size: 0.9rem; }
+  input, select, textarea { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+  textarea { min-height: 120px; resize: vertical; }
+  button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 1rem; cursor: pointer; margin-top: 20px; width: 100%; font-weight: bold; }
+  button:hover { background: var(--primary-hover); }
+  .login-box { max-width: 400px; margin: 80px auto; text-align: center; }
+  .hidden { display: none !important; }
+  .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #e2e8f0; }
+  .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+  .badge.active { background: #c6f6d5; color: #22543d; }
+  .badge.parduota { background: #fed7d7; color: #742a2a; }
+  .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; margin: 0 4px; }
+  .btn-danger { background: #e53e3e; }
+  .btn-danger:hover { background: #c53030; }
+  .flex { display: flex; gap: 10px; }
+</style>
 </head>
 <body>
-  <!-- Wczytanie Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.reload();
-          });
-        }
-      });
+
+<div class="container">
+  <!-- EKRAN LOGOWANIA -->
+  <div id="loginScreen" class="card login-box">
+    <h2>Valdymo Pultas</h2>
+    <p style="font-size: 0.9rem; color: #666;">Įveskite administratoriaus slaptažodį</p>
+    <input type="password" id="passInput" placeholder="Slaptažodis...">
+    <button onclick="tryLogin()">Prisijungti</button>
+    <p id="loginError" style="color: #e53e3e; font-size: 0.85rem; margin-top: 10px; display: none;">Neteisingas slaptažodis!</p>
+  </div>
+
+  <!-- PANEL ZARZĄDZANIA -->
+  <div id="adminScreen" class="hidden">
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Sandėlio Valdymas</h1>
+        <button onclick="logout()" class="btn-sm btn-danger" style="margin-top: 0;">Atsijungti</button>
+      </div>
+      <p style="font-size: 0.9rem; color: #666;">Pridėkite naują prekę arba keiskite esamas.</p>
+    </div>
+
+    <!-- FORMULARZ DODAWANIA / EDYCJI -->
+    <div class="card">
+      <h2 id="formTitle">Pridėti naują prekę</h2>
+      <input type="hidden" id="editIndex" value="-1">
+      
+      <label>Pavadinimas (Title)
+        <input type="text" id="title" placeholder="pvz. Baltas kartoninis stovas">
+      </label>
+
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Kategorija
+            <select id="category">
+              <option value="Stovai">Stovai</option>
+              <option value="Pakuotės">Pakuotės</option>
+              <option value="Medžiagos">Medžiagos</option>
+              <option value="Paslaugos">Paslaugos</option>
+            </select>
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Statusas
+            <select id="status">
+              <option value="active">Galioja</option>
+              <option value="parduota">Parduota</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex">
+        <div style="flex: 1;">
+          <label>Kaina (EUR)
+            <input type="number" step="0.01" id="price" placeholder="15.00">
+          </label>
+        </div>
+        <div style="flex: 1;">
+          <label>Likutis (vnt.)
+            <input type="number" id="stock" placeholder="5">
+          </label>
+        </div>
+      </div>
+
+      <label>Aprašymas
+        <textarea id="description" placeholder="Trumpas prekės aprašymas, matmenys..."></textarea>
+      </label>
+
+      <button onclick="saveItem()">Išsaugoti prekę</button>
+    </div>
+
+    <!-- LISTA AKTUALNYCH PRODUKTÓW -->
+    <div class="card">
+      <h2>Esamos prekės sandėlyje</h2>
+      <div id="itemsList">
+        <!-- Generowane dynamicznie -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // USTAW SWOJE HASŁO TUTAJ:
+  const ADMIN_PASS = "kartonas2027";
+
+  let items = JSON.parse(localStorage.getItem('kp_warehouse') || '[]');
+
+  function tryLogin() {
+    const p = document.getElementById('passInput').value;
+    if(p === ADMIN_PASS) {
+      localStorage.setItem('kp_logged', 'true');
+      showAdmin();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
     }
-  </script>
+  }
+
+  function logout() {
+    localStorage.removeItem('kp_logged');
+    location.reload();
+  }
+
+  function showAdmin() {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('adminScreen').classList.remove('hidden');
+    renderList();
+  }
+
+  // Sprawdź czy już zalogowany
+  if(localStorage.getItem('kp_logged') === 'true') {
+    showAdmin();
+  }
+
+  function saveItem() {
+    const title = document.getElementById('title').value;
+    if(!title) { alert('Įveskite pavadinimą!'); return; }
+
+    const item = {
+      title: title,
+      category: document.getElementById('category').value,
+      status: document.getElementById('status').value,
+      price: document.getElementById('price').value,
+      stock: document.getElementById('stock').value,
+      description: document.getElementById('description').value
+    };
+
+    const editIndex = document.getElementById('editIndex').value;
+    if(editIndex == -1) {
+      items.push(item);
+    } else {
+      items[editIndex] = item;
+      document.getElementById('editIndex').value = -1;
+      document.getElementById('formTitle').textContent = 'Pridėti naują prekę';
+    }
+
+    localStorage.setItem('kp_warehouse', JSON.stringify(items));
+    clearForm();
+    renderList();
+  }
+
+  function renderList() {
+    const listDiv = document.getElementById('itemsList');
+    if(items.length === 0) {
+      listDiv.innerHTML = '<p style="color: #666; font-size: 0.9rem;">Sandėlyje kol kas nėra prekių.</p>';
+      return;
+    }
+    
+    let html = '';
+    items.forEach((item, index) => {
+      const badgeClass = item.status === 'parduota' ? 'parduota' : 'active';
+      const badgeText = item.status === 'parduota' ? 'Parduota' : 'Galioja';
+      html += `
+        <div class="item-row">
+          <div>
+            <strong>${item.title}</strong> (${item.category})<br>
+            <small style="color: #666;">Kaina: ${item.price || 0} EUR | Likutis: ${item.stock || 0} vnt.</small>
+          </div>
+          <div>
+            <span class="badge ${badgeClass}">${badgeText}</span>
+            <button onclick="editItem(${index})" class="btn-sm" style="background:#3182ce;">Redaguoti</button>
+            <button onclick="deleteItem(${index})" class="btn-sm btn-danger">Trinti</button>
+          </div>
+        </div>
+      `;
+    });
+    listDiv.innerHTML = html;
+  }
+
+  function editItem(index) {
+    const item = items[index];
+    document.getElementById('title').value = item.title;
+    document.getElementById('category').value = item.category;
+    document.getElementById('status').value = item.status;
+    document.getElementById('price').value = item.price;
+    document.getElementById('stock').value = item.stock;
+    document.getElementById('description').value = item.description;
+    
+    document.getElementById('editIndex').value = index;
+    document.getElementById('formTitle').textContent = 'Redaguoti prekę: ' + item.title;
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  function deleteItem(index) {
+    if(confirm('Ar tikrai norite ištrinti šią prekę?')) {
+      items.splice(index, 1);
+      localStorage.setItem('kp_warehouse', JSON.stringify(items));
+      renderList();
+    }
+  }
+</script>
 </body>
 </html>
