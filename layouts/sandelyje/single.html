@@ -59,11 +59,11 @@
             <span style="border: 1px solid var(--border); background: var(--theme); color: var(--primary); padding: 4px 10px; border-radius: 4px;">Likutis: {{ .Params.stock }} vnt.</span>
             {{ end }}
 
-            <!-- Obsługa statusu PARDUOTA -->
+            <!-- Statusy -->
             {{ if or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
-            <span style="background: #e53e3e; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold;">PARDUOTA</span>
+            <span style="background: #e53e3e; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold;">Pasiūlymas nebegaliojantis</span>
             {{ else }}
-            <span style="background: #38a169; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold;">AKTYVU</span>
+            <span style="background: #38a169; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold;">Pasiūlymas galiojantis</span>
             {{ end }}
         </div>
 
@@ -72,9 +72,10 @@
                 {{ .Title }}
             </h1>
             
-            <button id="print-pdf-btn" style="border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">
-                🖨️ Pasiūlymo PDF su QR
-            </button>
+            <!-- Czysty przycisk PDF bez ikon drukarki i bez zwisów -->
+            <a href="#pdf-pasiulymas" onclick="generatePDF(); return false;" style="border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">
+                📄 Pasiūlymo PDF su QR
+            </a>
         </div>
     </header>
 
@@ -103,7 +104,7 @@
         </div>
         {{ end }}
 
-        <!-- Lekkie linki do załączników (bez ciężkich iframe na stronie) -->
+        <!-- Linki do załączników / brėžiniai -->
         {{ $files := .Resources.Match "files/*" }}
         {{ if not $files }}{{ $files = .Params.files }}{{ end }}
         {{ if $files }}
@@ -150,9 +151,9 @@
     <img id="lightbox-img" src="" style="max-width:90%; max-height:90%; border-radius:4px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
 </div>
 
-<!-- Szablon ulotki PDF (lekkiej, z informacją o brėžiniai) -->
+<!-- Ukryty szablon generowania PDF (wersja czysto inżynieryjna) -->
 <div id="printable-leaflet" style="display:none;">
-  <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.4; padding: 20px; max-width: 700px; margin: 0 auto; border: 2px solid #222; background: #fff; border-radius: 6px;">
+  <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.4; padding: 25px; max-width: 700px; margin: 0 auto; border: 2px solid #222; background: #fff; border-radius: 6px;">
     
     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #222; padding-bottom: 12px; margin-bottom: 15px;">
       <div>
@@ -186,7 +187,6 @@
     </div>
     {{ end }}
 
-    <!-- Specjalna informacja o brėžiniai w PDF -->
     <div style="background: #f4f4f4; border: 1px solid #ddd; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 12px; color: #222;">
       📌 <strong>Pastaba:</strong> Šis pasiūlymas paskelbtas kartu su brėžiniais. Skenuokite QR kodą ir šiame Kartono projektų pasiūlymo puslapyje susipažinkite su siūlomo produkto brėžiniais PDF formatu.
     </div>
@@ -207,18 +207,18 @@ function closeLightbox() {
     document.getElementById('img-lightbox').style.display = 'none';
 }
 
-document.getElementById('print-pdf-btn').addEventListener('click', function() {
-    var printContent = document.getElementById('printable-leaflet').innerHTML;
-    var printWindow = window.open('', '_blank', 'width=800,height=900');
-    if (printWindow) {
-        printWindow.document.write('<html><head><title>{{ .Title }} - PDF</title><style>@page { size: A4; margin: 10mm; }</style></head><body style="margin:0; padding:0; background:#fff;">' + printContent + '</body></html>');
-        printWindow.document.close();
-        printWindow.focus();
+function generatePDF() {
+    var content = document.getElementById('printable-leaflet').innerHTML;
+    var win = window.open('', '_blank', 'width=800,height=900');
+    if (win) {
+        win.document.write('<html><head><title>{{ .Title }} - Pasiūlymo PDF</title><style>@page { size: A4; margin: 10mm; }</style></head><body style="margin:0; padding:0; background:#fff;">' + content + '</body></html>');
+        win.document.close();
+        win.focus();
         setTimeout(function() {
-            printWindow.print();
+            win.print();
         }, 300);
     }
-});
+}
 
 document.addEventListener("DOMContentLoaded", function() {
     var phoneLink = document.querySelector('.mobile-phone-link');
