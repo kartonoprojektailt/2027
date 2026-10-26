@@ -131,14 +131,15 @@
         {{ end }}
     </div>
 
-    <!-- Sekcja kontaktowa z poprawnie zakodowanym mailto (%20) -->
+    <!-- Sekcja kontaktowa z czystym mailto bez widocznych kodów %20 -->
     <div style="margin-top: 40px; padding: 24px; border: 1px solid var(--border); border-radius: 6px; background: var(--theme); text-align: center;">
         <h3 style="margin-top: 0; font-size: 1.2rem; color: var(--primary);">Susisiekti dėl šio pasiūlymo:</h3>
         <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 15px; font-size: 1.05rem;">
             <a href="tel:+37065285223" class="mobile-phone-link" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
                 📞 +370 652 85223
             </a>
-            <a href="mailto:info@kartonoprojektai.lt?subject={{ printf "KP sandėlio pasiūlymas %s" .Params.offer_code | urlquery | replaceRE "\\+" "%20" }}&body={{ printf "Sveiki,\n\nteiraujuosi dėl pasiūlymo %s." .Params.offer_code | urlquery | replaceRE "\\+" "%20" | replaceRE "%0A" "%0A" }}" style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
+            <!-- Naprawione kodowanie mailto dla pełnej czystości w mobilnych aplikacjach pocztowych -->
+            <a href="mailto:info@kartonoprojektai.lt?subject=KP%20sandėlio%20pasiūlymas%20{{ .Params.offer_code }}&body=Sveiki,%0A%0Ateiraujuosi%20dėl%20pasiūlymo%20{{ .Params.offer_code }}." style="border: 1px solid var(--border); padding: 10px 20px; border-radius: 6px; text-decoration: none; color: var(--primary); font-weight: bold; background: var(--entry);">
                 ✉️ info@kartonoprojektai.lt
             </a>
         </div>
@@ -156,13 +157,17 @@
         {{ range where site.RegularPages "Section" "sandelyje" }}
             {{ $isSold := or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
             {{ if and (ne .Permalink $currentPath) (not $isSold) }}
-                <a href="{{ .Permalink }}" style="display: flex; flex-direction: column; justify-content: space-between; padding: 12px 16px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: inherit; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--entry)';" onmouseout="this.style.background='var(--theme)';">
-                    <div style="display: flex; align-items: center; gap: 10px; width: 100%; flex-wrap: wrap;">
+                <a href="{{ .Permalink }}" style="display: flex; flex-direction: column; padding: 12px 16px; background: var(--theme); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: inherit; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--entry)';" onmouseout="this.style.background='var(--theme)';">
+                    
+                    <!-- Górna linia kafelka: Kategoria oraz Tytuł z pełną elastycznością -->
+                    <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
                         {{ if .Params.category }}
-                        <span style="font-size: 0.75rem; padding: 2px 8px; background: var(--border); border-radius: 4px; white-space: nowrap;">{{ .Params.category }}</span>
+                        <span style="font-size: 0.75rem; padding: 3px 8px; background: var(--border); border-radius: 4px; white-space: nowrap; flex-shrink: 0; font-weight: 500;">{{ .Params.category }}</span>
                         {{ end }}
-                        <strong style="font-size: 0.95rem; color: var(--primary); word-break: break-word;">{{ .Title }}</strong>
+                        <strong style="font-size: 0.95rem; color: var(--primary); overflow: hidden; text-overflow: ellipsis;">{{ .Title }}</strong>
                     </div>
+
+                    <!-- Dolna linia kafelka: Cena i ilość zablokowane razem po prawej -->
                     <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px; width: 100%; font-size: 0.9rem; font-weight: 600; border-top: 1px dashed var(--border); padding-top: 6px; margin-top: 2px;">
                         {{ if .Params.price }}<span style="white-space: nowrap; color: var(--primary);">{{ .Params.price }} EUR</span>{{ end }}
                         {{ if .Params.stock }}<span style="color: var(--secondary); white-space: nowrap; font-weight: normal;">({{ .Params.stock }} vnt.)</span>{{ end }}
