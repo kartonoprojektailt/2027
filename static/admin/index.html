@@ -7,9 +7,9 @@
 <style>
   :root { --bg: #f4f6f8; --card: #ffffff; --primary: #2b6cb0; --primary-hover: #234e70; --text: #2d3748; --border: #cbd5e0; }
   body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-  .container { max-width: 850px; margin: 0 auto; }
+  .container { max-width: 950px; margin: 0 auto; }
   .card { background: var(--card); padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
-  h1, h2 { margin-top: 0; font-size: 1.5rem; color: #1a202c; }
+  h1, h2, h3 { margin-top: 0; font-size: 1.5rem; color: #1a202c; }
   label { display: block; margin-top: 14px; font-weight: 600; font-size: 0.9rem; }
   input, select, textarea { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
   textarea { min-height: 120px; resize: vertical; }
@@ -25,6 +25,11 @@
   .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; margin: 0; }
   .btn-danger { background: #e53e3e; }
   .btn-success { background: #38a169; }
+  .btn-warning { background: #d69e2e; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  th, td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  th { background: #f7fafc; }
+  .actions-cell { display: flex; gap: 6px; }
 </style>
 </head>
 <body>
@@ -43,10 +48,10 @@
   <div id="adminScreen" class="hidden">
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>Sandėlio Valdymas (Page Bundle)</h1>
+        <h1>Sandėlio Valdymas</h1>
         <button onclick="logout()" class="btn-sm btn-danger">Atsijungti</button>
       </div>
-      <p style="font-size: 0.9rem; color: #666;">Užpildykite duomenis, pasirinkite failus ir spauskite publikuoti.</p>
+      <p style="font-size: 0.9rem; color: #666;">Valdykite esamus skelbimus arba kurkite naujus.</p>
     </div>
 
     <!-- KONFIGURACJA GITHUB API -->
@@ -64,12 +69,34 @@
           </label>
         </div>
       </div>
-      <button onclick="saveSettings()" class="btn-sm" style="margin-top: 10px; background: #4a5568;">Išsaugoti nustatymus</button>
+      <button onclick="saveSettings(); loadOffers();" class="btn-sm" style="margin-top: 10px; background: #4a5568;">Išsaugoti nustatymus ir užkrauti skelbimus</button>
     </div>
 
-    <!-- FORMULARZ TWORZENIA -->
+    <!-- LISTA ISTNIEJĄCYCH OGŁOSZEŃ -->
     <div class="card">
-      <h2>Sukurti naują pasiūlymą</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Esami skelbimai sandėlyje</h2>
+        <button onclick="loadOffers()" class="btn-sm" style="width: auto; margin:0;">🔄 Atnaujinti sąrašą</button>
+      </div>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Katalogo pavadinimas (Slug)</th>
+              <th>Veiksmai</th>
+            </tr>
+          </thead>
+          <tbody id="offersTableBody">
+            <tr><td colspan="2" style="text-align:center; color:#666;">Spauskite „Atnaujinti sąrašą“ arba įveskite nustatymus.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FORMULARZ TWORZENIA / EDYCJI -->
+    <div class="card">
+      <h2 id="formTitle">Sukurti naują pasiūlymą</h2>
+      <input type="hidden" id="editSlug" value="">
       
       <label>Pavadinimas (Title)
         <input type="text" id="title" placeholder="pvz. Baltas kartoninis stovas A2">
@@ -107,7 +134,7 @@
           <label>Statusas
             <select id="status">
               <option value="active">Galioja</option>
-              <option value="parduota">Parduota</option>
+              <option value="parduota">Parduota (Sold)</option>
             </select>
           </label>
         </div>
@@ -146,13 +173,12 @@
         </div>
       </div>
 
-      <label>Nuotraukos / GIF (pasirinkite per Browse)
+      <label>Nuotraukos / GIF (pasirinkite naujas)
         <input type="file" id="imagesInput" multiple accept="image/*,.gif">
         <div class="file-info" id="imgInfo">Pasirinkta nuotraukų: 0</div>
       </label>
 
-      <!-- PRZYWRÓCONE POLE NA DOKUMENTY PDF / CAD -->
-      <label>Dokumentai / CAD / PDF (pasirinkite per Browse)
+      <label>Dokumentai / CAD / PDF
         <input type="file" id="docsInput" multiple accept=".pdf,.dwg,.dxf,.step,.stp,.zip">
         <div class="file-info" id="docInfo">Pasirinkta dokumentų: 0</div>
       </label>
@@ -161,7 +187,8 @@
         <textarea id="description" placeholder="Detalus prekės aprašymas..."></textarea>
       </label>
 
-      <button onclick="publishToGitHub()" class="btn-success" id="pubBtn">🚀 Paskelbti automatiškai į svetainę</button>
+      <button onclick="publishToGitHub()" class="btn-success" id="pubBtn">🚀 Paskelbti / Išsaugoti pakeitimus</button>
+      <button onclick="resetForm()" class="btn-danger hidden" id="cancelBtn" style="margin-top: 10px;">Atšaukti redagavimą</button>
     </div>
   </div>
 </div>
@@ -188,6 +215,7 @@
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('adminScreen').classList.remove('hidden');
     loadSettings();
+    loadOffers();
   }
 
   if(localStorage.getItem('kp_logged') === 'true') {
@@ -240,18 +268,192 @@
     const content = await fileToBase64(file);
     const url = `https://api.github.com/repos/${repo}/contents/${path}`;
     
+    // Sprawdzamy czy plik już istnieje, aby pobrać jego SHA (wymagane przez GitHub API przy nadpisywaniu)
+    let sha = null;
+    const existing = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (existing.ok) {
+      const data = await existing.json();
+      sha = data.sha;
+    }
+
+    const bodyData = {
+      message: `Admin update/upload: ${path}`,
+      content: content
+    };
+    if (sha) bodyData.sha = sha;
+
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        message: `Admin bundle upload: ${file.name}`,
-        content: content
-      })
+      body: JSON.stringify(bodyData)
     });
-    if (!response.ok) throw new Error(`Klaida įkeliant failą ${file.name}`);
+    if (!response.ok) throw new Error(`Klaida įkeliant failą ${path}`);
+  }
+
+  async function loadOffers() {
+    const repo = localStorage.getItem('kp_repo');
+    const token = localStorage.getItem('kp_token');
+    const tbody = document.getElementById('offersTableBody');
+    if(!repo || !token) {
+      tbody.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#e53e3e;">Įveskite GitHub nustatymus viršuje!</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#666;">Kraunasi skelbimai...</td></tr>`;
+
+    try {
+      const url = `https://api.github.com/repos/${repo}/contents/content/sandelyje`;
+      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+      if(!res.ok) throw new Error('Nepavyko gauti sandėlio turinio.');
+      const items = await res.json();
+
+      tbody.innerHTML = '';
+      const folders = items.filter(item => item.type === 'dir');
+
+      if(folders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#666;">Sandėlyje nėra jokių skelbimų.</td></tr>`;
+        return;
+      }
+
+      folders.forEach(folder => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${folder.name}</strong></td>
+          <td class="actions-cell">
+            <button class="btn-sm btn-warning" onclick="quickMarkSold('${folder.name}')">Parduota</button>
+            <button class="btn-sm" onclick="editOffer('${folder.name}')">Redaguoti</button>
+            <button class="btn-sm btn-danger" onclick="deleteOffer('${folder.name}')">Trinti</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch(err) {
+      tbody.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#e53e3e;">Klaida: ${err.message}</td></tr>`;
+    }
+  }
+
+  async function quickMarkSold(slug) {
+    const repo = localStorage.getItem('kp_repo');
+    const token = localStorage.getItem('kp_token');
+    if(!confirm(`Ar tikrai norite pažymėti skelbimą „${slug}“ kaip Parduotą (Sold)?`)) return;
+
+    try {
+      const url = `https://api.github.com/repos/${repo}/contents/content/sandelyje/${slug}/index.md`;
+      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+      if(!res.ok) throw new Error('Nepavyko perskaityti index.md');
+      const fileData = await res.json();
+      const content = decodeURIComponent(escape(atob(fileData.content)));
+
+      // Zamieniamy status na parduota
+      let updatedContent = content;
+      if (updatedContent.includes('status:')) {
+        updatedContent = updatedContent.replace(/status:\s*"?[a-zA-Z]+"?[ \t]*/, 'status: "parduota"\n');
+      } else {
+        updatedContent = updatedContent.replace('---', '---\nstatus: "parduota"');
+      }
+
+      const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
+      const updateRes = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Quick mark sold: ${slug}`, content: encodedContent, sha: fileData.sha })
+      });
+
+      if(!updateRes.ok) throw new Error('Nepavyko atnaujinti failo.');
+      alert('🎉 Skelbimas sėkmingai pažymėtas kaip parduotas!');
+      loadOffers();
+    } catch(err) {
+      alert('Klaida: ' + err.message);
+    }
+  }
+
+  async function deleteOffer(slug) {
+    const repo = localStorage.getItem('kp_repo');
+    const token = localStorage.getItem('kp_token');
+    if(!confirm(`⚠️ Ar tikrai norite VISAM LAIKUI ištrinti skelbimą „${slug}“ (kartu su visais failais)?`)) return;
+
+    try {
+      // Pobieramy zawartość folderu aby usunąć każdy plik z osobna (wymóg GitHub API)
+      const url = `https://api.github.com/repos/${repo}/contents/content/sandelyje/${slug}`;
+      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+      if(!res.ok) throw new Error('Nepavyko rasti aplanko.');
+      const files = await res.json();
+
+      for(let file of files) {
+        const delRes = await fetch(`https://api.github.com/repos/${repo}/contents/${file.path}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: `Delete asset: ${file.path}`, sha: file.sha })
+        });
+      }
+
+      alert('🗑️ Skelbimas sėkmingai pašalintas!');
+      loadOffers();
+    } catch(err) {
+      alert('Klaida trinant: ' + err.message);
+    }
+  }
+
+  async function editOffer(slug) {
+    const repo = localStorage.getItem('kp_repo');
+    const token = localStorage.getItem('kp_token');
+    try {
+      const url = `https://api.github.com/repos/${repo}/contents/content/sandelyje/${slug}/index.md`;
+      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+      if(!res.ok) throw new Error('Nepavyko rasti index.md failo.');
+      const fileData = await res.json();
+      const text = decodeURIComponent(escape(atob(fileData.content)));
+
+      // Proste wyciąganie danych z frontmatter (YAML) do pól formularza
+      document.getElementById('editSlug').value = slug;
+      document.getElementById('formTitle').textContent = `Redaguoti skelbimą: ${slug}`;
+      document.getElementById('cancelBtn').classList.remove('hidden');
+
+      // Wypełnianie pól na oko / podstawowe parsowanie
+      const titleMatch = text.match(/title:\s*"([^"]+)"/);
+      if(titleMatch) document.getElementById('title').value = titleMatch[1];
+
+      const codeMatch = text.match(/offer_code:\s*"([^"]+)"/);
+      if(codeMatch) document.getElementById('offer_code').value = codeMatch[1];
+
+      const catMatch = text.match(/category:\s*"([^"]+)"/);
+      if(catMatch) document.getElementById('category').value = catMatch[1];
+
+      const statusMatch = text.match(/status:\s*"([^"]+)"/);
+      if(statusMatch) document.getElementById('status').value = statusMatch[1];
+
+      const priceMatch = text.match(/price:\s*([0-9.]+)/);
+      if(priceMatch) document.getElementById('price').value = priceMatch[1];
+
+      const origMatch = text.match(/original_price:\s*([0-9.]+)/);
+      if(origMatch) document.getElementById('original_price').value = origMatch[1];
+
+      const stockMatch = text.match(/stock:\s*([0-9]+)/);
+      if(stockMatch) document.getElementById('stock').value = stockMatch[1];
+
+      const dimMatch = text.match(/dimensions:\s*"([^"]+)"/);
+      if(dimMatch) document.getElementById('dimensions').value = dimMatch[1];
+
+      // Opis to wszystko poniżej drugiego "---"
+      const parts = text.split(/---\s*\n/);
+      if(parts.length >= 3) {
+        document.getElementById('description').value = parts.slice(2).join('---').trim();
+      }
+
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    } catch(err) {
+      alert('Klaida kraunant duomenis redagavimui: ' + err.message);
+    }
+  }
+
+  function resetForm() {
+    document.getElementById('editSlug').value = '';
+    document.getElementById('formTitle').textContent = 'Sukurti naują pasiūlymą';
+    document.getElementById('cancelBtn').classList.add('hidden');
+    clearForm();
   }
 
   async function publishToGitHub() {
@@ -265,28 +467,28 @@
     const title = document.getElementById('title').value;
     if(!title) { alert('Įveskite pavadinimą!'); return; }
 
+    const editSlug = document.getElementById('editSlug').value;
+    const slug = editSlug ? editSlug : slugify(title);
+
     const btn = document.getElementById('pubBtn');
     btn.disabled = true;
-    btn.textContent = '⏳ Kuriamas katalogas ir siunčiami failai...';
+    btn.textContent = '⏳ Saugoma ir siunčiama...';
 
     try {
       const imgFiles = document.getElementById('imagesInput').files;
       const docFiles = document.getElementById('docsInput').files;
-      const slug = slugify(title);
       let imagesList = [];
 
-      // 1. Wysyłamy zdjęcia do folderu oferty
+      // Pobieramy istniejącą listę obrazków z repo jeśli edytujemy, albo ładujemy nowe
       for(let file of imgFiles) {
         await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
         imagesList.push(file.name);
       }
 
-      // 2. Wysyłamy dokumenty PDF/CAD do tego samego folderu oferty
       for(let file of docFiles) {
         await uploadFileToGitHub(file, `content/sandelyje/${slug}/${file.name}`, repo, token);
       }
 
-      // 3. Budujemy zawartość pliku index.md w tym samym folderze
       const offer_code = document.getElementById('offer_code').value;
       const condition = document.getElementById('condition').value;
       const category = document.getElementById('category').value;
@@ -326,33 +528,5 @@ condition: "${condition}"
 ${description}
 `;
 
-      // 4. Wysyłamy index.md do folderu
       const mdFile = new File([mdContent], `index.md`, { type: 'text/markdown' });
-      await uploadFileToGitHub(mdFile, `content/sandelyje/${slug}/index.md`, repo, token);
-
-      alert('🎉 Valio! Prekė su nuotraukomis ir PDF dokumentais sėkmingai paskelbta!');
-      clearForm();
-    } catch(err) {
-      alert('Klaida publikuojant: ' + err.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '🚀 Paskelbti automatiškai į svetainę';
-    }
-  }
-
-  function clearForm() {
-    document.getElementById('title').value = '';
-    document.getElementById('offer_code').value = '';
-    document.getElementById('price').value = '';
-    document.getElementById('original_price').value = '';
-    document.getElementById('stock').value = '';
-    document.getElementById('dimensions').value = '';
-    document.getElementById('imagesInput').value = '';
-    document.getElementById('docsInput').value = '';
-    document.getElementById('imgInfo').textContent = 'Pasirinkta nuotraukų: 0';
-    document.getElementById('docInfo').textContent = 'Pasirinkta dokumentų: 0';
-    document.getElementById('description').value = '';
-  }
-</script>
-</body>
-</html>
+      await uploadFileToGitHub(
