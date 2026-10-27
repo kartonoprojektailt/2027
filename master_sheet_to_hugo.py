@@ -137,13 +137,12 @@ for index, row in df.iterrows():
     unit_block = f"\nunit: \"{unit}\"" if unit else ""
     stock_block = f"\nstock: \"{stock}\"" if stock else ""
 
-    # Dedykowany szablon dla strony wyszukiwarki z poprawnym layoutem
+    # Dedykowany szablon dla strony wyszukiwarki (czysty PaperMod search layout)
     if file_path == "content/search.md":
-        markdown_content = f"""---
-title: "{title}"
-description: "{meta_desc}"
+        markdown_content = """---
+title: "Paieška"
+description: "Kartono projektai paieška"
 layout: "search"
-{cloud_block}
 ---
 """
     elif file_path == "content/sandelyje/_index.md":
@@ -174,7 +173,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Fix category mappings and search page layout"], check=True)
+        subprocess.run(["git", "commit", "-m", "Fix search page layout and category mappings"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Visi pakeitimai iškeliavo į GitHub.")
     else:
