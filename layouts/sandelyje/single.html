@@ -1,0 +1,194 @@
+{{ define "main" }}
+{{ $isSold := or (eq .Params.stock "0") (eq .Params.stock "0 vnt.") (eq .Params.stock "Parduota") }}
+
+<article class="post-single">
+  <header class="post-header">
+    <h1 class="post-title" style="font-size: 2rem; font-weight: 700; margin-bottom: 15px;">{{ .Title }}</h1>
+  </header>
+
+  <div class="post-content" style="font-size: 1rem; line-height: 1.6; color: var(--content);">
+    
+    <!-- ODZNAKA PARDUOTA -->
+    {{ if $isSold }}
+    <div style="background: #e74c3c; color: white; padding: 12px 20px; border-radius: 6px; font-weight: bold; font-size: 1.1rem; text-align: center; margin-bottom: 20px;">
+      ⚠️ ŠIS PASIŪLYMAS JAU PARDUOTAS / SANDĖLYJE NEBĖRA
+    </div>
+    {{ end }}
+
+    <!-- HERO IMAGE -->
+    {{ if .Params.hero_image }}
+    <div style="margin-bottom: 25px; border-radius: 8px; overflow: hidden; background: #f0f0f0; max-height: 450px; text-align: center; border: 1px solid var(--border);">
+      <img src="{{ .Params.hero_image }}" alt="{{ .Title }}" style="max-width: 100%; height: auto; object-fit: contain; max-height: 450px; cursor: pointer;" onclick="openModal(this.src)">
+    </div>
+    {{ end }}
+
+    <!-- BOKS HANDLOWY -->
+    <div style="background: var(--entry); border: 1px solid var(--border); padding: 25px; border-radius: 8px; margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center;">
+      
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        {{ if .Params.category }}
+        <div style="font-size: 0.95rem; color: var(--secondary);">
+          Kategorija: 
+          <a href="{{ .Params.category_url | default "/sandelyje/" }}" style="color: var(--primary); text-decoration: underline; font-weight: 600;">
+            {{ .Params.category }}
+          </a>
+        </div>
+        {{ end }}
+        {{ if .Params.offer_code }}
+        <div style="font-size: 0.9rem; font-family: monospace; opacity: 0.8; background: var(--tertiary); padding: 4px 8px; border-radius: 4px; width: fit-content;">
+          Kodas: {{ .Params.offer_code }}
+        </div>
+        {{ end }}
+      </div>
+
+      <div style="text-align: right; display: flex; flex-direction: column; gap: 5px;">
+        {{ if .Params.price }}
+        <div style="font-size: 1.8rem; font-weight: bold; color: var(--primary);">
+          {{ .Params.price }} {{ if .Params.unit }}<span style="font-size: 1.1rem; font-weight: normal; opacity: 0.8;">/ {{ .Params.unit }}</span>{{ end }}
+        </div>
+        {{ end }}
+        <div style="font-size: 1rem; color: var(--secondary);">
+          Likutis sandėlyje: 
+          {{ if $isSold }}
+            <strong style="color: #e74c3c;">0 vnt. (Parduota)</strong>
+          {{ else }}
+            <strong style="color: var(--primary);">{{ .Params.stock }}</strong>
+          {{ end }}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PRZYCISKI AKCJI -->
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 35px;" class="no-print">
+      <button onclick="window.print();" style="background: var(--primary); color: var(--theme); border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+        🖨️ Pilno skelbimo PDF su QR
+      </button>
+
+      <a href="tel:+37065285223" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+        📞 Skambinti (+370 652 85223)
+      </a>
+
+      {{ $emailSubject := printf "%s-%s-Kartono projektų sandėlio pasiūlymas" .Title (.Params.offer_code | default "KP") }}
+      <a href="mailto:info@kartonoprojektai.lt?subject={{ $emailSubject | urlize }}" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+        ✉️ Siųsti užklausą el. paštu
+      </a>
+    </div>
+
+    <!-- TREŚĆ GŁÓWNA -->
+    <div style="font-size: 1rem; line-height: 1.7; margin-bottom: 40px;">
+      {{ .Content }}
+    </div>
+
+    <!-- CHMURKA TAGÓW SŁÓW KLUCZOWYCH (SEARCH CLOUD) -->
+    {{ if .Params.search_cloud }}
+    <div style="margin-top: 30px; margin-bottom: 30px; padding: 15px; background: var(--tertiary); border-radius: 8px;" class="no-print">
+      <h4 style="margin: 0 0 10px 0; font-size: 0.9rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">Susijusios paieškos frazės:</h4>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        {{ range .Params.search_cloud }}
+        <a href="/search/?q={{ . | urlize }}" style="font-size: 0.85rem; background: var(--entry); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; color: var(--primary); text-decoration: none;">
+          🔍 {{ . }}
+        </a>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+
+    <!-- GALERIA ZDJĘĆ -->
+    {{ if .Params.gallery_images }}
+    <div style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 30px;" class="no-print">
+      <h3 style="margin-bottom: 20px; font-size: 1.3rem; font-weight: 600;">Nuotraukų galerija</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px;">
+        {{ range .Params.gallery_images }}
+        <div style="border-radius: 6px; overflow: hidden; border: 1px solid var(--border); height: 130px; background: #f0f0f0; cursor: pointer;" onclick="openModal('{{ . }}')">
+          <img src="{{ . }}" alt="Galerijos nuotrauka" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';">
+        </div>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+
+    <!-- MODAL -->
+    <div id="imageModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.8); align-items:center; justify-content:center;" onclick="closeModal()">
+      <span style="position:absolute; top:20px; right:35px; color:#f1f1f1; font-size:40px; font-weight:bold; cursor:pointer;" onclick="closeModal()">&times;</span>
+      <img id="modalImg" style="max-width:90%; max-height:90%; border-radius:6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
+    </div>
+
+    <!-- STOPKA DO DRUKU PDF Z QR -->
+    <div id="print-footer" style="display: none; margin-top: 50px; border-top: 2px solid #000; padding-top: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <p style="font-size: 0.9rem; font-weight: bold; margin: 0 0 5px 0;">UAB „Kartono projektai" sandėlio pasiūlymas</p>
+          <p style="font-size: 0.8rem; margin: 0; color: #555;">Raudondvario pl. 164, Kaunas | Tel. +370 652 85223 | info@kartonoprojektai.lt</p>
+          <p style="font-size: 0.75rem; margin: 10px 0 0 0; max-width: 400px;">Šis dokumentas yra oficialus sandėlio pasiūlymas. Nuskenavę QR kodą galite peržiūrėti pasiūlymą internete.</p>
+        </div>
+        <div id="qrcode" style="background: white; padding: 5px; border: 1px solid #ccc;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ .Permalink }}" alt="QR Kodas" style="width: 100px; height: 100px; display: block;">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</article>
+
+<!-- SCHEMA.ORG (JSON-LD) DLA GOOGLE -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ .Title }}",
+  "image": [
+    {{ if .Params.hero_image }}"{{ .Params.hero_image }}"{{ end }}
+    {{ range .Params.gallery_images }}, "{{ . }}"{{ end }}
+  ],
+  "description": "{{ .Description | default .Summary | plainify }}",
+  "sku": "{{ .Params.offer_code }}",
+  "mpn": "{{ .Params.offer_code }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "UAB Kartono projektai"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ .Permalink }}",
+    "priceCurrency": "EUR",
+    "price": "{{ .Params.price | default "0" }}",
+    "priceValidUntil": "2026-12-31",
+    "itemCondition": "https://schema.org/RefurbishedCondition",
+    "availability": "{{ if $isSold }}https://schema.org/OutOfStock{{ else }}https://schema.org/InStock{{ end }}",
+    "seller": {
+      "@type": "Organization",
+      "name": "UAB „Kartono projektai“",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Raudondvario pl. 164",
+        "addressLocality": "Kaunas",
+        "postalCode": "47174",
+        "addressCountry": "LT"
+      }
+    }
+  }
+}
+</script>
+
+<script>
+function openModal(src) {
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImg');
+  modal.style.display = "flex";
+  modalImg.src = src;
+}
+function closeModal() {
+  document.getElementById('imageModal').style.display = "none";
+}
+</script>
+
+<style>
+@media print {
+  .no-print, header, footer, .nav, .mobile-menu-icon { display: none !important; }
+  body { background: white !important; color: black !important; }
+  #print-footer { display: block !important; page-break-inside: avoid; }
+  .post-single { padding: 0 !important; }
+}
+</style>
+{{ end }}

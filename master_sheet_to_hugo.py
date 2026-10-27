@@ -18,13 +18,11 @@ try:
     client = gspread.authorize(creds)
     spreadsheet = client.open_by_key(SPREADSHEET_ID)
     
-    # 1. Zakładka główna ze stronami 'puslapiai'
     df_puslapiai = pd.DataFrame(spreadsheet.worksheet("puslapiai").get_all_records())
     df_puslapiai['source_tab'] = 'puslapiai'
     
     dfs_to_concat = [df_puslapiai]
     
-    # 2. Zakładka magazynowa / ogłoszenia 'sandelyje'
     try:
         df_sandelyje = pd.DataFrame(spreadsheet.worksheet("sandelyje").get_all_records())
         df_sandelyje['source_tab'] = 'sandelyje'
@@ -43,31 +41,35 @@ def sanitize_text(text):
         return ""
     return text.strip()
 
-def fix_gdrive_url(url):
-    """Konwertuje link Google Drive na niezawodny format strumieniowy lh3"""
+def fix_gdrive_url(url, max_width=1000):
     if "drive.google.com" in url:
         try:
+            file_id = ""
             if "/file/d/" in url:
                 file_id = url.split("/file/d/")[1].split("/")[0]
-                return f"https://lh3.googleusercontent.com/d/{file_id}"
             elif "id=" in url:
                 file_id = url.split("id=")[1].split("&")[0]
-                return f"https://lh3.googleusercontent.com/d/{file_id}"
+            
+            if file_id:
+                return f"https://lh3.googleusercontent.com/d/{file_id}=w{max_width}"
         except Exception:
             return url
     return url
 
-# Usuwamy błędny plik index.md z głównego folderu content
-rogue_index = "content/index.md"
-if os.path.exists(rogue_index):
-    os.remove(rogue_index)
-    print("Pašalintas klaidingas 'content/index.md' iš pagrindinio aplanko.")
+def get_category_url(category_name):
+    cat_lower = category_name.strip().lower()
+    if "reklam" in cat_lower or "stend" in cat_lower or "posm" in cat_lower:
+        return "/reklaminiai-stendai-ir-posm/"
+    elif "pakuot" in cat_lower:
+        return "/kartono-pakuotes/"
+    elif "cnc" in cat_lower or "paslaug" in cat_lower:
+        return "/cnc-paslaugos/"
+    else:
+        return "/sandelyje/"
 
-# Usuwamy błędny plik index.md z folderu sandelyje
-rogue_sandelyje_index = "content/sandelyje/index.md"
-if os.path.exists(rogue_sandelyje_index):
-    os.remove(rogue_sandelyje_index)
-    print("Pašalintas klaidingas 'content/sandelyje/index.md', kuris blokavo siatkę kafelków.")
+# Usuwamy błędny plik index.md z sandelyje jeśli istnieje
+if os.path.exists("content/sandelyje/index.md"):
+    os.remove("content/sandelyje/index.md")
 
 for index, row in df.iterrows():
     slug = sanitize_text(str(row.get('slug', '')))
@@ -75,23 +77,23 @@ for index, row in df.iterrows():
     meta_desc = sanitize_text(str(row.get('meta_description', '')))
     content_body = sanitize_text(str(row.get('content_body', '')))
     
-    # Hero image z automatyczną naprawą linku Google Drive
     hero_image = sanitize_text(str(row.get('hero_image', '')))
     if hero_image:
-        hero_image = fix_gdrive_url(hero_image)
+        hero_image = fix_gdrive_url(hero_image, max_width=1000)
         
     search_cloud = sanitize_text(str(row.get('search_cloud', '')))
+    cloud_list = [tag.strip() for tag in search_cloud.split(',') if tag.strip()]
     
-    # Nowe pola dla ogłoszeń magazynowych
     code = sanitize_text(str(row.get('code', '')))
     category = sanitize_text(str(row.get('category', '')))
+    category_url = get_category_url(category) if category else ""
+    
     price = sanitize_text(str(row.get('price', '')))
     unit = sanitize_text(str(row.get('unit', '')))
     stock = sanitize_text(str(row.get('stock', '')))
     
-    # Obsługa galerii zdjęć po przecinku z naprawą linków Google Drive
     gallery_raw = sanitize_text(str(row.get('gallery_images', '')))
-    gallery_list = [fix_gdrive_url(img.strip()) for img in gallery_raw.split(',') if img.strip()]
+    gallery_list = [fix_gdrive_url(img.strip(), max_width=800) for img in gallery_raw.split(',') if img.strip()]
     
     source_tab = str(row.get('source_tab', ''))
     
@@ -105,6 +107,8 @@ for index, row in df.iterrows():
         if not slug or slug.lower() == 'nan' or slug.lower() == 'sandelyje':
             continue
         file_path = f"content/sandelyje/{slug}/index.md"
+    elif slug.lower() == 'paieska' or slug.lower() == 'search':
+        file_path = f"content/search.md"
     elif not slug or slug.lower() == 'nan' or slug.lower() == 'index' or slug == '/':
         file_path = f"content/_index.md"
     else:
@@ -112,23 +116,31 @@ for index, row in df.iterrows():
 
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-    # Budowanie nagłówka YAML
     gallery_yaml = "\n".join([f"  - \"{img}\"" for img in gallery_list])
     gallery_block = f"\ngallery_images:\n{gallery_yaml}" if gallery_yaml else ""
 
+    cloud_yaml = "\n".join([f"  - \"{tag}\"" for tag in cloud_list])
+    cloud_block = f"\nsearch_cloud:\n{cloud_yaml}" if cloud_yaml else ""
+
     hero_block = f"\nhero_image: \"{hero_image}\"" if hero_image else ""
     desc_block = f"\ndescription: \"{meta_desc}\"" if meta_desc else ""
-    cloud_block = f"\nsearch_cloud: \"{search_cloud}\"" if search_cloud else ""
     
-    # Bloki dla magazynu
     code_block = f"\noffer_code: \"{code}\"" if code else ""
-    cat_block = f"\ncategory: \"{category}\"" if category else ""
+    cat_block = f"\ncategory: \"{category}\"\ncategory_url: \"{category_url}\"" if category else ""
     price_block = f"\nprice: \"{price}\"" if price else ""
     unit_block = f"\nunit: \"{unit}\"" if unit else ""
     stock_block = f"\nstock: \"{stock}\"" if stock else ""
 
-    # Szablon pliku Markdown
-    if file_path == "content/sandelyje/_index.md":
+    # Dedykowany szablon dla strony wyszukiwarki
+    if file_path == "content/search.md":
+        markdown_content = f"""---
+title: "{title}"
+description: "{meta_desc}"
+layout: "search"
+{cloud_block}
+---
+"""
+    elif file_path == "content/sandelyje/_index.md":
         markdown_content = f"""---
 title: "{title}"{desc_block}{hero_block}{gallery_block}{cloud_block}
 draft: false
@@ -151,15 +163,14 @@ draft: false
         f.write(markdown_content)
     print(f"Įrašyta: {file_path}")
 
-# Git Push
 print("Vykdomas Git sinchronizavimas...")
 try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Use direct lh3 googleusercontent image links"], check=True)
+        subprocess.run(["git", "commit", "-m", "Fix search page layout, map category URLs and build search cloud tags"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
-        print("Valio! Visi pakeitimai iškeliavo į GitHub ir Cloudflare Pages atsinaujins akimirksniu.")
+        print("Valio! Visi pakeitimai iškeliavo į GitHub.")
     else:
         print("Jokių naujų pakeitimų faile nėra.")
 except subprocess.CalledProcessError as e:

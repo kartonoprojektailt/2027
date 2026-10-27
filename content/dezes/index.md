@@ -2,6 +2,7 @@
 title: "Kartoninės dėžės ir gofro tara"
 offer_code: "nan"
 category: "nan"
+category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"

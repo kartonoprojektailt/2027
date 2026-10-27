@@ -1,11 +1,17 @@
 ---
 title: "A3 balto kartono lapai"
-hero_image: "https://lh3.googleusercontent.com/d/1YWPKVcxZnKbaFUyUI2iahOacmtCTefGZ"
+hero_image: "https://lh3.googleusercontent.com/d/1YWPKVcxZnKbaFUyUI2iahOacmtCTefGZ=w1000"
 gallery_images:
-  - "https://lh3.googleusercontent.com/d/1Vc5PKVPC4r8fySdyA6qeTs2cLiEtP2IR"
-search_cloud: "Kartonas baltas, ekologiškas kartonas, nedegus kartonas, šventinės dekoracijos, DIY"
+  - "https://lh3.googleusercontent.com/d/1Vc5PKVPC4r8fySdyA6qeTs2cLiEtP2IR=w800"
+search_cloud:
+  - "Kartonas baltas"
+  - "ekologiškas kartonas"
+  - "nedegus kartonas"
+  - "šventinės dekoracijos"
+  - "DIY"
 offer_code: "kp20261016b"
-category: "Medžiagos"
+category: "Kartono pakuotės"
+category_url: "/kartono-pakuotes/"
 price: "200 EUR"
 unit: "pakuotė (10 vnt.)"
 stock: "14"

@@ -2,11 +2,12 @@
 title: "Foto sienelės ir renginių dekoracijos"
 hero_image: "https://kartonoprojektai.lt/wp-content/uploads/2022/10/Kartono-projektai-reklamines-foto-sieneles-renginiams.jpg"
 gallery_images:
-  - "https://lh3.googleusercontent.com/d/1v_uOUm9I6VCy2fMvmZ8ZmFkSyz5Ytajz"
+  - "https://lh3.googleusercontent.com/d/1v_uOUm9I6VCy2fMvmZ8ZmFkSyz5Ytajz=w800"
   - "/images/Reklaminiai-stendai-kartono-projektai.jpg"
   - "/images/Kartono-projektai-foto-sieneles-renginiui.jpg"
 offer_code: "nan"
 category: "nan"
+category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"

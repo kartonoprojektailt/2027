@@ -2,6 +2,7 @@
 title: "Pakuočių ir stendų projektavimo paslaugos"
 offer_code: "nan"
 category: "nan"
+category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
