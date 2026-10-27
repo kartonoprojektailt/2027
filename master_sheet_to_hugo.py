@@ -43,6 +43,20 @@ def sanitize_text(text):
         return ""
     return text.strip()
 
+def fix_gdrive_url(url):
+    """Konwertuje link Google Drive na niezawodny format strumieniowy lh3"""
+    if "drive.google.com" in url:
+        try:
+            if "/file/d/" in url:
+                file_id = url.split("/file/d/")[1].split("/")[0]
+                return f"https://lh3.googleusercontent.com/d/{file_id}"
+            elif "id=" in url:
+                file_id = url.split("id=")[1].split("&")[0]
+                return f"https://lh3.googleusercontent.com/d/{file_id}"
+        except Exception:
+            return url
+    return url
+
 # Usuwamy błędny plik index.md z głównego folderu content
 rogue_index = "content/index.md"
 if os.path.exists(rogue_index):
@@ -60,7 +74,12 @@ for index, row in df.iterrows():
     title = sanitize_text(str(row.get('title', '')))
     meta_desc = sanitize_text(str(row.get('meta_description', '')))
     content_body = sanitize_text(str(row.get('content_body', '')))
+    
+    # Hero image z automatyczną naprawą linku Google Drive
     hero_image = sanitize_text(str(row.get('hero_image', '')))
+    if hero_image:
+        hero_image = fix_gdrive_url(hero_image)
+        
     search_cloud = sanitize_text(str(row.get('search_cloud', '')))
     
     # Nowe pola dla ogłoszeń magazynowych
@@ -70,9 +89,9 @@ for index, row in df.iterrows():
     unit = sanitize_text(str(row.get('unit', '')))
     stock = sanitize_text(str(row.get('stock', '')))
     
-    # Obsługa galerii zdjęć po przecinku
+    # Obsługa galerii zdjęć po przecinku z naprawą linków Google Drive
     gallery_raw = sanitize_text(str(row.get('gallery_images', '')))
-    gallery_list = [img.strip() for img in gallery_raw.split(',') if img.strip()]
+    gallery_list = [fix_gdrive_url(img.strip()) for img in gallery_raw.split(',') if img.strip()]
     
     source_tab = str(row.get('source_tab', ''))
     
@@ -138,7 +157,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", -1 if False else ["-m", "Fix syntax and inventory sync"][0], "-m", "Fix syntax and inventory sync"], check=True) if False else subprocess.run(["git", "commit", "-m", "Fix syntax and inventory sync"], check=True)
+        subprocess.run(["git", "commit", "-m", "Use direct lh3 googleusercontent image links"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Visi pakeitimai iškeliavo į GitHub ir Cloudflare Pages atsinaujins akimirksniu.")
     else:

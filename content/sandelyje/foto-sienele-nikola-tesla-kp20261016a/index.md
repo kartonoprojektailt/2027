@@ -1,9 +1,9 @@
 ---
 title: "Foto sienelės Nikola Tesla"
-hero_image: "https://drive.google.com/file/d/1C4zJrNQP4C-SQM3C3GX0fDkFT6qt70Gx/view?usp=sharing"
+hero_image: "https://lh3.googleusercontent.com/d/1C4zJrNQP4C-SQM3C3GX0fDkFT6qt70Gx"
 gallery_images:
-  - "https://drive.google.com/file/d/1YFiQdhbaP2tqwla6WCziBWTdQB29Nkvt/view?usp=sharing"
-  - "https://drive.google.com/file/d/1DxRKceQM2lUkv1f2wNlFyz0JbEc1S28i/view?usp=sharing"
+  - "https://lh3.googleusercontent.com/d/1YFiQdhbaP2tqwla6WCziBWTdQB29Nkvt"
+  - "https://lh3.googleusercontent.com/d/1DxRKceQM2lUkv1f2wNlFyz0JbEc1S28i"
 search_cloud: "Foto sienelė, Dekoracijos šventėms, Dekoracijos renginiams, Mokyklai, Festivaliams, Reklamai"
 offer_code: "kp20261016a"
 category: "Foto sienelės, stendai"

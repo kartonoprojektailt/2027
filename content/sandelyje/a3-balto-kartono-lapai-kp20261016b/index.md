@@ -1,8 +1,8 @@
 ---
 title: "A3 balto kartono lapai"
-hero_image: "https://drive.google.com/file/d/1YWPKVcxZnKbaFUyUI2iahOacmtCTefGZ/view?usp=drive_link"
+hero_image: "https://lh3.googleusercontent.com/d/1YWPKVcxZnKbaFUyUI2iahOacmtCTefGZ"
 gallery_images:
-  - "https://drive.google.com/file/d/1Vc5PKVPC4r8fySdyA6qeTs2cLiEtP2IR/view?usp=drive_link"
+  - "https://lh3.googleusercontent.com/d/1Vc5PKVPC4r8fySdyA6qeTs2cLiEtP2IR"
 search_cloud: "Kartonas baltas, ekologiškas kartonas, nedegus kartonas, šventinės dekoracijos, DIY"
 offer_code: "kp20261016b"
 category: "Medžiagos"
