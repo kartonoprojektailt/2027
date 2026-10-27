@@ -9,13 +9,15 @@ theme = "PaperMod"
 
 # ==========================================
 # WŁĄCZENIE HTML W MARKDOWN (GOLDMARK)
-# Umożliwia renderowanie przycisków HTML (Google Maps / Waze)
 # ==========================================
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
 
+# ==========================================
+# PARAMETRY GŁÓWNE I MOTYWU PAPERMOD
+# ==========================================
 [params]
   env = "production"
   title = "Kartono projektai"
@@ -23,8 +25,8 @@ theme = "PaperMod"
   defaultTheme = "light"
   disableThemeToggle = false
 
-  # Wyłączenie wyświetlania autora i metadanych pod nagłówkami
-  author = ""
+  # Autor i metadane
+  author = "UAB Kartono projektai"
   showAuthor = false
   hideMeta = true
   showShareButtons = false
@@ -36,6 +38,7 @@ theme = "PaperMod"
     icon = ""
     iconHeight = 35
 
+  # Konfiguracja wyszukiwarki Fuse.js dla PaperMod
   [params.fuseOpts]
     isCaseSensitive = false
     shouldSort = true
@@ -43,11 +46,15 @@ theme = "PaperMod"
     distance = 100
     threshold = 0.3
     minMatchCharLength = 2
-    keys = ["title", "permalink", "summary", "content"]
+    keys = ["title", "permalink", "summary", "content", "search_cloud", "offer_code", "category"]
 
-
+# ==========================================
+# WYTWARZANIE PLIKÓW WYJŚCIOWYCH (WYMAGANE DLA WYSZUKIWARKI)
+# ==========================================
 [outputs]
   home = ["HTML", "RSS", "JSON", "llms"]
+  page = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
 
 [outputFormats.llms]
   mediaType = "text/plain"
@@ -195,7 +202,6 @@ theme = "PaperMod"
 # ==========================================
 # KONFIGURACJA MENU STOPKI (FOOTER MENU)
 # ==========================================
-
   [[menu.footer]]
     name = "Reklaminiai stendai ir POSM"
     url = "/reklaminiai-stendai-stovai/"

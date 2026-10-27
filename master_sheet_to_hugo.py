@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 import gspread
 from google.oauth2.service_account import Credentials
@@ -57,7 +58,6 @@ def fix_gdrive_url(url, max_width=1000):
     return url
 
 def get_category_url(category_name):
-    """Precyzyjne mapowanie kategorii na żądane adresy URL"""
     cat_lower = category_name.strip().lower()
     
     if "pakuot" in cat_lower:
@@ -73,7 +73,12 @@ def get_category_url(category_name):
     else:
         return "/sandelyje/"
 
-# Usuwamy błędne pliki index.md z sandelyje jeśli istnieją
+# 1. USUWANIE FOLDERU CONTENT/SEARCH/ JEŚLI ISTNIEJE (GŁÓWNA PRZYCZYNA BŁĘDU)
+if os.path.exists("content/search") and os.path.isdir("content/search"):
+    shutil.rmtree("content/search")
+    print("Pašalintas klaidingas aplankas 'content/search/'.")
+
+# 2. Usuwanie ewentualnego błędnego pliku sandelyje/index.md
 if os.path.exists("content/sandelyje/index.md"):
     os.remove("content/sandelyje/index.md")
 
@@ -106,7 +111,6 @@ for index, row in df.iterrows():
     if not title and not content_body:
         continue
         
-    # Mapowanie ścieżek
     if source_tab == 'puslapiai' and slug.lower() == 'sandelyje':
         file_path = "content/sandelyje/_index.md"
     elif source_tab == 'sandelyje':
@@ -114,9 +118,9 @@ for index, row in df.iterrows():
             continue
         file_path = f"content/sandelyje/{slug}/index.md"
     elif slug.lower() == 'paieska' or slug.lower() == 'search':
-        file_path = f"content/search.md"
+        file_path = "content/search.md"
     elif not slug or slug.lower() == 'nan' or slug.lower() == 'index' or slug == '/':
-        file_path = f"content/_index.md"
+        file_path = "content/_index.md"
     else:
         file_path = f"content/{slug}/index.md"
 
@@ -137,7 +141,6 @@ for index, row in df.iterrows():
     unit_block = f"\nunit: \"{unit}\"" if unit else ""
     stock_block = f"\nstock: \"{stock}\"" if stock else ""
 
-    # Dedykowany szablon dla strony wyszukiwarki (czysty PaperMod search layout)
     if file_path == "content/search.md":
         markdown_content = """---
 title: "Paieška"
@@ -173,7 +176,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Fix search page layout and category mappings"], check=True)
+        subprocess.run(["git", "commit", "-m", "Fix search page layout collision and remove search folder"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Visi pakeitimai iškeliavo į GitHub.")
     else:
