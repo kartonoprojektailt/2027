@@ -55,7 +55,9 @@ for index, row in df.iterrows():
     meta_desc = sanitize_text(str(row.get('meta_description', '')))
     content_body = sanitize_text(str(row.get('content_body', '')))
     hero_image = sanitize_text(str(row.get('hero_image', '')))
-    search_cloud = sanitize_text(str(row.get('Search_Cloud', '')))
+    
+    # Ujednolicony klucz search_cloud (małe litery z podłogą)
+    search_cloud = sanitize_text(str(row.get('search_cloud', '')))
     
     # Obsługa galerii zdjęć po przecinku (właściciel wkleja linki z Google Drive)
     gallery_raw = sanitize_text(str(row.get('gallery_images', '')))
@@ -109,7 +111,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Auto-update: streamlined sheets sync, cleaned obsolete files and fixed routing"], check=True)
+        subprocess.run(["git", "commit", "-m", "Auto-update: unified search_cloud and streamlined sheets sync"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Visi pakeitimai iškeliavo į GitHub ir Cloudflare Pages atsinaujins akimirksniu.")
     else:
