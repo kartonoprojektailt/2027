@@ -1,10 +1,8 @@
 ---
 title: "Šiuo metu sandėlyje"
-date: 2026-10-14T00:00:00+03:00
 draft: false
 type: "sandelyje"
 layout: "list"
-description: "UAB „Kartono projektai“ sandėlio išpardavimas – riboto kiekio gamybos likučiai, standartinės pakuotės ir stendai geriausiomis kainomis."
 ---
 
 ## Apie Kartono projektų sandėlio išpardavimą

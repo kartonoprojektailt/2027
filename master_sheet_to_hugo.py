@@ -68,15 +68,19 @@ for index, row in df.iterrows():
     if not title and not content_body:
         continue
         
-    # 1. Zakładka 'sandelyje' -> pliki trafiają do folderu content/sandelyje/{slug}/index.md
-    if source_tab == 'sandelyje' and slug and slug.lower() != 'nan':
+    # 1. Specjalna obsługa: slug 'sandelyje' w zakładce 'puslapiai' staje się głównym opisem sekcji (_index.md)
+    if source_tab == 'puslapiai' and slug.lower() == 'sandelyje':
+        file_path = "content/sandelyje/_index.md"
+    
+    # 2. Zakładka 'sandelyje' -> subpage skelbimai trafiają do folderu content/sandelyje/{slug}/index.md
+    elif source_tab == 'sandelyje' and slug and slug.lower() != 'nan':
         file_path = f"content/sandelyje/{slug}/index.md"
     
-    # 2. Strona główna (_index.md) - obsługa pustego sluga, 'index' lub '/'
+    # 3. Strona główna (_index.md) - obsługa pustego sluga, 'index' lub '/'
     elif not slug or slug.lower() == 'nan' or slug.lower() == 'index' or slug == '/':
         file_path = f"content/_index.md"
     
-    # 3. Zwykła podstrona -> content/{slug}/index.md
+    # 4. Zwykła podstrona -> content/{slug}/index.md
     else:
         file_path = f"content/{slug}/index.md"
 
@@ -93,7 +97,19 @@ for index, row in df.iterrows():
     desc_block = f"\ndescription: \"{meta_desc}\"" if meta_desc else ""
     cloud_block = f"\nsearch_cloud: \"{search_cloud}\"" if search_cloud else ""
 
-    markdown_content = f"""---
+    # Dla sekcji sandelyje (_index.md) dodajemy layout list i typ sekcji, żeby Hugo poprawnie ją wyświetlił
+    if file_path == "content/sandelyje/_index.md":
+        markdown_content = f"""---
+title: "{title}"{desc_block}{hero_block}{gallery_block}{cloud_block}
+draft: false
+type: "sandelyje"
+layout: "list"
+---
+
+{content_body}
+"""
+    else:
+        markdown_content = f"""---
 title: "{title}"{desc_block}{hero_block}{gallery_block}{cloud_block}
 draft: false
 ---
@@ -111,7 +127,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Auto-update: unified search_cloud and streamlined sheets sync"], check=True)
+        subprocess.run(["git", "commit", "-m", "Auto-update: map sandelyje puslapis to _index.md and sync items"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Visi pakeitimai iškeliavo į GitHub ir Cloudflare Pages atsinaujins akimirksniu.")
     else:
