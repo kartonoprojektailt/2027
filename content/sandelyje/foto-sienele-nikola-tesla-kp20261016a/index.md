@@ -13,7 +13,7 @@ search_cloud:
   - "Reklamai"
 offer_code: "kp20261016a"
 category: "Reklaminiai stendai ir POSM"
-category_url: "/reklaminiai-stendai-ir-posm/"
+category_url: "/reklaminiai-stendai-stovai/"
 price: "150 EUR"
 unit: "vnt."
 stock: "5"

@@ -57,17 +57,23 @@ def fix_gdrive_url(url, max_width=1000):
     return url
 
 def get_category_url(category_name):
+    """Precyzyjne mapowanie kategorii na żądane adresy URL"""
     cat_lower = category_name.strip().lower()
-    if "reklam" in cat_lower or "stend" in cat_lower or "posm" in cat_lower:
-        return "/reklaminiai-stendai-ir-posm/"
-    elif "pakuot" in cat_lower:
-        return "/kartono-pakuotes/"
-    elif "cnc" in cat_lower or "paslaug" in cat_lower:
+    
+    if "pakuot" in cat_lower:
+        return "/pakuotes/"
+    elif "reklam" in cat_lower or "stend" in cat_lower or "posm" in cat_lower:
+        return "/reklaminiai-stendai-stovai/"
+    elif "cnc" in cat_lower or "frez" in cat_lower or "pjov" in cat_lower:
         return "/cnc-paslaugos/"
+    elif "medžiag" in cat_lower or "medziag" in cat_lower:
+        return "/"
+    elif "workshop" in cat_lower or "dirbtuv" in cat_lower or "mokym" in cat_lower or "minkšt" in cat_lower or "minkst" in cat_lower:
+        return "/projektavimo-paslaugos/"
     else:
         return "/sandelyje/"
 
-# Usuwamy błędny plik index.md z sandelyje jeśli istnieje
+# Usuwamy błędne pliki index.md z sandelyje jeśli istnieją
 if os.path.exists("content/sandelyje/index.md"):
     os.remove("content/sandelyje/index.md")
 
@@ -131,7 +137,7 @@ for index, row in df.iterrows():
     unit_block = f"\nunit: \"{unit}\"" if unit else ""
     stock_block = f"\nstock: \"{stock}\"" if stock else ""
 
-    # Dedykowany szablon dla strony wyszukiwarki
+    # Dedykowany szablon dla strony wyszukiwarki z poprawnym layoutem
     if file_path == "content/search.md":
         markdown_content = f"""---
 title: "{title}"
@@ -168,7 +174,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Fix search page layout, map category URLs and build search cloud tags"], check=True)
+        subprocess.run(["git", "commit", "-m", "Fix category mappings and search page layout"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Visi pakeitimai iškeliavo į GitHub.")
     else:

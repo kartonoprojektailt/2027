@@ -10,7 +10,7 @@ search_cloud:
   - "kartono pjovimo paslaugos"
 offer_code: "kp20261016c"
 category: "Paslaugos"
-category_url: "/cnc-paslaugos/"
+category_url: "/sandelyje/"
 price: "100 EUR"
 unit: "val."
 stock: "Šeštadieniais 8:00-12:00"
