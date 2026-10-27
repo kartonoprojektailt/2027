@@ -1,5 +1,10 @@
 ---
 title: "Kartoninės pakuotės, POSM stendai ir CNC apdirbimas verslui"
+offer_code: "nan"
+category: "nan"
+price: "nan"
+unit: "nan"
+stock: "nan"
 draft: false
 ---
 

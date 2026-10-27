@@ -6,68 +6,35 @@
 
   <div class="post-content">
     
-    <!-- SIATKA PRODUKTÓW NA SAMEJ GÓRZE (PRZED TEKSTEM OPISOWYM) -->
+    <!-- SIATKA PRODUKTÓW Z ZAKŁADKI SANDELYJE -->
     <div class="inventory-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px;">
       {{ range (where site.RegularPages "Section" "sandelyje") }}
-      <!-- Cały kafel jest klikalny za pomocą stylów i onclick -->
-      <div class="item-card" onclick="location.href='{{ .Permalink }}';" style="border: 1px solid var(--border); padding: 20px; border-radius: 8px; background: var(--entry); display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-        
+      <div class="item-card" onclick="location.href='{{ .Permalink }}';" style="border: 1px solid var(--border); padding: 20px; border-radius: 8px; background: var(--entry); display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;">
         <div>
-          <!-- Miniatura okładki z bezpieczną ścieżką -->
-          {{ if .Params.cover.image }}
-          {{ $coverUrl := printf "%s%s" .RelPermalink .Params.cover.image }}
-          <div style="margin-bottom: 12px; height: 160px; overflow: hidden; border-radius: 4px; background: #f0f0f0;">
-            <img src="{{ $coverUrl }}" alt="{{ .Title }}" style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
-          {{ else if .Params.cover }}
-          {{ $coverUrl := printf "%s%s" .RelPermalink .Params.cover }}
-          <div style="margin-bottom: 12px; height: 160px; overflow: hidden; border-radius: 4px; background: #f0f0f0;">
-            <img src="{{ $coverUrl }}" alt="{{ .Title }}" style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
-          {{ end }}
-
-          <!-- 1. Tytuł -->
           <h2 style="font-size: 1.1rem; margin-bottom: 8px; margin-top: 0;">
             <a href="{{ .Permalink }}" style="color: var(--primary); text-decoration: none;">{{ .Title }}</a>
           </h2>
           
-          <!-- 2. Kategoria -->
           {{ if .Params.category }}
-          <p style="font-size: 0.85rem; color: var(--secondary); margin-bottom: 8px;">
-            Kategorija: <strong>{{ .Params.category }}</strong>
-          </p>
+          <p style="font-size: 0.85rem; margin-bottom: 8px;">Kategorija: <strong>{{ .Params.category }}</strong></p>
           {{ end }}
 
-          <!-- 3. Kaina i Likutis w jednym wierszu -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.95rem;">
             <span style="font-size: 1.2rem; font-weight: bold; color: var(--primary);">{{ .Params.price }} €</span>
-            <span style="font-size: 0.85rem; color: var(--secondary);">Likutis: <strong>{{ .Params.stock }} vnt.</strong></span>
+            <span style="font-size: 0.85rem;">Likutis: <strong>{{ .Params.stock }} vnt.</strong></span>
           </div>
-          
-          <!-- 4. Kodas -->
-          {{ if .Params.offer_code }}
-          <p style="font-size: 0.8rem; font-family: monospace; opacity: 0.7; margin-bottom: 15px;">Kodas: {{ .Params.offer_code }}</p>
-          {{ end }}
-
-          {{ $isSold := or (eq .Params.status "parduota") (eq .Params.status "sold_out") }}
-          {{ if $isSold }}
-          <div style="background: var(--tertiary); color: var(--primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; text-align: center; font-size: 0.8rem; margin-bottom: 15px; border: 1px solid var(--border);">
-            SOLD OUT / PARDUOTA
-          </div>
-          {{ end }}
         </div>
         
         <div style="margin-top: 15px;">
-          <a href="{{ .Permalink }}" class="btn-view" style="display: block; background: var(--tertiary); color: var(--primary); padding: 10px; text-align: center; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--border);">
+          <a href="{{ .Permalink }}" style="display: block; background: var(--tertiary); color: var(--primary); padding: 10px; text-align: center; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--border);">
             Peržiūrėti pasiūlymą
           </a>
         </div>
-
       </div>
       {{ end }}
     </div>
 
-    <!-- WŁAŚCIWY TEKST OPISOWY SEKCJI (Z _index.md) Z PIĘKNYM FORMATOWANIEM -->
+    <!-- TEKST OPISOWY SEKCJI Z PŁASZCZYZNY _index.md -->
     <div class="section-description-text" style="border-top: 1px solid var(--border); padding-top: 30px;">
       {{ .Content }}
     </div>

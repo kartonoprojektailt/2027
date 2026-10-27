@@ -1,5 +1,10 @@
 ---
 title: "Reklaminiai stendai ir stovai 2"
+offer_code: "nan"
+category: "nan"
+price: "nan"
+unit: "nan"
+stock: "nan"
 draft: false
 ---
 

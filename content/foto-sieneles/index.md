@@ -5,6 +5,11 @@ gallery_images:
   - "https://drive.google.com/file/d/1v_uOUm9I6VCy2fMvmZ8ZmFkSyz5Ytajz/view?usp=sharing"
   - "/images/Reklaminiai-stendai-kartono-projektai.jpg"
   - "/images/Kartono-projektai-foto-sieneles-renginiui.jpg"
+offer_code: "nan"
+category: "nan"
+price: "nan"
+unit: "nan"
+stock: "nan"
 draft: false
 ---
 

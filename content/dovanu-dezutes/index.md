@@ -1,5 +1,10 @@
 ---
 title: "Dovanų dėžutės ir reprezentacinės pakuotės"
+offer_code: "nan"
+category: "nan"
+price: "nan"
+unit: "nan"
+stock: "nan"
 draft: false
 ---
 
