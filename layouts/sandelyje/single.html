@@ -12,8 +12,8 @@
     
     <!-- BANER PARDUOTA -->
     {{ if $isSold }}
-    <div style="background: #e74c3c; color: white; padding: 14px 20px; border-radius: 8px; font-weight: 600; font-size: 1.1rem; text-align: center; margin-bottom: 24px;">
-      ⚠️ PARDUOTA 
+    <div style="background: #e74c3c; color: white; padding: 14px 20px; border-radius: 8px; font-weight: 700; font-size: 1.2rem; text-align: center; margin-bottom: 24px; letter-spacing: 0.5px;">
+      PARDUOTA
     </div>
     {{ end }}
 
@@ -43,7 +43,7 @@
       {{ .Content }}
     </div>
 
-    <!-- 4. KATEGORIA, KOD, CENA, LIKUTIS (W PIONOWY SŁUPEK NA MOBILE) -->
+    <!-- 4. KATEGORIA, KOD, CENA, LIKUTIS -->
     <div style="background: var(--entry); border: 1px solid var(--border); padding: 20px; border-radius: 10px; margin-bottom: 32px; display: flex; flex-direction: column; gap: 16px; font-size: 1.05rem; font-weight: 400; color: var(--content);">
       
       <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -59,7 +59,7 @@
         {{ end }}
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); pt-12; padding-top: 12px;">
+      <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px;">
         {{ if .Params.price }}
         <div>
           Kaina: {{ .Params.price }}{{ if .Params.unit }} / {{ .Params.unit }}{{ end }}
@@ -68,7 +68,7 @@
         <div>
           Likutis sandėlyje: 
           {{ if $isSold }}
-            <span style="color: #e74c3c; font-weight: 600;">0 vnt. (Parduota)</span>
+            <span style="color: #e74c3c; font-weight: 600;">Parduota</span>
           {{ else }}
             <span style="font-weight: 600;">{{ .Params.stock }}</span>
           {{ end }}
@@ -77,7 +77,7 @@
 
     </div>
 
-    <!-- 5. PRZYCISKI AKCJI (W PIONOWY SŁUPEK NA TELEFONACH, ŻEBY SIĘ NIE ŁAMAŁY) -->
+    <!-- 5. PRZYCISKI AKCJI -->
     <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px;" class="no-print">
       
       <button onclick="window.print();" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 12px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 1rem; text-align: center;">
@@ -88,8 +88,8 @@
         +370 652 85223
       </a>
 
-      {{ $emailSubject := printf "%s-%s-Kartono projektų sandėlio pasiūlymas" .Title (.Params.offer_code | default "KP") }}
-      <a href="mailto:info@kartonoprojektai.lt?subject={{ $emailSubject | urlize }}" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 12px 16px; border-radius: 8px; text-decoration: none; font-weight: 500; display: block; font-size: 1rem; text-align: center; box-sizing: border-box;">
+      {{ $cleanSubject := printf "Sandėlio užklausa: %s (%s)" .Title (.Params.offer_code | default "KP") }}
+      <a href="mailto:info@kartonoprojektai.lt?subject={{ $cleanSubject | urlize }}" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 12px 16px; border-radius: 8px; text-decoration: none; font-weight: 500; display: block; font-size: 1rem; text-align: center; box-sizing: border-box;">
         Siųsti užklausą el. paštu
       </a>
 
@@ -109,7 +109,7 @@
     </div>
     {{ end }}
 
-    <!-- 7. INNE AKTYWNE OFERTY (W PIONOWY SŁUPEK, BEZ UCIEKANIA NA BOKI) -->
+    <!-- 7. INNE AKTYWNE OFERTY (TYTUŁ POGRUBIONY / BOLD) -->
     <div style="margin-top: 48px; border: 1px solid var(--border); padding: 20px; border-radius: 10px; background: var(--entry);" class="no-print">
       <h3 style="margin-bottom: 16px; font-size: 1.15rem; font-weight: 600;">
         Kiti galiojantys <a href="/sandelyje/" style="color: var(--primary); text-decoration: underline; font-weight: 600;">Kartono projektų sandėlio pasiūlymai</a>:
@@ -119,8 +119,8 @@
         {{ $currentPermalink := .Permalink }}
         {{ range where site.RegularPages "Type" "sandelyje" }}
           {{ if and (ne .Permalink $currentPermalink) (ne .RelPermalink "/sandelyje/") }}
-            <a href="{{ .RelPermalink }}" style="display: block; background: var(--tertiary); border: 1px solid var(--border); padding: 12px 16px; border-radius: 6px; text-decoration: none; color: var(--primary); font-size: 0.95rem; font-weight: 400; line-height: 1.5;">
-              {{ .Title }} | {{ if .Params.category }}{{ .Params.category }} | {{ end }}{{ if .Params.stock }}Likutis: {{ .Params.stock }} | {{ end }}{{ if .Params.price }}{{ .Params.price }}{{ if .Params.unit }} / {{ .Params.unit }}{{ end }} | {{ end }}{{ if .Params.offer_code }}{{ .Params.offer_code }}{{ end }}
+            <a href="{{ .RelPermalink }}" style="display: block; background: var(--tertiary); border: 1px solid var(--border); padding: 12px 16px; border-radius: 6px; text-decoration: none; color: var(--primary); font-size: 0.95rem; line-height: 1.5;">
+              <strong style="font-weight: 700;">{{ .Title }}</strong> | {{ if .Params.category }}{{ .Params.category }} | {{ end }}{{ if .Params.stock }}Likutis: {{ .Params.stock }} | {{ end }}{{ if .Params.price }}{{ .Params.price }}{{ if .Params.unit }} / {{ .Params.unit }}{{ end }} | {{ end }}{{ if .Params.offer_code }}{{ .Params.offer_code }}{{ end }}
             </a>
           {{ end }}
         {{ end }}
