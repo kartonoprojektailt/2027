@@ -43,11 +43,17 @@ def sanitize_text(text):
         return ""
     return text.strip()
 
-# Usuwamy błędny plik index.md z głównego folderu content (zapobiega konfliktom)
+# Usuwamy błędny plik index.md z głównego folderu content
 rogue_index = "content/index.md"
 if os.path.exists(rogue_index):
     os.remove(rogue_index)
     print("Pašalintas klaidingas 'content/index.md' iš pagrindinio aplanko.")
+
+# Usuwamy błędny plik index.md z folderu sandelyje
+rogue_sandelyje_index = "content/sandelyje/index.md"
+if os.path.exists(rogue_sandelyje_index):
+    os.remove(rogue_sandelyje_index)
+    print("Pašalintas klaidingas 'content/sandelyje/index.md', kuris blokavo siatkę kafelków.")
 
 for index, row in df.iterrows():
     slug = sanitize_text(str(row.get('slug', '')))
@@ -76,7 +82,9 @@ for index, row in df.iterrows():
     # Mapowanie ścieżek
     if source_tab == 'puslapiai' and slug.lower() == 'sandelyje':
         file_path = "content/sandelyje/_index.md"
-    elif source_tab == 'sandelyje' and slug and slug.lower() != 'nan':
+    elif source_tab == 'sandelyje':
+        if not slug or slug.lower() == 'nan' or slug.lower() == 'sandelyje':
+            continue
         file_path = f"content/sandelyje/{slug}/index.md"
     elif not slug or slug.lower() == 'nan' or slug.lower() == 'index' or slug == '/':
         file_path = f"content/_index.md"
@@ -130,7 +138,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Sync updated inventory schema"], check=True)
+        subprocess.run(["git", "commit", -1 if False else ["-m", "Fix syntax and inventory sync"][0], "-m", "Fix syntax and inventory sync"], check=True) if False else subprocess.run(["git", "commit", "-m", "Fix syntax and inventory sync"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Visi pakeitimai iškeliavo į GitHub ir Cloudflare Pages atsinaujins akimirksniu.")
     else:
