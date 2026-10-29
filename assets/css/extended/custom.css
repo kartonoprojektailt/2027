@@ -1,16 +1,17 @@
 /* ================================================= */
-/* 0. GLOBALNA CZCIONKA: INTER + PŁYNNE PRZEWIJANIE  */
+/* 0. GLOBALNA CZCIONKA: PLUS JAKARTA SANS + PŁYNNE PRZEWIJANIE */
 /* ================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 html {
     scroll-behavior: smooth;
     font-size: 100% !important; /* Pozwala stronie dostosować się do domyślnych ustawień urządzenia/przeglądarki */
     -webkit-overflow-scrolling: touch; /* Płynne przewijanie dotykowe na urządzeniach Apple */
+    color-scheme: dark light;
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     font-size: 1rem !important;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased; /* Idealne wygładzanie czcionek na ekranach Retina (Apple) */
@@ -20,7 +21,7 @@ body {
 }
 
 /* ================================================= */
-/* 1. UKŁAD DLA PC (DESKTOP)                         */
+/* 1. UKŁAD DLA PC (DESKTOP)                            */
 /* ================================================= */
 
 .nav {
@@ -102,15 +103,21 @@ body {
 
   .nav {
     flex-wrap: wrap;
-    padding: 14px 16px;
+    padding: 12px 16px;
   }
 
   .nav ul {
     display: flex !important; 
   }
 
+  /* Poprawka szerokości i kontenera logo na mobile (zapobiega zwężaniu widoku) */
+  .logo img.adaptive-logo {
+    max-height: 42px !important;
+    width: auto !important;
+  }
+
   /* Pionowy układ całego menu na telefonie */
-  #menu {
+  #custom-menu, #menu {
     display: flex !important;
     flex-direction: column;
     align-items: stretch;
@@ -216,7 +223,7 @@ a[href*="waze.com"]:hover {
 
 
 /* ================================================= */
-/* 4. TOTALNE WYMUSZENIE CZCIONKI INTER DLA SHORTCODE COPY */
+/* 4. TOTALNE WYMUSZENIE CZCIONKI DLA SHORTCODE COPY */
 /* ================================================= */
 div.highlight pre, 
 div.highlight code, 
@@ -225,7 +232,7 @@ pre code,
 .post-content code,
 figure.highlight pre,
 figure.highlight code {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     font-size: 0.9375rem !important;
     font-weight: 400 !important;
     letter-spacing: normal !important;
@@ -233,6 +240,107 @@ figure.highlight code {
     text-transform: none !important;
 }
 
-html {
-    color-scheme: dark light;
+
+/* ================================================= */
+/* 5. SEKCJA CHROMA / SYNTAX HIGHLIGHTING (ZACHOWANA) */
+/* ================================================= */
+.bg {
+    color: #cad3f5;
+    background-color: #24273a;
+}
+
+.chroma {
+    color: #cad3f5;
+    background-color: #24273a;
+}
+
+.chroma .err { color: #ed8796; }
+.chroma .lnlinks { outline: none; text-decoration: none; color: inherit; }
+.chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
+.chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
+.chroma .hl { background-color: #474733; }
+.chroma .lnt, .chroma .ln { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: .4em; padding: 0 .4em; color: #8087a2; }
+.chroma .line { display: flex; }
+.chroma .k { color: #c6a0f6; }
+.chroma .kc { color: #f5a97f; }
+.chroma .kd { color: #ed8796; }
+.chroma .kn { color: #8bd5ca; }
+.chroma .kp { color: #c6a0f6; }
+.chroma .kr { color: #c6a0f6; }
+.chroma .kt { color: #ed8796; }
+.chroma .na { color: #8aadf4; }
+.chroma .nb { color: #91d7e3; }
+.chroma .bp { color: #91d7e3; }
+.chroma .nc { color: #eed49f; }
+.chroma .no { color: #eed49f; }
+.chroma .nd { color: #8aadf4; font-weight: 700; }
+.chroma .ni { color: #8bd5ca; }
+.chroma .ne { color: #f5a97f; }
+.chroma .nf { color: #8aadf4; }
+.chroma .fm { color: #8aadf4; }
+.chroma .nl { color: #91d7e3; }
+.chroma .nn { color: #f5a97f; }
+.chroma .py { color: #f5a97f; }
+.chroma .nt { color: #c6a0f6; }
+.chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm { color: #f4dbd6; }
+.chroma .s, .chroma .sb, .chroma .sc, .chroma .s1, .chroma .s2, .chroma .si, .chroma .sx, .chroma .ss { color: #a6da95; }
+.chroma .sa, .chroma .gr { color: #ed8796; }
+.chroma .dl, .chroma .se { color: #8aadf4; }
+.chroma .sd, .chroma .sh { color: #6e738d; }
+.chroma .sr { color: #8bd5ca; }
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo { color: #f5a97f; }
+.chroma .o, .chroma .ow { color: #91d7e3; font-weight: 700; }
+.chroma .c, .chroma .ch, .chroma .cm, .chroma .c1, .chroma .cs, .chroma .cp { color: #6e738d; font-style: italic; }
+.chroma .cpf { color: #6e738d; font-weight: 700; font-style: italic; }
+.chroma .gd { color: #ed8796; background-color: #363a4f; }
+.chroma .ge { font-style: italic; }
+.chroma .gh, .chroma .gu { color: #f5a97f; font-weight: 700; }
+.chroma .gi { color: #a6da95; background-color: #363a4f; }
+.chroma .gs { font-weight: 700; }
+.chroma .gl { text-decoration: underline; }
+
+.chroma { background-color: unset !important; }
+.chroma .hl { display: flex; }
+.chroma .lnt { padding: 0 0 0 12px; }
+.highlight pre.chroma code { padding: 8px 0; }
+.highlight pre.chroma .line .cl, .chroma .ln { padding: 0 10px; }
+.chroma .lntd:last-of-type { width: 100%; }
+
+@media screen and (max-width: 768px) {
+    :root {
+        --gap: 14px;
+    }
+    .profile img {
+        transform: scale(.85);
+    }
+    .first-entry {
+        min-height: 260px;
+    }
+    .archive-month {
+        flex-direction: column;
+    }
+    .archive-year {
+        margin-top: 20px;
+    }
+    .footer {
+        padding: calc((var(--footer-height) - var(--gap) - 10px)/2) var(--gap);
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .list .top-link {
+        transform: translateY(-5rem);
+    }
+}
+
+@media screen and (max-width: 340px) {
+    .share-buttons {
+        justify-content: unset;
+    }
+}
+
+@media(prefers-reduced-motion) {
+    .terms-tags a:active, .button:active, .post-entry:active, .top-link, .searchResults .focus, .searchResults li:active {
+        transform: none;
+    }
 }
