@@ -11,7 +11,7 @@ availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-UAB "Kartono projektai" teikia profesionalias CNC paslaugas: kartono, plastiko, akrilo apdirbimas.
+UAB Kartono projektai teikia profesionalias CNC paslaugas: kartono, plastiko, akrilo apdirbimas.
 
 ## Techninės specifikacijos
 

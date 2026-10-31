@@ -1,5 +1,5 @@
 ---
-title: "Įmonė UAB "Kartono projektai""
+title: "Įmonė UAB Kartono projektai"
 offer_code: "nan"
 category: "nan"
 category_url: "/sandelyje/"
