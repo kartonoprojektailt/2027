@@ -1,4 +1,6 @@
 import os
+import json
+import tempfile
 import shutil
 import subprocess
 import gspread
@@ -15,7 +17,20 @@ SCOPES = [
 
 print("Jungiamasi prie Google Sheets per API...")
 try:
-    creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
+    # Obsługa uwierzytelniania: w chmurze (GitHub Actions) tworzy plik tymczasowy ze zmiennej środowiskowej,
+    # lokalnie na laptopie szuka fizycznego pliku credentials.json.
+    credentials_json_str = os.environ.get("GCP_CREDENTIALS_JSON")
+    
+    if credentials_json_str:
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_cred:
+            temp_cred.write(credentials_json_str)
+            temp_cred_path = temp_cred.name
+        creds = Credentials.from_service_account_file(temp_cred_path, scopes=SCOPES)
+        print("Użyto poświadczeń z GitHub Secrets.")
+    else:
+        creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
+        print("Użyto lokalnego pliku credentials.json.")
+
     client = gspread.authorize(creds)
     spreadsheet = client.open_by_key(SPREADSHEET_ID)
     
@@ -176,7 +191,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Fix search page layout collision and remove search folder"], check=True)
+        subprocess.run(["git", "commit", "-m", "Automated sync from Google Sheets via Python"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Visi pakeitimai iškeliavo į GitHub.")
     else:
