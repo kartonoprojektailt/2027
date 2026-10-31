@@ -12,7 +12,7 @@ draft: false
 
 # Tvarūs pakuočių, reklamos stendų ir konstrukcijų inžineriniai sprendimai
 
-UAB „Kartono projektai“ projektuje ir gamina individualias pakuotes iš gofruoto kartono, prekybinius POSM stendus, foto sieneles bei akrilo gaminius verslui. Valdome pilną gamybos ciklą – nuo inžinerinio CAD projektavimo bei pavyzdžių išpjovimo iki didelio formato skaitmeninės UV spaudos ir serijinio kirtimo. Įmonė įsikūrusi Kaune, užtikrinant operatyvų pristatymą visoje Lietuvoje bei ES.
+UAB „Kartono projektai“ projektuoja ir gamina individualias pakuotes iš gofruoto kartono, prekybinius POSM stendus, foto sieneles bei akrilo gaminius verslui. Valdome pilną gamybos ciklą – nuo inžinerinio CAD projektavimo bei pavyzdžių išpjovimo iki didelio formato skaitmeninės UV spaudos ir serijinio kirtimo. Įmonė įsikūrusi Kaune, užtikrinant operatyvų pristatymą visoje Lietuvoje bei ES.
 
 ---
 
@@ -33,40 +33,40 @@ UAB „Kartono projektai“ projektuje ir gamina individualias pakuotes iš gofr
 ## Pagrindinės gamybos ir paslaugų kryptys
 
 ### 1. Kartoninės pakuotės ir pramoninė tara
-* **[Pakuotės ir transportavimo dėžės](/pakuotes/)** – Sustiprintos 3-jų ir 5-ių sluoksnių gofruoto kartono dėžės logistikai, sandėliavimui bei e-commerce siuntoms.
-* **[Gofro kartono dėžės (FEFCO)](/fefco-dezes/)** – Standartinės klapinės (FEFCO 0201/0203) ir fasoninės (FEFCO 0427) dėžės pagal tarptautinį katalogą.
-* **[Dovanų ir reprezentacinės dėžutės](/dovanu-dezutes/)** – Dviejų dalių dėžutės su dangteliu (FEFCO 03xx), kalėdinės pakuotės, dėžutės su magnetiniais užraktais, folijavimu bei individualiomis ložetėmis.
-* **[Individualios ir nestandartinės pakuotės](/individualios-nestandartines-pakuotes/)** – Sudėtingos geometrijos pakuotės, transportavimo įdėklai įrangai ir demonstraciniai rinkiniai (*Sample Kits*).
-* **[Ekologiškos rūšiavimo šiukšliadėžės](/rusiavimo-siuksliadezes/)** – Tvarios kartoninės šiukšliadėžės biurams, renginiams, mokykloms ir pramoninėms patalpoms.
+- **[Pakuotės ir transportavimo dėžės](/pakuotes/)** – Sustiprintos 3-jų ir 5-ių sluoksnių gofruoto kartono dėžės logistikai, sandėliavimui bei e-commerce siuntoms.
+- **[Gofro kartono dėžės (FEFCO)](/fefco-dezes/)** – Standartinės klapinės (FEFCO 0201/0203) ir fasoninės (FEFCO 0427) dėžės pagal tarptautinį katalogą.
+- **[Dovanų ir reprezentacinės dėžutės](/dovanu-dezutes/)** – Dviejų dalių dėžutės su dangteliu (FEFCO 03xx), kalėdinės pakuotės, dėžutės su magnetiniais užraktais, folijavimu bei individualiomis ložetėmis.
+- **[Individualios ir nestandartinės pakuotės](/individualios-nestandartines-pakuotes/)** – Sudėtingos geometrijos pakuotės, transportavimo įdėklai įrangai ir demonstraciniai rinkiniai (*Sample Kits*).
+- **[Ekologiškos rūšiavimo šiukšliadėžės](/rusiavimo-siuksliadezes/)** – Tvarios kartoninės šiukšliadėžės biurams, renginiams, mokykloms ir pramoninėms patalpoms.
 
 ### 2. Prekybinė įranga, reklaminiai stendai ir POSM
-* **[Reklaminiai stendai ir stovai](/reklaminiai-stendai-stovai/)** – Grindiniai ir moduliniai stendai prekybos centrams, parodoms bei reprezentaciniams renginiams.
-* **[Kartoniniai lentynų stendai](/lentynos/)** – Sustiprintos konstrukcijos lentynos, išlaikančios iki 15–20 kg svorį vienai lentynai, su PET apsauga nuo drėgmės (*anti-mop*).
-* **[Prekystalio stendai ir stoveliai](/prekystaliai-displejai-stoveliai/)** – Kompaktiški kasos zonos stendai, laikikliai lankstinukams ir demonstraciniai dėklai impulsyviems pirkimams.
-* **[Parduotuvių ir vitrinų dekoracijos](/parduotuviu-dekoracijos/)** – Vitrinų podestai („Modular Cube“), tūriniai 3D objektai, prekių apsaugos vartelių apvalkalai ir paletiniai sijonai (*pallet wraps*).
-* **[Renginių foto sienelės](/foto-sieneles/)** – Mobilios spaudos sienelės (*Press Wall*), moduliniai fonai ir tūrinės konstrukcijos konferencijoms bei šventėms.
+- **[Reklaminiai stendai ir stovai](/reklaminiai-stendai-stovai/)** – Grindiniai ir moduliniai stendai prekybos centrams, parodoms bei reprezentaciniams renginiams.
+- **[Kartoniniai lentynų stendai](/lentynos/)** – Sustiprintos konstrukcijos lentynos, išlaikančios iki 15–20 kg svorį vienai lentynai, su PET apsauga nuo drėgmės (*anti-mop*).
+- **[Prekystalio stendai ir stoveliai](/prekystaliai-displejai-stoveliai/)** – Kompaktiški kasos zonos stendai, laikikliai lankstinukams ir demonstraciniai dėklai impulsyviems pirkimams.
+- **[Parduotuvių ir vitrinų dekoracijos](/parduotuviu-dekoracijos/)** – Vitrinų podestai („Modular Cube“), tūriniai 3D objektai, prekių apsaugos vartelių apvalkalai ir paletiniai sijonai (*pallet wraps*).
+- **[Renginių foto sienelės](/foto-sieneles/)** – Mobilios spaudos sienelės (*Press Wall*), moduliniai fonai ir tūrinės konstrukcijos konferencijoms bei šventėms.
 
 ### 3. Skaitmeninės paslaugos ir plastiko apdirbimas
-* **[CAD projektavimo paslaugos](/projektavimo-paslaugos/)** – Pakuočių ir POSM konstrukcijų inžinerinis projektavimas, BCT/ECT gniuždymo skaičiavimas ir prototipavimas ploteriu nuo 1 vnt.
-* **[CNC pjovimas ir frezavimas](/cnc-pjovimas/)** – Tikslus kartono, kietojo puskartonio, akrilo ir putplasčio pjovimas skaitmeniniu ploteriu.
-* **[Akrilo gaminiai ir stendai](/akrilo-gaminiai/)** – Skaidraus ir spalvoto PMMA plastikų kirtimas, terminis lenkimas, kišenėlės, informaciniai stoveliai vykdymui bei tūriniai logotipai.
+- **[CAD projektavimo paslaugos](/projektavimo-paslaugos/)** – Pakuočių ir POSM konstrukcijų inžinerinis projektavimas, BCT/ECT gniuždymo skaičiavimas ir prototipavimas ploteriu nuo 1 vnt.
+- **[CNC pjovimas ir frezavimas](/cnc-pjovimas/)** – Tikslus kartono, kietojo puskartonio, akrilo ir putplasčio pjovimas skaitmeniniu ploteriu.
+- **[Akrilo gaminiai ir stendai](/akrilo-gaminiai/)** – Skaidraus ir spalvoto PMMA plastikų kirtimas, terminis lenkimas, kišenėlės, informaciniai stoveliai vykdymui bei tūriniai logotipai.
 
 ---
 
 ## Gamybinė įranga ir techniniai pajėgumai
 
-* **Skaitmeninis CNC ploteris** – Didelio formato (iki 3200x2000 mm) kartono, akrilo, putplasčio pjovimas, frezavimas bei bigavimas be kirtimo štampų.
-* **Didelio formato UV spauda** – Tiesioginė spauda ant storių plokščių (CMYK + Balta) su fotorealistine raiška ir momentiniu LED džiovinimu.
-* **Automatinė kirtimo ir klijavimo linija** – Serijinė FEFCO klapinių bei fasoninių dėžių gamyba dideliems tiražams.
-* **Akrilo terminio lenkimo įranga** – Tikslus PMMA plastikų lenkimas stendų kišenėlėms, kainų laikikliams ir tūriniams gaminiams.
+- **Skaitmeninis CNC ploteris** – Didelio formato (iki 3200x2000 mm) kartono, akrilo, putplasčio pjovimas, frezavimas bei bigavimas be kirtimo štampų.
+- **Didelio formato UV spauda** – Tiesioginė spauda ant storių plokščių (CMYK + Balta) su fotorealistine raiška ir momentiniu LED džiovinimu.
+- **Automatinė kirtimo ir klijavimo linija** – Serijinė FEFCO klapinių bei fasoninių dėžių gamyba dideliems tiražams.
+- **Akrilo terminio lenkimo įranga** – Tikslus PMMA plastikų lenkimas stendų kišenėlėms, kainų laikikliams ir tūriniams gaminiams.
 
 ---
 
 ## Reikalavimai spaudos ir CAD failams
 
-* **Vektoriniai brėžiniai:** PDF, AI, CDR, DWG, DXF formatai (Scale 1:1).
-* **Spalvų paletė:** CMYK (spauda), PANTONE (rekomendacijos), pjaustymo linijos atskirame sluoksnyje (*Spot Color / CutContour*).
-* **Spaudos raiška:** Ne mažiau 300 DPI skalėje 1:1 (dideliam formatui rekomenduojama 150–200 DPI).
+- **Vektoriniai brėžiniai:** PDF, AI, CDR, DWG, DXF formatai (Scale 1:1).
+- **Spalvų paletė:** CMYK (spauda), PANTONE (rekomendacijos), pjaustymo linijos atskirame sluoksnyje (*Spot Color / CutContour*).
+- **Spaudos raiška:** Ne mažiau 300 DPI skalėje 1:1 (dideliam formatui rekomenduojama 150–200 DPI).
 
 ---
 
@@ -87,3 +87,5 @@ Produkcija supakuojama saugioje plokščioje pakuotėje (*flat-pack*) arba surin
 ---
 
 [Siųsti užklausą / Gauti inžinerinį pasiūlymą per 24 val.](/kontaktai/)
+
+{{< sandelio >}}
