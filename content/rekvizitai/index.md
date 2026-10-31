@@ -35,17 +35,17 @@ Oficialūs įmonės duomenys ir teisiniai rekvizitai sąskaitų-faktūrų, sutar
 
 ### Teisiniai ir finansiniai duomenys
 
-* **Įmonės pavadinimas:** {{< copy "UAB 'Kartono projektai'" >}}
-* **Įmonės kodas:** {{< copy "303235896" >}}
-* **PVM mokėtojo kodas:** {{< copy "LT100008359510" >}}
-* **Teisinė forma:** Uždaroji akcinė bendrovė
+- **Įmonės pavadinimas:** {{< copy "UAB 'Kartono projektai'" >}}
+- **Įmonės kodas:** {{< copy "303235896" >}}
+- **PVM mokėtojo kodas:** {{< copy "LT100008359510" >}}
+- **Teisinė forma:** Uždaroji akcinė bendrovė
 
 ---
 
 ### Buveinė ir registracijos adresas
 
-* **Adresas:** {{< copy "Raudondvario pl. 164, Kaunas, Lietuva" >}}
-* **Oficialus tinklalapis:** [https://kartonoprojektai.lt](https://kartonoprojektai.lt)
+- **Adresas:** {{< copy "Raudondvario pl. 164, Kaunas, Lietuva" >}}
+- **Oficialus tinklalapis:** [https://kartonoprojektai.lt](https://kartonoprojektai.lt)
 
 ---
 
