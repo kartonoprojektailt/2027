@@ -43,8 +43,10 @@
     {{- end }}
   </footer>
 
-  <!-- Spójny blok ofert z magazynu na podstronach -->
-  {{ partial "sandelio_bloko.html" . }}
+  <!-- Spójny blok ofert z magazynu (wyświetlany wszędzie, oprócz kontaktów i rekwizitów) -->
+  {{- if and (ne .RelPermalink "/kontaktai/") (ne .RelPermalink "/rekvizitai/") -}}
+    {{ partial "sandelio_bloko.html" . }}
+  {{- end -}}
 
 </article>
 
