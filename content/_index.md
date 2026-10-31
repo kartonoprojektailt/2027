@@ -12,7 +12,7 @@ draft: false
 
 # Tvarūs pakuočių, reklamos stendų ir konstrukcijų inžineriniai sprendimai
 
-UAB „Kartono projektai“ projektuoja ir gamina individualias pakuotes iš gofruoto kartono, prekybinius POSM stendus, foto sieneles bei akrilo gaminius verslui. Valdome pilną gamybos ciklą – nuo inžinerinio CAD projektavimo bei pavyzdžių išpjovimo iki didelio formato skaitmeninės UV spaudos ir serijinio kirtimo. Įmonė įsikūrusi Kaune, užtikrinant operatyvų pristatymą visoje Lietuvoje bei ES.
+UAB „Kartono projektai“ projektuje ir gamina individualias pakuotes iš gofruoto kartono, prekybinius POSM stendus, foto sieneles bei akrilo gaminius verslui. Valdome pilną gamybos ciklą – nuo inžinerinio CAD projektavimo bei pavyzdžių išpjovimo iki didelio formato skaitmeninės UV spaudos ir serijinio kirtimo. Įmonė įsikūrusi Kaune, užtikrinant operatyvų pristatymą visoje Lietuvoje bei ES.
 
 ---
 
@@ -87,5 +87,3 @@ Produkcija supakuojama saugioje plokščioje pakuotėje (*flat-pack*) arba surin
 ---
 
 [Siųsti užklausą / Gauti inžinerinį pasiūlymą per 24 val.](/kontaktai/)
-
-{{< sandelio >}}

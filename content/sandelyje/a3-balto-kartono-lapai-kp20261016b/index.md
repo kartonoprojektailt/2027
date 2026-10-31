@@ -12,7 +12,7 @@ search_cloud:
 offer_code: "kp20261016b"
 category: "Kartono pakuotės"
 category_url: "/pakuotes/"
-price: "200 EUR"
+price: "35 EUR"
 unit: "pakuotė (10 vnt.)"
 stock: "14"
 draft: false
