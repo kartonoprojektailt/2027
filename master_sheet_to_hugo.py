@@ -114,4 +114,100 @@ for index, row in df.iterrows():
     category = sanitize_text(str(row.get('category', '')))
     category_url = get_category_url(category) if category else ""
     
-    price = sanitize_text(str(row
+    price = sanitize_text(str(row.get('price', '')))
+    unit = sanitize_text(str(row.get('unit', '')))
+    
+    # Rozpoznawanie stanu wyprzedanego (0, PARDUOTA itp.)
+    stock_raw = sanitize_text(str(row.get('stock', '')))
+    stock_clean = stock_raw.lower()
+    
+    if stock_clean in ['0', '0.0', 'parduota', 'out of stock', 'sold']:
+        is_sold = True
+        stock_display = "PARDUOTA"
+        availability_schema = "https://schema.org/OutOfStock"
+    else:
+        is_sold = False
+        stock_display = stock_raw
+        availability_schema = "https://schema.org/InStock"
+    
+    gallery_raw = sanitize_text(str(row.get('gallery_images', '')))
+    gallery_list = [fix_gdrive_url(img.strip(), max_width=800) for img in gallery_raw.split(',') if img.strip()]
+    
+    source_tab = str(row.get('source_tab', ''))
+    
+    if not title and not content_body:
+        continue
+        
+    if source_tab == 'puslapiai' and slug.lower() == 'sandelyje':
+        file_path = "content/sandelyje/_index.md"
+    elif source_tab == 'sandelyje':
+        if not slug or slug.lower() == 'nan' or slug.lower() == 'sandelyje':
+            continue
+        file_path = f"content/sandelyje/{slug}/index.md"
+    elif slug.lower() == 'paieska' or slug.lower() == 'search':
+        file_path = "content/search.md"
+    elif not slug or slug.lower() == 'nan' or slug.lower() == 'index' or slug == '/':
+        file_path = "content/_index.md"
+    else:
+        file_path = f"content/{slug}/index.md"
+
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+    gallery_yaml = "\n".join([f"  - \"{img}\"" for img in gallery_list])
+    gallery_block = f"\ngallery_images:\n{gallery_yaml}" if gallery_yaml else ""
+
+    cloud_yaml = "\n".join([f"  - \"{tag}\"" for tag in cloud_list])
+    cloud_block = f"\nsearch_cloud:\n{cloud_yaml}" if cloud_yaml else ""
+
+    hero_block = f"\nhero_image: \"{hero_image}\"" if hero_image else ""
+    desc_block = f"\ndescription: \"{meta_desc}\"" if meta_desc else ""
+    
+    code_block = f"\noffer_code: \"{code}\"" if code else ""
+    cat_block = f"\ncategory: \"{category}\"\ncategory_url: \"{category_url}\"" if category else ""
+    price_block = f"\nprice: \"{price}\"" if price else ""
+    unit_block = f"\nunit: \"{unit}\"" if unit else ""
+    
+    stock_block = f"\nstock: \"{stock_display}\"\nis_sold: {str(is_sold).lower()}\navailability_schema: \"{availability_schema}\"" if stock_raw else ""
+
+    if file_path == "content/search.md":
+        markdown_content = """---
+title: "Paieška"
+description: "Kartono projektai paieška"
+layout: "search"
+---
+"""
+    elif file_path == "content/sandelyje/_index.md":
+        markdown_content = f"""---
+title: "{title}"{desc_block}{hero_block}{gallery_block}{cloud_block}
+draft: false
+type: "sandelyje"
+layout: "list"
+---
+
+{content_body}
+"""
+    else:
+        markdown_content = f"""---
+title: "{title}"{desc_block}{hero_block}{gallery_block}{cloud_block}{code_block}{cat_block}{price_block}{unit_block}{stock_block}
+draft: false
+---
+
+{content_body}
+"""
+
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(markdown_content)
+    print(f"Įrašyta: {file_path}")
+
+print("Vykdomas Git sinchronizavimas...")
+try:
+    subprocess.run(["git", "add", "-A"], check=True)
+    status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
+    if status_res.stdout.strip():
+        subprocess.run(["git", "commit", "-m", "Fix syntax error in master_sheet_to_hugo.py"], check=True)
+        subprocess.run(["git", "push", "origin", "main"], check=True)
+        print("Valio! Visi pakeitimai iškeliavo į GitHub.")
+    else:
+        print("Jokių naujų pakeitimų faile nėra.")
+except subprocess.CalledProcessError as e:
+    print(f"Klaida vykdant Git: {e}")
