@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Reklaminiai stendai, stovai ir POSM konstrukcijos prekybos vietoms
+Reklaminiai stendai, stovai ir POSM konstrukcijos prekybos vietoms
 
 UAB „Kartono projektai“ – tiesioginis tvarių ir inžineriškai patikimų POSM sprendimų gamintojas iš Kauno. Siūlome pilną asortimentą sprendimų prekybos vietoms, renginiams ir parodoms: nuo smulkių prekystalio stovelių iki didelių ekspozicinių sistemų, užtikrinančių efektyvų *visual merchandising* ir impulsyvius pirkimus (*impulse buying*).
 

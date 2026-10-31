@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Kartoninės dėžės pakavimui, logistikai ir sandėliavimui
+Kartoninės dėžės pakavimui, logistikai ir sandėliavimui
 
 ## Techninės specifikacijos
 

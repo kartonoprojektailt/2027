@@ -1,11 +1,13 @@
 ---
-title: "Apie UAB Kartono projektai įmonę"
+title: "Įmonė UAB "Kartono projektai""
 offer_code: "nan"
 category: "nan"
 category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 

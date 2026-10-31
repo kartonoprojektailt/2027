@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Profesionalios CNC paslaugos verslui (kartono, plastiko, akrilo apdirbimas)
+UAB "Kartono projektai" teikia profesionalias CNC paslaugas: kartono, plastiko, akrilo apdirbimas.
 
 ## Techninės specifikacijos
 

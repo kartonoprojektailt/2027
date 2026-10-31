@@ -6,10 +6,13 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Kartoninės šiukšliadėžės ir atliekų rūšiavimo konteineriai (Gamyba Kaune)
+Kartoninės šiukšliadėžės ir atliekų rūšiavimo konteineriai. Gamyba ir atsiėmimas Kaune, Raudondvario pl. 164. Greitas pristatymas visoje Lietuvoje.
+
 
 ## Techninės specifikacijos
 

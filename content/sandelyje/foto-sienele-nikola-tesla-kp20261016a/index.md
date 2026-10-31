@@ -17,6 +17,8 @@ category_url: "/reklaminiai-stendai-stovai/"
 price: "150 EUR"
 unit: "vnt."
 stock: "5"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 

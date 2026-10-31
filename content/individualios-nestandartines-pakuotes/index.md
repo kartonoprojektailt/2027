@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Individualios ir nestandartinės kartoninės pakuotės
+Individualių, nestandartinių kartoninių pakuočių projektavimas ir gamyba nuo 2014 m.
 
 ## Techninės specifikacijos
 

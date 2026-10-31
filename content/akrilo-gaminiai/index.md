@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Akrilo gaminiai ir balsadėžės iš organinio stiklo 
+Akrilo gaminiai ir balsadėžės iš organinio stiklo 
 
 ## Techninės specifikacijos
 

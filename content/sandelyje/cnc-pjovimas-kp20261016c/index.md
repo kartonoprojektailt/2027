@@ -13,7 +13,9 @@ category: "Paslaugos"
 category_url: "/sandelyje/"
 price: "100 EUR"
 unit: "val."
-stock: "Šeštadieniais 8:00-12:00"
+stock: "PARDUOTA"
+is_sold: true
+availability_schema: "https://schema.org/OutOfStock"
 draft: false
 ---
 

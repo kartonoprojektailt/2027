@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Dovanų dėžutės, dekoratyvinės deko dėžės ir reprezentacinė tara verslui
+Visų tipų dovanų dėžučių, dekoratyvinių deko dėžių ir reprezentacinės taros verslui pasirinkimas
 
 ## Techninės specifikacijos
 

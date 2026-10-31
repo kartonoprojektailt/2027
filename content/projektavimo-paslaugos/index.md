@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Pakuočių ir POSM konstrukcijų CAD projektavimo paslaugos
+Pakuočių ir POSM konstrukcijų CAD projektavimo paslaugos
 
 ## Techninės specifikacijos
 

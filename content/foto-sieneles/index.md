@@ -11,10 +11,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Renginių foto sienelės ir mobilios reklaminės konstrukcijos
+Renginių foto sienelės ir mobilios reklaminės konstrukcijos
 
 Foto sienelės – praktiškas sprendimas renginiams ir šventėms. 
 

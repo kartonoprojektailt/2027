@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Tikslus CNC frezavimas ir lakštinių medžiagų apdirbimas
+Tikslus CNC frezavimas ir lakštinių medžiagų apdirbimas Kaune. Pristatymas visoje šalyje. 
 
 ## Techninės specifikacijos
 

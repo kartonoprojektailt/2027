@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Parduotuvių, vitrinų ir prekybos vietų dekoracijos bei POSM sprendimai 
+Parduotuvių, vitrinų ir prekybos vietų dekoracijos bei POSM sprendimai 
 ## Techninės specifikacijos
 
 | Parametras | Galimybės ir techninės specifikacijos |

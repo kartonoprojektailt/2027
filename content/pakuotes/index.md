@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Kartoniniai pakuočių sprendimai, gofrokartono dėžės ir pramoninė tara
+Kartoniniai pakuočių sprendimai, gofrokartono dėžės ir pramoninė tara
 
 UAB „Kartono projektai“ projektuoja ir gaminiai patikimus pakuotės bei logistikos sprendimus verslui. Užtikriname optimalų apsaugos lygis, tikslius inžinerinius parametrus (BCT / ECT gniuždimo rodiklius) ir nepriekaištingą reprezentacinę išvaizdą.
 

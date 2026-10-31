@@ -15,6 +15,8 @@ category_url: "/pakuotes/"
 price: "35 EUR"
 unit: "pakuotė (10 vnt.)"
 stock: "14"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 

@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Reklaminiai kartono stendai ir prekybiniai stovai (POSM gamyba)
+Reklaminiai kartono stendai ir prekybiniai stovai (POSM gamyba)
 
 ## Techninės specifikacijos ir gamybinės galimybės
 

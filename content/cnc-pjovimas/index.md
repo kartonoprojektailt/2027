@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Tikslus CNC kartono ir lakštinių medžiagų pjovimas (Gamyba Kaune)
+Kartono projektai atlieka tikslų kartono ir lakštinių medžiagų CNC pjovimą Kaune. Pristatymas į visus Lietuvos miestus. 
 
 ## Techninės specifikacijos
 

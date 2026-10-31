@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# Kartoninių dėžučių gamyba ir pakuotės sprendimai 
+Kartoninių dėžučių gamyba ir pakuotės sprendimai 
 
 ## Techninės specifikacijos
 

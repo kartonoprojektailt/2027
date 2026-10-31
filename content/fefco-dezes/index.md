@@ -6,10 +6,12 @@ category_url: "/sandelyje/"
 price: "nan"
 unit: "nan"
 stock: "nan"
+is_sold: false
+availability_schema: "https://schema.org/InStock"
 draft: false
 ---
 
-# FEFCO katalogo gofrokartono dėžės ir standartinė tara
+FEFCO katalogo gofrokartono dėžės ir standartinė tara
 
 ## Techninės specifikacijos
 
