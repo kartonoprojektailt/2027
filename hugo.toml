@@ -25,6 +25,9 @@ theme = "PaperMod"
   defaultTheme = "light"
   disableThemeToggle = false
 
+  # Wyłączenie automatycznego feedu wpisów na stronie głównej
+  mainSections = []
+
   # Autor i metadane
   author = "UAB Kartono projektai"
   showAuthor = false
@@ -202,38 +205,37 @@ theme = "PaperMod"
 # ==========================================
 # KONFIGURACJA MENU STOPKI (FOOTER MENU)
 # ==========================================
-  [[menu.footer]]
-    name = "Reklaminiai stendai ir POSM"
-    url = "/reklaminiai-stendai-stovai/"
-    weight = 1
+[[menu.footer]]
+  name = "Reklaminiai stendai ir POSM"
+  url = "/reklaminiai-stendai-stovai/"
+  weight = 1
 
-  [[menu.footer]]
-    name = "Kartono pakuotės"
-    url = "/pakuotes/"
-    weight = 2
+[[menu.footer]]
+  name = "Kartono pakuotės"
+  url = "/pakuotes/"
+  weight = 2
 
-  [[menu.footer]]
-    name = "Sandėlyje"
-    url = "/sandelyje/"
-    weight = 3
+[[menu.footer]]
+  name = "Sandėlyje"
+  url = "/sandelyje/"
+  weight = 3
 
-  [[menu.footer]]
-    name = "CNC Paslaugos"
-    url = "/cnc-paslaugos/"
-    weight = 4
+[[menu.footer]]
+  name = "CNC Paslaugos"
+  url = "/cnc-paslaugos/"
+  weight = 4
 
-  [[menu.footer]]
-    name = "Kontaktai"
-    url = "/kontaktai/"
-    weight = 5
+[[menu.footer]]
+  name = "Kontaktai"
+  url = "/kontaktai/"
+  weight = 5
 
-  [[menu.footer]]
-    name = "Rekvizitai"
-    url = "/rekvizitai/"
-    weight = 6
+[[menu.footer]]
+  name = "Rekvizitai"
+  url = "/rekvizitai/"
+  weight = 6
 
-  [[menu.footer]]
-    name = "Apie UAB Kartono projektai"
-    url = "/uab-kartono-projektai/"
-    weight = 7
-
+[[menu.footer]]
+  name = "Apie UAB Kartono projektai"
+  url = "/uab-kartono-projektai/"
+  weight = 7

@@ -1,0 +1,85 @@
+<style>
+  /* Ukrycie domyślnych, wielkich kafelków listy PaperMod na stronie głównej */
+  body.home .first-entry,
+  body.home .post-entry,
+  body.home .pages-list {
+    display: none !important;
+  }
+
+  /* 1. Globalne wymuszenie idealnej czcionki i interlinii na podstronach ORAZ na stronie głównej */
+  .post-content, 
+  .home-info, 
+  .entry-content,
+  .main {
+    font-size: 1.125rem !important;
+    line-height: 1.75 !important;
+  }
+
+  /* 2. Akapity na stronie głównej i podstronach */
+  .main p,
+  .home-info p,
+  .post-content p {
+    margin-bottom: 1.5rem !important;
+    line-height: 1.75 !important;
+    font-size: 1.125rem !important;
+  }
+
+  /* 3. Nagłówki H2 (odpowiedni oddech nad i pod) */
+  .main h2,
+  .home-info h2,
+  .post-content h2 {
+    margin-top: 2.66rem !important;
+    margin-bottom: 1.25rem !important;
+    line-height: 1.3 !important;
+  }
+
+  /* 4. Nagłówki H3 */
+  .main h3,
+  .home-info h3,
+  .post-content h3 {
+    margin-top: 2.33rem !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.35 !important;
+  }
+
+  /* 5. Listy punktowane */
+  .main li,
+  .home-info li,
+  .post-content li {
+    margin-bottom: 0.5rem !important;
+    line-height: 1.6 !important;
+    font-size: 1.125rem !important;
+  }
+
+  /* 6. Tabele i specyfikacje */
+  .main table,
+  .home-info table,
+  .post-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2.5rem 0;
+    font-size: 1rem !important;
+  }
+
+  .main th, .main td,
+  .home-info th, .home-info td,
+  .post-content th, .post-content td {
+    padding: 0.85rem 1rem !important;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border) !important;
+  }
+
+  .main th,
+  .home-info th,
+  .post-content th {
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary) !important;
+  }
+
+  .main tr:hover,
+  .home-info tr:hover,
+  .post-content tr:hover {
+    background-color: var(--entry);
+  }
+</style>
