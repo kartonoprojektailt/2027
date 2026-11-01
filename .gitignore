@@ -36,6 +36,8 @@ __pycache__/
 # ================================================= =
 # 5. LOKALNE PLIKI DANYCH / ROBOCZE ARTEFAKTY
 # ================================================= =
+.env
+config.local.toml
 Master_content_kp_real.csv
 test-upload.html
 credentials.json
