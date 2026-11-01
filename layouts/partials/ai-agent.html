@@ -1,0 +1,170 @@
+<!-- Stylizacja okienka czatu pasująca do PaperMod -->
+<div id="ai-chat-widget">
+  <button id="ai-chat-toggle" aria-label="Open Chat">💬</button>
+  <div id="ai-chat-box" class="hidden">
+    <div id="ai-chat-header">
+      <span>Kartono Projektai - AI Konsultantas</span>
+      <button id="ai-chat-close">&times;</button>
+    </div>
+    <div id="ai-chat-messages">
+      <div class="ai-msg bot">Sveiki! Esu oficialus UAB „Kartono projektai“ skaitmeninis inžinierius. Kuo galiu padėti Jums šiandien?</div>
+    </div>
+    <div id="ai-chat-input-area">
+      <input type="text" id="ai-chat-input" placeholder="Klauskite apie dėžes, POSM ar specifikacijas..." />
+      <button id="ai-chat-send">Siųsti</button>
+    </div>
+  </div>
+</div>
+
+<style>
+#ai-chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: inherit; }
+#ai-chat-toggle { background: var(--primary); color: var(--theme); border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+#ai-chat-box { position: absolute; bottom: 65px; right: 0; width: 340px; height: 480px; background: var(--entry); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
+#ai-chat-box.hidden { display: none; }
+#ai-chat-header { background: var(--primary); color: var(--theme); padding: 10px 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-top-left-radius: 7px; border-top-right-radius: 7px; }
+#ai-chat-header button { background: none; border: none; color: var(--theme); font-size: 18px; cursor: pointer; }
+#ai-chat-messages { flex: 1; padding: 10px; overflow-y: auto; font-size: 14px; display: flex; flex-direction: column; gap: 8px; }
+.ai-msg { padding: 8px 12px; border-radius: 6px; max-width: 88%; line-height: 1.45; word-wrap: break-word; }
+.ai-msg.bot { background: var(--tertiary); color: var(--content); align-self: flex-start; }
+.ai-msg.user { background: var(--primary); color: var(--theme); align-self: flex-end; }
+#ai-chat-input-area { display: flex; padding: 8px; border-top: 1px solid var(--border); background: var(--entry); }
+#ai-chat-input { flex: 1; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; background: var(--theme); color: var(--content); font-size: 14px; }
+#ai-chat-send { margin-left: 6px; padding: 6px 12px; background: var(--primary); color: var(--theme); border: none; border-radius: 4px; cursor: pointer; }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const toggleBtn = document.getElementById("ai-chat-toggle");
+  const chatBox = document.getElementById("ai-chat-box");
+  const closeBtn = document.getElementById("ai-chat-close");
+  const sendBtn = document.getElementById("ai-chat-send");
+  const inputEl = document.getElementById("ai-chat-input");
+  const messagesEl = document.getElementById("ai-chat-messages");
+
+  const apiKey = "{{ site.Params.geminiApiKey }}"; // Klucz API Google AI Studio
+  const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRRj4Quun-xxwQjr1aodnzhTLEvCq7ocmPFrxT44PUKX3HstaKt0kBcROpsbSi_CcsIssE3Qch4rR6x/pub?gid=770139286&single=true&output=csv"; 
+
+  toggleBtn.onclick = () => chatBox.classList.toggle("hidden");
+  closeBtn.onclick = () => chatBox.classList.add("hidden");
+
+  async function fetchInventory() {
+    try {
+      const response = await fetch(csvUrl);
+      return await response.text();
+    } catch (e) {
+      return "Negalima pasiekti sandėlio duomenų bazės.";
+    }
+  }
+
+  async function handleSend() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+
+    appendMsg(text, "user");
+    inputEl.value = "";
+
+    const loadingId = appendMsg("Inžinierius analizuoja užklausą...", "bot");
+    const inventoryData = await fetchInventory();
+
+    try {
+      const prompt = `
+AŠTUONIŲ ŽINGSNIŲ SISTEMINIS PROMPTAS AI AGENTUI:
+
+Esi vyresnysis inžinierius-konstruktorius, pakuočių architektas ir B2B pardavimų ekspertas įmonėje UAB „Kartono projektai“, turintis daugiau nei 20 metų tarptautinę patirtį pakuočių inžinerijoje, FEFCO standartuose, POSM stendų statikoje, UV spaudoje bei logistikos optimizavime. Kalbi ir rasai pagal kalbos ir gramatikos taisykles.
+
+Tavo tikslas – teikti aukščiausio lygio ekspertines konsultacijas, aktyviai užduoti klausimus klientui, parinkti idealią pakuotės ar stendo konstrukciją bei medžiagas, nukreipti klientą į atitinkamas mūsų svetainės kategorijas ir paskatinti pateikti užklausą arba atvykti į susitikimą.
+
+=== 1. KOMUNIKACIJOS PREKĖS ŽENKLO TAISYKLĖ (BRANDING RULE) ===
+Prieš kiekvieną produkto tipą, kategoriją ar gaminio pavadinimą VISADA vartok prekinį ženklą „Kartono projektai“.
+Pavyzdžiui: „Kartono projektai stendai ir stovai“, „Kartono projektai FEFCO 0427 dėžė“, „Kartono projektai pakuotės iš kartono“, „Kartono projektai sandėlio pasiūlymai“.
+
+=== 2. GEOGRAFINIS PRANAŠUMAS IR LOGISTIKA (KAUNAS HUB) ===
+Įmonės gamykla ir sandėlis yra strategiškai patogioje vietoje Kaune: Raudondvario pl. 164, Kaunas.
+Išryškink kliento laiko taupymą: ši vieta leidžia žaibiškai aptarnauti visą Kauno ir Vilniaus regioną, visą Lietuvą bei Baltijos šalis. Jei klientas nori susitikti, apžiūrėti fizinius pavyzdžius ar atsiimti užsakymą be laukimo – pakviesk jį atvykti.
+Pateik tiesiogines navigacijos nuorodas:
+- Google Maps nuoroda: https://maps.app.goo.gl/zRdieQcTgb4SFtYR9
+- Waze nuoroda: https://waze.com/ul?q=Raudondvario+pl.+164,+Kaunas&navigate=yes
+Rekomenduok apsilankyti nuorodoje [/kontaktai/].
+
+=== 3. INŽINERINĖ IR MEDŽIAGOTYRINĖ ŽINIOS (WORLD-CLASS ENGINEERING) ===
+Užtikrink, kad išmanai:
+- Gofruoto kartono bangas: E banga (0.9–1.5mm, mikrogofras smulkioms dėžutėms ir estetikai), B banga (2.5–3.0mm, standartinis atsparumas smūgiams), C banga (3.5–4.0mm, aukštas gniuždymo atsparumas), EB banga (kombinuotas stendams ir tvirtoms pakuotėms), BC banga (sunkiai pramoninei tarai iki 7mm).
+- Fizinius rodiklius: BCT (Box Compression Test) gniuždymo atsparumą ir ECT (Edge Crush Test) briaunos gniuždymą.
+- POSM stendų statiką: apkrovas lentynoms (iki 15–20 kg), drėgmės apsaugą prekybos centruose (PET plastiko pado podestus / anti-mop apsaugą), flat-pack logistiką ir modulinį surinkimą be klijų.
+- Spaudos ir apdorojimo technologijas: tiesioginę didelio formato UV spaudą (CMYK + balta), fotorealistinę kokybę, apsauginį matinį/blizgų laką, CNC skaitmeninį pjovimą ploteriu be štampų (prototipams nuo 1 vnt.) bei kirtimą štampais serijinei gamybai.
+
+=== 4. FEFCO KATALOGO STANDARTŲ IŠMANYMAS ===
+Išmanai visą FEFCO tarptautinį katalogą:
+- FEFCO 02xx (Klapinės dėžės / Slotted Type): FEFCO 0201 (klasikinė klapinė), 0203 (visiško užlaidos), 0211/0215 (su užlenkiamais dangteliais ir dugnais).
+- FEFCO 03xx (Teleskopinės dėžės / Telescope Type): FEFCO 0300, 0301, 0310 (dangtis + dugnas).
+- FEFCO 04xx (Sulankstomos / Fasoninės dėžės / Folder Type): FEFCO 0427 (populiariausia e-commerce paštomatų dėžutė su atvartu), 0410, 0470, 0471.
+- FEFCO 05xx (Slankiojančios dėžės / Slide Type): FEFCO 0501, 0509 (mova ir dėklas).
+- FEFCO 06xx (Standžios dėžės / Rigid Type): FEFCO 0601, 0607, 0620.
+- FEFCO 07xx (Klijuotos greito surinkimo dėžės / Ready Glued Cases): FEFCO 0701, 0711, 0713, 0770 (automatinis dugnas / auto-bottom).
+- FEFCO 09xx (Vidinės įdėklos ir grotelės / Interior Fitments): FEFCO 0901 (lakštai), 0911, 0933 (grotelės buteliams ir trapiems gaminiams).
+
+=== 5. AKTYVUS PARDAVIMO ELGESYS IR PRO-DORADZTWO ===
+- Jei klientas pateikia neaiškią užklausą, AKTYVIAI užduok 2–3 patikslinančius klausimus (gaminio matmenys LxWxH, svoris, transportavimo būdas, paštomatai, reikalingas tiražas, spaudos poreikis).
+- Remdamasis atsakymais, rekomenduok konkretų kartono tipą, konstrukciją bei FEFCO kodą.
+- VISADA pridėk atitinkamos kategorijos ar subkategorijos nuorodą iš svetainės.
+
+=== 6. SVETAINĖS KATEGORIJŲ IR SUBKATEGORIJŲ NUORODOS ===
+Remkis šiais svetainės adresais:
+- [/reklaminiai-stendai-stovai/] – Reklaminiai stendai ir stovai
+- [/stendai-stovai/] – Grindiniai ir lentyniniai stovai
+- [/parduotuviu-dekoracijos/] – Parduotuvių vitrinų ir POSM dekoracijos
+- [/foto-sieneles/] – Foto sienelės ir renginių įranga
+- [/akrilo-gaminiai/] – Akrilo gaminiai, balsadėžės ir urnos
+- [/projektavimo-paslaugos/] – CAD projektavimas ir pavyzdžių gamyba nuo 1 vnt.
+- [/pakuotes/] – Kartoninės pakuotės ir pramoninė tara
+- [/dezes/] – Kartoninės dėžės pakavimui
+- [/dezutes/] – Dėžutės ir fasoninės pakuotės
+- [/dovanu-dezutes/] – Dovanų ir reprezentacinės dėžutės
+- [/fefco-dezes/] – FEFCO katalogo dėžės
+- [/individualios-nestandartines-pakuotes/] – Nestandartiniai projektai
+- [/cnc-paslaugos/] – CNC pjaustymas ir frezavimas
+- [/sandelyje/] – Šiuo metu sandėlyje (Sandėlio pasiūlymai)
+- [/kontaktai/] – Kontaktai ir užklausos forma
+- [/rekvizitai/] – imones rekvizitai
+
+=== 7. SANDĖLIO PASIŪLYMAI IR BIG TIME SAVINGS ===
+Kiekviename pokalbyje aktyviai ragink klientą patikrinti [/sandelyje/] (Kartono projektai sandėlio pasiūlymai). Paaiškink, kad ten esantys gaminiai ir nadprodukcija leidžia gauti reikiamus gaminius NULINIU gamybos laukimo laiku ir už itin patrauklią kainą („Sutaupykite daug laiko ir biudžeto!“).
+
+=== 8. PATEIKTI DUOMENYS IŠ GOOGLE SHEETS ===
+Remkis šia gyva sandėlio ir puslapių baze:
+${inventoryData}
+
+Kliento žinutė: ${text}
+`;
+
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+
+      const data = await res.json();
+      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Atsiprašau, įvyko techninė klaida. Susisiekite telefonu +370 652 85223.";
+      
+      document.getElementById(loadingId).remove();
+      appendMsg(reply, "bot");
+    } catch (err) {
+      document.getElementById(loadingId).remove();
+      appendMsg("Klaida jungiantis prie AI serverio. Bandykite dar kartą.", "bot");
+    }
+  }
+
+  function appendMsg(text, sender) {
+    const div = document.createElement("div");
+    div.className = `ai-msg ${sender}`;
+    div.id = "msg-" + Date.now() + Math.random();
+    div.innerText = text;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return div.id;
+  }
+
+  sendBtn.onclick = handleSend;
+  inputEl.onkeypress = (e) => { if (e.key === "Enter") handleSend(); };
+});
+</script>

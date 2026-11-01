@@ -34,14 +34,20 @@ try:
     client = gspread.authorize(creds)
     spreadsheet = client.open_by_key(SPREADSHEET_ID)
     
+    # Pobranie danych z zakładki 'puslapiai' i pominięcie 2. wiersza (instrukcyjnego)
     df_puslapiai = pd.DataFrame(spreadsheet.worksheet("puslapiai").get_all_records())
     df_puslapiai['source_tab'] = 'puslapiai'
+    if len(df_puslapiai) > 0:
+        df_puslapiai = df_puslapiai.iloc[1:].reset_index(drop=True)
     
     dfs_to_concat = [df_puslapiai]
     
     try:
+        # Pobranie danych z zakładki 'sandelyje' i pominięcie 2. wiersza (instrukcyjnego)
         df_sandelyje = pd.DataFrame(spreadsheet.worksheet("sandelyje").get_all_records())
         df_sandelyje['source_tab'] = 'sandelyje'
+        if len(df_sandelyje) > 0:
+            df_sandelyje = df_sandelyje.iloc[1:].reset_index(drop=True)
         dfs_to_concat.append(df_sandelyje)
         print("Zakładka 'sandelyje' pomyślnie dołączona.")
     except Exception:
@@ -204,7 +210,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Fix syntax error in master_sheet_to_hugo.py"], check=True)
+        subprocess.run(["git", "commit", "-m", "Ignore instruction row in master sheet and sync"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Visi pakeitimai iškeliavo į GitHub.")
     else:
