@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-  # Opcjonalnie: automatyczne odpytanie arkusza raz dziennie lub możesz to usunąć, jeśli wolisz tylko przy zmianach
+  # Automatyczne odpytanie arkusza co 6 godzin
   schedule:
-    - cron: '0 */6 * * *' # Sprawdza co 6 godzin (możesz zmienić lub usunąć)
+    - cron: '0 */6 * * *'
 
 jobs:
   build:
@@ -38,4 +38,6 @@ jobs:
           extended: true
 
       - name: Build Hugo
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: hugo --minify
