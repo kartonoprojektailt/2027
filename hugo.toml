@@ -24,7 +24,7 @@ theme = "PaperMod"
   description = "Reklaminių stendų ir pakuočių gamintojas UAB Kartono projektai"
   defaultTheme = "light"
   disableThemeToggle = false
-  geminiApiKey = "AQ.Ab8RN6Lsigr6yAz3vQeJnRUl2WjuXNxgDJu6HOezZEc7MU0u-w"
+  geminiApiKey = ""
 
   # Wyłączenie automatycznego feedu wpisów na stronie głównej
   mainSections = []

@@ -1,13 +1,16 @@
 ---
 title: "Individualios ir nestandartinės pakuotės"
+description: "Unikalių konstrukcijų, nestandartinių matmenų ir sudėtingų kartoninių pakuočių gamyba. CAD projektavimas, prototipavimas nuo 1 vnt., ložetės ir spauda."
 offer_code: "nan"
-category: "nan"
-category_url: "/sandelyje/"
+sale_reason: "nan"
 price: "nan"
 unit: "nan"
 stock: "nan"
 is_sold: false
 availability_schema: "https://schema.org/InStock"
+assembled_specs: "nan"
+flatpack_specs: "nan"
+units_per_pack: "nan"
 draft: false
 ---
 

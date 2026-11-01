@@ -43,7 +43,7 @@
       {{ .Content }}
     </div>
 
-    <!-- 4. KATEGORIA, KOD, CENA, LIKUTIS -->
+    <!-- 4. KATEGORIA, KOD, CENA, LIKUTIS I LOGISTYKA -->
     <div style="background: var(--entry); border: 1px solid var(--border); padding: 20px; border-radius: 10px; margin-bottom: 32px; display: flex; flex-direction: column; gap: 16px; font-size: 1.05rem; font-weight: 400; color: var(--content);">
       
       <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -55,6 +55,11 @@
         {{ if .Params.offer_code }}
         <div>
           Kodas: {{ .Params.offer_code }}
+        </div>
+        {{ end }}
+        {{ if .Params.sale_reason }}
+        <div>
+          Pasiūlymo kilmė / priežastis: <span style="background: var(--tertiary); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); font-size: 0.95rem;">{{ .Params.sale_reason }}</span>
         </div>
         {{ end }}
       </div>
@@ -74,6 +79,21 @@
           {{ end }}
         </div>
       </div>
+
+      {{ if or .Params.assembled_specs .Params.flatpack_specs .Params.units_per_pack }}
+      <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px; font-size: 0.95rem;">
+        <strong style="font-size: 1rem;">Logistikos ir matmenų informacija:</strong>
+        {{ if .Params.assembled_specs }}
+        <div><strong>Išskleisto / surinkto matmenys:</strong> {{ .Params.assembled_specs }}</div>
+        {{ end }}
+        {{ if .Params.flatpack_specs }}
+        <div><strong>Pakuotės / transportavimo matmenys:</strong> {{ .Params.flatpack_specs }}</div>
+        {{ end }}
+        {{ if .Params.units_per_pack }}
+        <div><strong>Kiekis pakuotėje / paletėje:</strong> {{ .Params.units_per_pack }}</div>
+        {{ end }}
+      </div>
+      {{ end }}
 
     </div>
 
@@ -109,7 +129,7 @@
     </div>
     {{ end }}
 
-    <!-- 7. INNE AKTYWNE OFERTY (TYLKO NIEWYPRZEDANE) -->
+    <!-- 7. INNE AKTYWNE OFERTY -->
     <div style="margin-top: 48px; border: 1px solid var(--border); padding: 20px; border-radius: 10px; background: var(--entry);" class="no-print">
       <h3 style="margin-bottom: 16px; font-size: 1.15rem; font-weight: 600;">
         Kiti galiojantys <a href="/sandelyje/" style="color: var(--primary); text-decoration: underline; font-weight: 600;">Kartono projektų sandėlio pasiūlymai</a>:
@@ -117,7 +137,6 @@
       
       <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px;">
         {{ $currentPermalink := .Permalink }}
-        {{/* Pobieramy wyłącznie aktywne (nie sprzedane) oferty z sandelyje */}}
         {{ $activeOthers := where (where site.RegularPages "Type" "sandelyje") ".Params.is_sold" "!=" true }}
         {{ range $activeOthers }}
           {{ if and (ne .Permalink $currentPermalink) (ne .RelPermalink "/sandelyje/") }}

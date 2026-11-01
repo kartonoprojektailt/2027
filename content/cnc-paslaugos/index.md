@@ -1,13 +1,16 @@
 ---
 title: "CNC paslaugos"
+description: "Profesionalios CNC paslaugos verslui: lakštinių medžiagų pjovimas ir frezavimas. Maži ir vidutiniai tiražai, operatyvus vykdymas ir pristatymas visoje Lietuvoje."
 offer_code: "nan"
-category: "nan"
-category_url: "/sandelyje/"
+sale_reason: "nan"
 price: "nan"
 unit: "nan"
 stock: "nan"
 is_sold: false
 availability_schema: "https://schema.org/InStock"
+assembled_specs: "nan"
+flatpack_specs: "nan"
+units_per_pack: "nan"
 draft: false
 ---
 

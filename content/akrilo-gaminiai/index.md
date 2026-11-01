@@ -1,13 +1,16 @@
 ---
 title: "Akrilo gaminiai ir balsadėžės"
+description: "Profesionali balsavimo, aukų, loterijų, pasiūlymų dėžių renginiams, rinkimams bei akcijoms gamyba iš organinio stiklo (akrilo) Plexiglas®. Individualūs matmenys, spauda, lipdukai ir spynos."
 offer_code: "nan"
-category: "nan"
-category_url: "/sandelyje/"
+sale_reason: "nan"
 price: "nan"
 unit: "nan"
 stock: "nan"
 is_sold: false
 availability_schema: "https://schema.org/InStock"
+assembled_specs: "nan"
+flatpack_specs: "nan"
+units_per_pack: "nan"
 draft: false
 ---
 

@@ -1,13 +1,16 @@
 ---
 title: "Kartoninės dėžės ir gofro tara"
+description: "Sustiprintų gofruoto kartono dėžių gamyba pakavimui, logistikai ir sandėliavimui. Klapinės dėžės, fasoniniai modeliai, standartiniai ir individualūs matmenys."
 offer_code: "nan"
-category: "nan"
-category_url: "/sandelyje/"
+sale_reason: "nan"
 price: "nan"
 unit: "nan"
 stock: "nan"
 is_sold: false
 availability_schema: "https://schema.org/InStock"
+assembled_specs: "nan"
+flatpack_specs: "nan"
+units_per_pack: "nan"
 draft: false
 ---
 

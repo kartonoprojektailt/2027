@@ -1,13 +1,16 @@
 ---
 title: "Pakuočių ir stendų projektavimo paslaugos"
+description: "Profesionalus kartoninių pakuočių, POSM stendų ir konstrukcijų CAD projektavimas. Prototipų išpjovimas nuo 1 vnt., 3D vizualizacija ir inžineriniai sprendimai."
 offer_code: "nan"
-category: "nan"
-category_url: "/sandelyje/"
+sale_reason: "nan"
 price: "nan"
 unit: "nan"
 stock: "nan"
 is_sold: false
 availability_schema: "https://schema.org/InStock"
+assembled_specs: "nan"
+flatpack_specs: "nan"
+units_per_pack: "nan"
 draft: false
 ---
 

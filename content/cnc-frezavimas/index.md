@@ -1,13 +1,16 @@
 ---
 title: "CNC frezavimas"
+description: "Profesionalios CNC frezavimo paslaugos verslui. Tikslus ir švarus įvairių medžiagų apdorojimas pagal individualius brėžinius. Maži ir vidutiniai tiražai, greitas pristatymas visoje Lietuvoje."
 offer_code: "nan"
-category: "nan"
-category_url: "/sandelyje/"
+sale_reason: "nan"
 price: "nan"
 unit: "nan"
 stock: "nan"
 is_sold: false
 availability_schema: "https://schema.org/InStock"
+assembled_specs: "nan"
+flatpack_specs: "nan"
+units_per_pack: "nan"
 draft: false
 ---
 

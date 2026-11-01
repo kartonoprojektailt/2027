@@ -1,5 +1,6 @@
 ---
 title: "CNC Pjovimo paslaugos"
+description: "CNC pjovimo paslaugos | Sandėlio pasiūlymai | Kartono projektai"
 hero_image: "https://lh3.googleusercontent.com/d/1Dresj269PFfyFk-fIx3DOxz8PcuL6kK9=w1000"
 gallery_images:
   - "https://lh3.googleusercontent.com/d/1WcacpUsA_nXTjrFYssW6wXufKcGlW9E7=w800"
@@ -9,6 +10,7 @@ search_cloud:
   - "CNC pjovimas"
   - "kartono pjovimo paslaugos"
 offer_code: "kp20261016c"
+sale_reason: "Gamybos perteklius"
 category: "Paslaugos"
 category_url: "/sandelyje/"
 price: "100 EUR"

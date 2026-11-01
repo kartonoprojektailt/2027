@@ -17,8 +17,6 @@ SCOPES = [
 
 print("Jungiamasi prie Google Sheets per API...")
 try:
-    # Obsługa uwierzytelniania: w chmurze (GitHub Actions) tworzy plik tymczasowy ze zmiennej środowiskowej,
-    # lokalnie na laptopie szuka fizycznego pliku credentials.json.
     credentials_json_str = os.environ.get("GCP_CREDENTIALS_JSON")
     
     if credentials_json_str:
@@ -34,24 +32,35 @@ try:
     client = gspread.authorize(creds)
     spreadsheet = client.open_by_key(SPREADSHEET_ID)
     
-    # Pobranie danych z zakładki 'puslapiai' i pominięcie 2. wiersza (instrukcyjnego)
-    df_puslapiai = pd.DataFrame(spreadsheet.worksheet("puslapiai").get_all_records())
+    def fetch_sheet_as_df(sheet_name):
+        worksheet = spreadsheet.worksheet(sheet_name)
+        data = worksheet.get_all_values()
+        if not data:
+            return pd.DataFrame()
+        headers = [str(h).strip() for h in data[0]]
+        df_sheet = pd.DataFrame(data[1:], columns=headers)
+        # Czyszczenie ewentualnych pustych nagłówków bez nazwy
+        df_sheet = df_sheet.loc[:, df_sheet.columns != '']
+        return df_sheet
+
+    # 1. Zakładka 'puslapiai' - pomijamy wiersz 2 (instrukcyjny)
+    df_puslapiai = fetch_sheet_as_df("puslapiai")
     df_puslapiai['source_tab'] = 'puslapiai'
     if len(df_puslapiai) > 0:
         df_puslapiai = df_puslapiai.iloc[1:].reset_index(drop=True)
     
     dfs_to_concat = [df_puslapiai]
     
+    # 2. Zakładka 'sandelyje' - pomijamy wiersz 2 (instrukcyjny)
     try:
-        # Pobranie danych z zakładki 'sandelyje' i pominięcie 2. wiersza (instrukcyjnego)
-        df_sandelyje = pd.DataFrame(spreadsheet.worksheet("sandelyje").get_all_records())
+        df_sandelyje = fetch_sheet_as_df("sandelyje")
         df_sandelyje['source_tab'] = 'sandelyje'
         if len(df_sandelyje) > 0:
             df_sandelyje = df_sandelyje.iloc[1:].reset_index(drop=True)
         dfs_to_concat.append(df_sandelyje)
         print("Zakładka 'sandelyje' pomyślnie dołączona.")
-    except Exception:
-        print("Brak zakładki 'sandelyje' – pomijamy.")
+    except Exception as e:
+        print(f"Brak zakładki 'sandelyje' lub klaida: {e}")
 
     df = pd.concat(dfs_to_concat, ignore_index=True)
 except Exception as e:
@@ -81,32 +90,45 @@ def fix_gdrive_url(url, max_width=1000):
 def get_category_url(category_name):
     cat_lower = category_name.strip().lower()
     
-    if "pakuot" in cat_lower:
+    if "fefco" in cat_lower:
+        return "/fefco-dezes/"
+    elif "dovan" in cat_lower:
+        return "/dovanu-dezutes/"
+    elif "dėžutė" in cat_lower or "dezute" in cat_lower:
+        return "/dezutes/"
+    elif "dėžė" in cat_lower or "deze" in cat_lower or "pakuot" in cat_lower:
         return "/pakuotes/"
-    elif "reklam" in cat_lower or "stend" in cat_lower or "posm" in cat_lower:
+    elif "stend" in cat_lower or "stov" in cat_lower or "posm" in cat_lower:
         return "/reklaminiai-stendai-stovai/"
-    elif "cnc" in cat_lower or "frez" in cat_lower or "pjov" in cat_lower:
+    elif "foto" in cat_lower or "sienel" in cat_lower:
+        return "/foto-sieneles/"
+    elif "dekorac" in cat_lower:
+        return "/parduotuviu-dekoracijos/"
+    elif "akril" in cat_lower:
+        return "/akrilo-gaminiai/"
+    elif "frezavim" in cat_lower:
+        return "/cnc-frezavimas/"
+    elif "pjovim" in cat_lower:
+        return "/cnc-pjovimas/"
+    elif "cnc" in cat_lower:
         return "/cnc-paslaugos/"
-    elif "medžiag" in cat_lower or "medziag" in cat_lower:
-        return "/"
-    elif "workshop" in cat_lower or "dirbtuv" in cat_lower or "mokym" in cat_lower or "minkšt" in cat_lower or "minkst" in cat_lower:
+    elif "projektavim" in cat_lower:
         return "/projektavimo-paslaugos/"
     else:
         return "/sandelyje/"
 
-# 1. USUWANIE FOLDERU CONTENT/SEARCH/ JEŚLI ISTNIEJE (GŁÓWNA PRZYCZYNA BŁĘDU)
 if os.path.exists("content/search") and os.path.isdir("content/search"):
     shutil.rmtree("content/search")
     print("Pašalintas klaidingas aplankas 'content/search/'.")
 
-# 2. Usuwanie ewentualnego błędnego pliku sandelyje/index.md
 if os.path.exists("content/sandelyje/index.md"):
     os.remove("content/sandelyje/index.md")
 
 for index, row in df.iterrows():
     slug = sanitize_text(str(row.get('slug', '')))
     title = sanitize_text(str(row.get('title', '')))
-    meta_desc = sanitize_text(str(row.get('meta_description', '')))
+    
+    meta_desc = sanitize_text(str(row.get('meta_description', row.get('meta_description ', ''))))
     content_body = sanitize_text(str(row.get('content_body', '')))
     
     hero_image = sanitize_text(str(row.get('hero_image', '')))
@@ -117,13 +139,18 @@ for index, row in df.iterrows():
     cloud_list = [tag.strip() for tag in search_cloud.split(',') if tag.strip()]
     
     code = sanitize_text(str(row.get('code', '')))
+    sale_reason = sanitize_text(str(row.get('sale_reason', '')))
+    
+    assembled_specs = sanitize_text(str(row.get('assembled_specs', '')))
+    flatpack_specs = sanitize_text(str(row.get('flatpack_specs', '')))
+    units_per_pack = sanitize_text(str(row.get('units_per_pack', '')))
+    
     category = sanitize_text(str(row.get('category', '')))
     category_url = get_category_url(category) if category else ""
     
     price = sanitize_text(str(row.get('price', '')))
     unit = sanitize_text(str(row.get('unit', '')))
     
-    # Rozpoznawanie stanu wyprzedanego (0, PARDUOTA itp.)
     stock_raw = sanitize_text(str(row.get('stock', '')))
     stock_clean = stock_raw.lower()
     
@@ -169,9 +196,14 @@ for index, row in df.iterrows():
     desc_block = f"\ndescription: \"{meta_desc}\"" if meta_desc else ""
     
     code_block = f"\noffer_code: \"{code}\"" if code else ""
+    reason_block = f"\nsale_reason: \"{sale_reason}\"" if sale_reason else ""
     cat_block = f"\ncategory: \"{category}\"\ncategory_url: \"{category_url}\"" if category else ""
     price_block = f"\nprice: \"{price}\"" if price else ""
     unit_block = f"\nunit: \"{unit}\"" if unit else ""
+    
+    assembled_block = f"\nassembled_specs: \"{assembled_specs}\"" if assembled_specs else ""
+    flatpack_block = f"\nflatpack_specs: \"{flatpack_specs}\"" if flatpack_specs else ""
+    packinfo_block = f"\nunits_per_pack: \"{units_per_pack}\"" if units_per_pack else ""
     
     stock_block = f"\nstock: \"{stock_display}\"\nis_sold: {str(is_sold).lower()}\navailability_schema: \"{availability_schema}\"" if stock_raw else ""
 
@@ -194,7 +226,7 @@ layout: "list"
 """
     else:
         markdown_content = f"""---
-title: "{title}"{desc_block}{hero_block}{gallery_block}{cloud_block}{code_block}{cat_block}{price_block}{unit_block}{stock_block}
+title: "{title}"{desc_block}{hero_block}{gallery_block}{cloud_block}{code_block}{reason_block}{cat_block}{price_block}{unit_block}{stock_block}{assembled_block}{flatpack_block}{packinfo_block}
 draft: false
 ---
 
@@ -210,7 +242,7 @@ try:
     subprocess.run(["git", "add", "-A"], check=True)
     status_res = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True)
     if status_res.stdout.strip():
-        subprocess.run(["git", "commit", "-m", "Ignore instruction row in master sheet and sync"], check=True)
+        subprocess.run(["git", "commit", "-m", "Sync updated structure from Google Sheets"], check=True)
         subprocess.run(["git", "push", "origin", "main"], check=True)
         print("Valio! Visi pakeitimai iškeliavo į GitHub.")
     else:

@@ -1,13 +1,16 @@
 ---
 title: "Stendai ir stovai"
+description: "Profesionalūs kartono stendai, grindiniai lentyniniai ekspozitoriai ir reklaminiai stovai verslui, FMCG sektoriui bei parodoms. Individualus projektavimas, didelė apkrova ir ekologiškos medžiagos."
 offer_code: "nan"
-category: "nan"
-category_url: "/sandelyje/"
+sale_reason: "nan"
 price: "nan"
 unit: "nan"
 stock: "nan"
 is_sold: false
 availability_schema: "https://schema.org/InStock"
+assembled_specs: "nan"
+flatpack_specs: "nan"
+units_per_pack: "nan"
 draft: false
 ---
 
