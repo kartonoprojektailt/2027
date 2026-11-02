@@ -157,7 +157,7 @@ for _, row in df.iterrows():
         
     source_tab = str(row.get('source_tab', 'puslapiai')).strip()
     
-    # Apsauga: neperrašome pagrindinio sandėlio puslapio iš puslapių tabo
+    # Apsauga: neperrašome pagrindinio sandėlio puslapio (_index.md) iš puslapių tabo
     if source_tab == 'puslapiai' and slug == 'sandelyje':
         continue
 
@@ -168,6 +168,7 @@ for _, row in df.iterrows():
     hero_raw = row.get('hero_image', '')
     hero_image = download_and_cache_image(hero_raw, slug) if hero_raw and str(hero_raw).lower() != 'nan' else ""
     
+    # Galerijos nuotraukos (palaiko kableliais atskirtus sąrašus iš Google Drive)
     gallery_images = []
     gallery_raw = row.get('gallery_images', '')
     if gallery_raw and str(gallery_raw).lower() != 'nan':
@@ -227,6 +228,7 @@ for _, row in df.iterrows():
     
     filename = f"{slug}.md"
     
+    # Prekes iš sandelyje dedame į content/sandelyje/, o puslapius į content/
     if source_tab == 'sandelyje':
         filepath = os.path.join(sandelyje_dir, filename)
     else:
