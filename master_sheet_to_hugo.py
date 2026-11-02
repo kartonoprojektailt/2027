@@ -152,8 +152,14 @@ for _, row in df.iterrows():
     if not slug or slug.lower() == 'nan':
         continue
         
-    title = str(row.get('title', slug)).strip()
     source_tab = str(row.get('source_tab', 'puslapiai')).strip()
+    
+    # KLUCZOWE ZABEZPIECZENIE: Pomijamy wpis "sandelyje" z zakładki puslapiai, 
+    # aby nie nadpisać głównego pliku strony magazynu pustą zawartością.
+    if source_tab == 'puslapiai' and slug == 'sandelyje':
+        continue
+
+    title = str(row.get('title', slug)).strip()
     
     hero_raw = row.get('hero_image', '')
     hero_image = download_and_cache_image(hero_raw, slug) if hero_raw else ""
