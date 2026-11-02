@@ -1,0 +1,31 @@
+---
+title: "Foto sienel\u0117s Nikola Tesla"
+slug: "foto-sienele-nikola-tesla-kp20261016a"
+type: "sandelyje"
+description: "Foto senel\u0117s renginiams: Nikola Tesla | Kartono projekt\u0173 sand\u0117lio pasi\u016blymai Kaune"
+layout: "single"
+category: "Reklaminiai stendai ir POSM"
+offer_code: "kp20261016a"
+code: "kp20261016a"
+price: "150 EUR"
+unit: "vnt."
+stock: "5"
+sale_reason: "Spaudos brokas"
+assembled_specs: "120x60x180 cm | 4.2 kg"
+flatpack_specs: "120x80x15 cm | 22 kg"
+units_per_pack: "10"
+is_sold: false
+hero_image: "/images/foto-sienele-nikola-tesla-kp20261016a.jpg"
+gallery_images:
+  - "/images/foto-sienele-nikola-tesla-kp20261016a-g1.jpg"
+  - "/images/foto-sienele-nikola-tesla-kp20261016a-g2.jpg"
+  - "/images/foto-sienele-nikola-tesla-kp20261016a-g3.jpg"
+search_cloud:
+  - "Foto sienel\u0117"
+  - "Dekoracijos \u0161vent\u0117ms"
+  - "Dekoracijos renginiams"
+  - "Mokyklai"
+  - "Festivaliams"
+  - "Reklamai"
+---
+Foto sienelės su Nikola Tesla. 1:1. 5 vnt. Lengvai transportuojamos ir sudėdamos konstrukcijos. 1 vnt. sveria 2 kg. Perkantiems visą kiekį dovanų du tikroviški kartono banginiai

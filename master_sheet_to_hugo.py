@@ -16,7 +16,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive.readonly"
 ]
 
-print("Jungiamasi prie Google Sheets per API...")
+print("Jungiamasi prie Google Sheets (Master_turinys_kartonoprojektai) per API...")
 try:
     credentials_json_str = os.environ.get("GCP_CREDENTIALS_JSON") or os.environ.get("GCP_CREDENTIALS")
     
@@ -65,9 +65,12 @@ except Exception as e:
     exit(1)
 
 images_dir = os.path.join("static", "images")
-os.makedirs(images_dir, exist_ok=True)
 content_dir = "content"
+sandelyje_dir = os.path.join(content_dir, "sandelyje")
+
+os.makedirs(images_dir, exist_ok=True)
 os.makedirs(content_dir, exist_ok=True)
+os.makedirs(sandelyje_dir, exist_ok=True)
 
 def extract_gdrive_id(url):
     if not isinstance(url, str) or not url.strip():
@@ -145,7 +148,7 @@ def download_and_cache_image(url, filename_prefix):
             
     return url
 
-print("Generuojami Markdown puslapiai ir prekės...")
+print("Generuojami Markdown puslapiai ir prekės iš Google Sheets...")
 
 for _, row in df.iterrows():
     slug = str(row.get('slug', '')).strip()
@@ -154,19 +157,17 @@ for _, row in df.iterrows():
         
     source_tab = str(row.get('source_tab', 'puslapiai')).strip()
     
-    # KLUCZOWE ZABEZPIECZENIE: Pomijamy wpis "sandelyje" z zakładki puslapiai, 
-    # aby nie nadpisać głównego pliku strony magazynu pustą zawartością.
+    # Apsauga: neperrašome pagrindinio sandėlio puslapio iš puslapių tabo
     if source_tab == 'puslapiai' and slug == 'sandelyje':
         continue
 
     title = str(row.get('title', slug)).strip()
     if title.lower() == 'nan':
         title = slug
-    
+        
     hero_raw = row.get('hero_image', '')
     hero_image = download_and_cache_image(hero_raw, slug) if hero_raw and str(hero_raw).lower() != 'nan' else ""
     
-    # Obsługa galerii (wspiera zarówno kolumny gallery_1..5 jak i wpis z przecinkami gallery_images)
     gallery_images = []
     gallery_raw = row.get('gallery_images', '')
     if gallery_raw and str(gallery_raw).lower() != 'nan':
@@ -175,13 +176,6 @@ for _, row in df.iterrows():
             g_img = download_and_cache_image(u, f"{slug}-g{idx}")
             if g_img:
                 gallery_images.append(g_img)
-    else:
-        for i in range(1, 6):
-            g_raw = row.get(f'gallery_{i}', '')
-            if g_raw and str(g_raw).lower() != 'nan':
-                g_img = download_and_cache_image(g_raw, f"{slug}-g{i}")
-                if g_img:
-                    gallery_images.append(g_img)
 
     fm = [
         "---",
@@ -193,7 +187,7 @@ for _, row in df.iterrows():
     meta_desc = row.get('meta_description ', '') or row.get('meta_description', '')
     if meta_desc and str(meta_desc).lower() != 'nan':
         fm.append(f"description: {json.dumps(str(meta_desc).strip())}")
-    
+        
     if source_tab == 'sandelyje':
         fm.append("layout: \"single\"")
         for col in ['category', 'code', 'price', 'unit', 'stock', 'sale_reason', 'assembled_specs', 'flatpack_specs', 'units_per_pack']:
@@ -227,13 +221,16 @@ for _, row in df.iterrows():
 
     fm.append("---\n")
     
-    # Pobieramy właściwą treść z kolumny content_body (oraz zabezpieczenie zapasowe na kolumnę content)
     content_body = str(row.get('content_body', '')).strip()
     if not content_body or content_body.lower() == 'nan':
         content_body = str(row.get('content', '')).strip()
     
     filename = f"{slug}.md"
-    filepath = os.path.join(content_dir, filename)
+    
+    if source_tab == 'sandelyje':
+        filepath = os.path.join(sandelyje_dir, filename)
+    else:
+        filepath = os.path.join(content_dir, filename)
     
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write("\n".join(fm))

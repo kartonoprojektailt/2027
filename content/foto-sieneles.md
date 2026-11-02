@@ -7,7 +7,6 @@ hero_image: "/images/foto-sieneles.jpg"
 gallery_images:
   - "/images/foto-sieneles-g1.jpg"
   - "/images/foto-sieneles-g2.jpg"
-  - "/images/foto-sieneles-g3.jpg"
 ---
 Renginių foto sienelės ir mobilios reklaminės konstrukcijos
 
