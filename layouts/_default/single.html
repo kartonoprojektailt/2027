@@ -24,9 +24,30 @@
 
   {{- if .Content }}
   <div class="post-content">
+    
+    <!-- Wyświetlanie Zdjęcia Głównego (Hero Image) z arkusza -->
+    {{- if .Params.hero_image }}
+    <div class="hero-image-block" style="margin-bottom: 20px;">
+      <img src="{{ .Params.hero_image }}" alt="{{ .Title }}" style="width: 100%; height: auto; border-radius: 8px;" />
+    </div>
+    {{- end }}
+
+    <!-- Główna treść wpisu -->
     {{- if not (.Param "disableAnchoredHeadings") }}
     {{- partial "anchored_headings.html" .Content -}}
     {{- else }}{{ .Content }}{{ end -}}
+
+    <!-- Wyświetlanie Galerii Zdjęć (Gallery Images) z arkusza -->
+    {{- if .Params.gallery_images }}
+    <div class="post-gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 25px;">
+      {{ range .Params.gallery_images }}
+        <a href="{{ . }}" target="_blank" rel="noopener">
+          <img src="{{ . }}" alt="{{ $.Title }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 6px;" />
+        </a>
+      {{ end }}
+    </div>
+    {{- end }}
+
   </div>
   {{- end }}
 
