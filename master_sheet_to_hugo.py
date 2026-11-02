@@ -157,6 +157,7 @@ for _, row in df.iterrows():
         
     source_tab = str(row.get('source_tab', 'puslapiai')).strip()
     
+    # Apsauga: neperrašome pagrindinio sandėlio _index.md iš puslapių tabo
     if source_tab == 'puslapiai' and slug == 'sandelyje':
         continue
 
@@ -190,9 +191,9 @@ for _, row in df.iterrows():
     if source_tab == 'sandelyje':
         fm.append('layout: "single"')
         
+        # Uniwersalne mapowanie kluczy handlowych z wieloma aliasami dla pewności szablonów Hugo
         code_val = row.get('code', '')
         if code_val and str(code_val).lower() != 'nan':
-            # Zapisujemy wszystkie warianty kodu, żeby szablon na pewno go znalazł
             fm.append(f"code: {json.dumps(str(code_val))}")
             fm.append(f"offer_code: {json.dumps(str(code_val))}")
             fm.append(f"sku: {json.dumps(str(code_val))}")
