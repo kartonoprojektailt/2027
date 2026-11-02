@@ -4,6 +4,7 @@ date: 2026-03-23T00:00:00Z
 draft: false
 description: ""
 hero_image: "/images/parduotuviu-dekoracijos-hero.jpg"
+likutis: ""
 gallery_images:
   - "/images/parduotuviu-dekoracijos-gallery-1.jpg"
   - "/images/parduotuviu-dekoracijos-gallery-2.jpg"

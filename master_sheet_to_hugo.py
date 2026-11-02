@@ -46,13 +46,11 @@ try:
         df_sheet = df_sheet.loc[:, df_sheet.columns != '']
         return df_sheet
 
-    # 1. Zakładka 'puslapiai'
     df_puslapiai = fetch_sheet_as_df("puslapiai")
     df_puslapiai['source_tab'] = 'puslapiai'
     
     dfs_to_concat = [df_puslapiai]
     
-    # 2. Zakładka 'sandelyje'
     try:
         df_sandelyje = fetch_sheet_as_df("sandelyje")
         df_sandelyje['source_tab'] = 'sandelyje'
@@ -175,6 +173,9 @@ for index, row in df.iterrows():
     if not content:
         content = f"Informacija apie {title} atnaujinama."
 
+    # Dodatkowe pola dla magazynu (likutis / ilość itp.)
+    likutis = sanitize_text(row.get("likutis", "") or row.get("quantity", "") or row.get("kiekis", ""))
+
     hero_raw = row.get("hero image", "") or row.get("hero_image", "")
     hero_image = download_and_cache_image(hero_raw, f"{slug}-hero") if hero_raw else ""
     
@@ -197,6 +198,7 @@ date: 2026-03-23T00:00:00Z
 draft: false
 description: "{description}"
 hero_image: "{hero_image}"
+likutis: "{likutis}"
 gallery_images:
 """
     for img in gallery_images:
@@ -205,16 +207,12 @@ gallery_images:
     
     file_content = front_matter + content
     
-    # OBSŁUGA STRONY GŁÓWNEJ ORAZ SEKCJI /sandelyje/
-    if slug == "home" or slug == "index" or title.lower() in ["home", "pradžia", "pagrindinis"]:
+    # Prawidłowe rozróżnienie ścieżek dla Hugo
+    if slug in ["home", "index", "_index"] or title.lower() in ["home", "pradžia", "pagrindinis"]:
         file_path = os.path.join(output_dir, "_index.md")
     elif source_tab == "sandelyje":
-        # Wpisy z magazynu idą do folderu content/sandelyje/slug/index.md, żeby działały jako sekcja
-        sandelyje_folder = os.path.join(output_dir, "sandelyje", slug)
-        os.makedirs(sandelyje_folder, exist_ok=True)
-        file_path = os.path.join(sandelyje_folder, "index.md")
+        file_path = os.path.join(output_dir, f"{slug}.md")
     else:
-        # Pozostałe strony jako płaskie pliki
         file_path = os.path.join(output_dir, f"{slug}.md")
     
     with open(file_path, "w", encoding="utf-8") as f:
@@ -223,5 +221,5 @@ gallery_images:
     processed_count += 1
 
 print("\n" + "="*50)
-print(f"SUDERINIMAS BAIGTAS: Sėkmingai atstatyti visi {processed_count} puslapiai, homepage ir sandėlis!")
+print(f"SUDERINIMAS BAIGTAS: Sėkmingai atstatyti visi {processed_count} puslapiai su likučiais!")
 print("="*50)

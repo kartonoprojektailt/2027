@@ -4,6 +4,7 @@ date: 2026-03-23T00:00:00Z
 draft: false
 description: ""
 hero_image: "/images/stendai-stovai-hero.jpg"
+likutis: ""
 gallery_images:
   - "/images/stendai-stovai-gallery-1.jpg"
   - "/images/stendai-stovai-gallery-2.jpg"

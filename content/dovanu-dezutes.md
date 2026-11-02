@@ -4,6 +4,7 @@ date: 2026-03-23T00:00:00Z
 draft: false
 description: ""
 hero_image: "/images/dovanu-dezutes-hero.jpg"
+likutis: ""
 gallery_images:
   - "/images/dovanu-dezutes-gallery-1.jpg"
   - "/images/dovanu-dezutes-gallery-2.jpg"
