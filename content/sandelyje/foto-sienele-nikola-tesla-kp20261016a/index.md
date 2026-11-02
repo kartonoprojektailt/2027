@@ -1,6 +1,7 @@
 ---
 title: "Foto sienelės Nikola Tesla"
 description: "Foto senelės renginiams: Nikola Tesla | Kartono projektų sandėlio pasiūlymai Kaune"
+hero_image: "https://lh3.googleusercontent.com/d/1C4zJrNQP4C-SQM3C3GX0fDkFT6qt70Gx=w1000"
 gallery_images:
   - "https://lh3.googleusercontent.com/d/1YFiQdhbaP2tqwla6WCziBWTdQB29Nkvt=w800"
   - "https://lh3.googleusercontent.com/d/1DxRKceQM2lUkv1f2wNlFyz0JbEc1S28i=w800"

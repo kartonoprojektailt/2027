@@ -1,0 +1,12 @@
+{{- define "main" }}
+
+<main class="main">
+  {{- .Content -}}
+
+  <!-- Blok ofert z magazynu na stronie głównej -->
+  {{- if and (ne .RelPermalink "/kontaktai/") (ne .RelPermalink "/rekvizitai/") -}}
+    {{ partial "sandelio_bloko.html" . }}
+  {{- end -}}
+</main>
+
+{{- end -}}

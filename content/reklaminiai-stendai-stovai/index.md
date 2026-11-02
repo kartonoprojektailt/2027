@@ -1,6 +1,7 @@
 ---
 title: "Reklaminiai stendai ir stovai"
 description: "Mobilių ir tvarių kartoninių reklaminių stendų, ekspozitorių, foto sienelių bei POSM konstrukcijų gamyba verslui. Individualus projektavimas ir spauda."
+hero_image: "https://lh3.googleusercontent.com/d/1JPAbvFa5DJZ22LFGNnxQnI6i3rFyRRgh=w1000"
 offer_code: "nan"
 sale_reason: "nan"
 price: "nan"

@@ -1,6 +1,15 @@
 ---
 title: "Dovanų dėžutės ir reprezentacinės pakuotės"
 description: "Elegantiškų dovanų dėžučių gamyba verslui: deko dėžės, dviejų dalių dėžutės su dangteliu, kalėdinės pakuotės, dėžutės su spauda, folijavimu bei individualiomis ložetėmis nuo 2014 m."
+hero_image: "https://lh3.googleusercontent.com/d/138jK6F8h9ScI9c1o3L104Dh5133qNlUx=w1000"
+gallery_images:
+  - "18LBJdkQ0r3_FWFJOvGebrOv8iukKsbuJ/view?usp=drive_link"
+  - "https://lh3.googleusercontent.com/d/1fu21pF-4vA2h4S6kciJnE-M5x2xS_aWe=w800"
+  - "https://lh3.googleusercontent.com/d/1ZK7QptMQYLZLuCaPSRjemHjXVyuYapjZ=w800"
+  - "https://lh3.googleusercontent.com/d/1S3k8UEAR_KM8xWUiFnw8wnimGrEbsHON=w800"
+  - "https://lh3.googleusercontent.com/d/1RJmX0hrtrlqD60FJFL4Kjh2gVSCH6f0v=w800"
+  - "https://lh3.googleusercontent.com/d/138jK6F8h9ScI9c1o3L104Dh5133qNlUx=w800"
+  - "https://lh3.googleusercontent.com/d/1geUdC-yjyYEWgcx_M4N6MqJ0vIfKs6gV=w800"
 offer_code: "nan"
 sale_reason: "nan"
 price: "nan"
