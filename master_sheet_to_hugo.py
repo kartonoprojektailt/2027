@@ -157,6 +157,7 @@ for _, row in df.iterrows():
         
     source_tab = str(row.get('source_tab', 'puslapiai')).strip()
     
+    # Apsauga: neperrašome pagrindinio sandėlio _index.md iš puslapių tabo
     if source_tab == 'puslapiai' and slug == 'sandelyje':
         continue
 
@@ -190,11 +191,11 @@ for _, row in df.iterrows():
     if source_tab == 'sandelyje':
         fm.append("layout: \"single\"")
         
-        # Jasne przypisanie kluczowych pól, w tym offer_code dopasowanego do szablonu single.html
+        # Kluczowe mapowanie pól dla ogłoszeń magazynowych
         code_val = row.get('code', '')
         if code_val and str(code_val).lower() != 'nan':
-            fm.append(f"offer_code: {json.dumps(str(code_val))}")
             fm.append(f"code: {json.dumps(str(code_val))}")
+            fm.append(f"offer_code: {json.dumps(str(code_val))}")
             
         for col in ['category', 'price', 'unit', 'stock', 'sale_reason', 'assembled_specs', 'flatpack_specs', 'units_per_pack']:
             val = row.get(col, '')
@@ -225,7 +226,7 @@ for _, row in df.iterrows():
 
     fm.append("---\n")
     
-    # Treść ogłoszenia / strony z content_body
+    # Pobieranie pełnej treści z content_body dla obu zakładek
     content_body = str(row.get('content_body', '')).strip()
     if not content_body or content_body.lower() == 'nan':
         content_body = str(row.get('content', '')).strip()
