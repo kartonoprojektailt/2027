@@ -2,8 +2,6 @@ import os
 import json
 import tempfile
 import shutil
-import subprocess
-import re
 import urllib.request
 import gspread
 from google.oauth2.service_account import Credentials
@@ -48,11 +46,13 @@ try:
         df_sheet = df_sheet.loc[:, df_sheet.columns != '']
         return df_sheet
 
+    # 1. Zakładka 'puslapiai'
     df_puslapiai = fetch_sheet_as_df("puslapiai")
     df_puslapiai['source_tab'] = 'puslapiai'
     
     dfs_to_concat = [df_puslapiai]
     
+    # 2. Zakładka 'sandelyje'
     try:
         df_sandelyje = fetch_sheet_as_df("sandelyje")
         df_sandelyje['source_tab'] = 'sandelyje'
@@ -73,12 +73,9 @@ def extract_gdrive_id(url):
     if not isinstance(url, str) or not url.strip():
         return ""
     url = url.strip()
-    
     if "tinkami norodu" in url.lower() or "grafika tik" in url.lower() or "cia tik" in url.lower():
         return ""
-    
     url = url.replace("/d//", "/")
-    
     if "/file/d/" in url:
         try:
             return url.split("/file/d/")[1].split("/")[0].split("?")[0]
@@ -102,10 +99,8 @@ def optimize_and_save_image(filepath):
         with Image.open(filepath) as img:
             if img.mode in ("RGBA", "P"):
                 img = img.convert("RGB")
-            
             max_dimension = 1600
             img.thumbnail((max_dimension, max_dimension), Image.Resampling.LANCZOS)
-            
             img.save(filepath, "JPEG", quality=85, optimize=True)
     except Exception as e:
         print(f"Błąd optymalizacji pliku {filepath}: {e}")
@@ -113,24 +108,19 @@ def optimize_and_save_image(filepath):
 def download_and_cache_image(url, filename_prefix, index_suffix=0):
     if not isinstance(url, str) or not url.strip() or str(url).lower() == "nan":
         return ""
-
     url = url.strip()
-
     if url.startswith("/images/"):
         return url
-
     if "." in url and not url.startswith("http") and "/" not in url and "\\" not in url:
         return f"/images/{url}"
         
     file_id = extract_gdrive_id(url)
-    
     local_filename = f"{filename_prefix}-{index_suffix}.jpg" if index_suffix > 0 else f"{filename_prefix}.jpg"
     local_filepath = os.path.join(images_dir, local_filename)
     public_url_path = f"/images/{local_filename}"
     
     if not file_id:
         return ""
-        
     if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000:
         return public_url_path
 
@@ -142,23 +132,16 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
     success = False
     for d_url in download_urls:
         try:
-            req = urllib.request.Request(d_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+            req = urllib.request.Request(d_url, headers={'User-Agent': 'Mozilla/5.0'})
             with urllib.request.urlopen(req, timeout=12) as response, open(local_filepath, 'wb') as out_file:
                 shutil.copyfileobj(response, out_file)
-            
             if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000:
                 optimize_and_save_image(local_filepath)
-                print(f"✓ Pobrano i zoptymalizowano zdjęcie: {local_filename}")
                 success = True
                 break
         except Exception:
             continue
-            
-    if not success:
-        print(f"⚠ Ostrzeżenie: Nie udało się pobrać pliku dla ID: {file_id}")
-        return ""
-        
-    return public_url_path
+    return public_url_path if success else ""
 
 def sanitize_text(text):
     if not isinstance(text, str):
@@ -173,6 +156,7 @@ processed_count = 0
 for index, row in df.iterrows():
     title = sanitize_text(row.get("title", ""))
     slug = sanitize_text(row.get("slug", ""))
+    source_tab = row.get("source_tab", "puslapiai")
     
     if not title and not slug:
         continue
@@ -181,8 +165,6 @@ for index, row in df.iterrows():
         slug = title.lower().replace(" ", "-").replace("ą", "a").replace("č", "c").replace("ę", "e").replace("ė", "e").replace("į", "i").replace("š", "s").replace("ų", "u").replace("ū", "u").replace("ž", "z")
     
     description = sanitize_text(row.get("description", ""))
-    
-    # NAPRAWA: Bezpieczne wyciąganie treści ze wszystkich możliwych wariantów nagłówka kolumny w arkuszu
     content = sanitize_text(
         row.get("content_body", "") or 
         row.get("content body", "") or 
@@ -190,7 +172,6 @@ for index, row in df.iterrows():
         row.get("aprasymas", "") or 
         row.get("tekstas", "")
     )
-    
     if not content:
         content = f"Informacija apie {title} atnaujinama."
 
@@ -224,7 +205,17 @@ gallery_images:
     
     file_content = front_matter + content
     
-    file_path = os.path.join(output_dir, f"{slug}.md")
+    # OBSŁUGA STRONY GŁÓWNEJ ORAZ SEKCJI /sandelyje/
+    if slug == "home" or slug == "index" or title.lower() in ["home", "pradžia", "pagrindinis"]:
+        file_path = os.path.join(output_dir, "_index.md")
+    elif source_tab == "sandelyje":
+        # Wpisy z magazynu idą do folderu content/sandelyje/slug/index.md, żeby działały jako sekcja
+        sandelyje_folder = os.path.join(output_dir, "sandelyje", slug)
+        os.makedirs(sandelyje_folder, exist_ok=True)
+        file_path = os.path.join(sandelyje_folder, "index.md")
+    else:
+        # Pozostałe strony jako płaskie pliki
+        file_path = os.path.join(output_dir, f"{slug}.md")
     
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(file_content)
@@ -232,5 +223,5 @@ gallery_images:
     processed_count += 1
 
 print("\n" + "="*50)
-print(f"SUDERINIMAS BAIGTAS: Sėkmingai sugeneruoti {processed_count} puslapiai su pilnais tekstais!")
+print(f"SUDERINIMAS BAIGTAS: Sėkmingai atstatyti visi {processed_count} puslapiai, homepage ir sandėlis!")
 print("="*50)
