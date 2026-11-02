@@ -157,7 +157,6 @@ for _, row in df.iterrows():
         
     source_tab = str(row.get('source_tab', 'puslapiai')).strip()
     
-    # Apsauga: neperrašome puslapio _index.md iš puslapių tabo
     if source_tab == 'puslapiai' and slug == 'sandelyje':
         continue
 
@@ -190,11 +189,16 @@ for _, row in df.iterrows():
         
     if source_tab == 'sandelyje':
         fm.append("layout: \"single\"")
-        for col in ['category', 'code', 'price', 'unit', 'stock', 'sale_reason', 'assembled_specs', 'flatpack_specs', 'units_per_pack']:
+        
+        # Jasne przypisanie kluczowych pól, w tym offer_code dopasowanego do szablonu single.html
+        code_val = row.get('code', '')
+        if code_val and str(code_val).lower() != 'nan':
+            fm.append(f"offer_code: {json.dumps(str(code_val))}")
+            fm.append(f"code: {json.dumps(str(code_val))}")
+            
+        for col in ['category', 'price', 'unit', 'stock', 'sale_reason', 'assembled_specs', 'flatpack_specs', 'units_per_pack']:
             val = row.get(col, '')
             if val and str(val).lower() != 'nan':
-                if col == 'code':
-                    fm.append(f"offer_code: {json.dumps(str(val))}")
                 fm.append(f"{col}: {json.dumps(str(val))}")
         
         stock_val = str(row.get('stock', '')).lower()
@@ -221,7 +225,7 @@ for _, row in df.iterrows():
 
     fm.append("---\n")
     
-    # Svarbu: imame pilną tekstą iš content_body
+    # Treść ogłoszenia / strony z content_body
     content_body = str(row.get('content_body', '')).strip()
     if not content_body or content_body.lower() == 'nan':
         content_body = str(row.get('content', '')).strip()
