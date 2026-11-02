@@ -3,9 +3,9 @@ title: "CNC Pjovimo paslaugos"
 date: 2026-03-23T00:00:00Z
 draft: false
 description: ""
-hero_image: "https://drive.google.com/uc?export=view&id=1Dresj269PFfyFk-fIx3DOxz8PcuL6kK9"
+hero_image: "/images/cnc-pjovimas-kp20261016c-hero.jpg"
 gallery_images:
-  - "https://drive.google.com/uc?export=view&id=1WcacpUsA_nXTjrFYssW6wXufKcGlW9E7"
-  - "https://drive.google.com/uc?export=view&id=1DQjGhe-Zi5-7Rrb1iskKCiw6RfraGXeE"
+  - "/images/cnc-pjovimas-kp20261016c-gallery-1.jpg"
+  - "/images/cnc-pjovimas-kp20261016c-gallery-2.jpg"
 ---
 
