@@ -121,32 +121,29 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
     if not file_id:
         return ""
         
-    if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 0:
+    # Jeśli plik już istnieje i ma sensowny rozmiar (> 1KB), pomijamy ponowne pobieranie
+    if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000:
         return public_url_path
 
-    download_url = f"https://lh3.googleusercontent.com/d/{file_id}"
+    # Używamy bezpośredniego endpointu pobierania Google Drive, który unika błędu 400
+    download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
     
     try:
-        req = urllib.request.Request(download_url, headers={'User-Agent': 'Mozilla/5.0'})
+        req = urllib.request.Request(download_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
         with urllib.request.urlopen(req) as response, open(local_filepath, 'wb') as out_file:
             shutil.copyfileobj(response, out_file)
         
+        # Sprawdzamy czy pobrało faktycznie grafikę, a nie stronę HTML z błędem
+        if os.path.getsize(local_filepath) < 1000:
+            print(f"Ostrzeżenie: Plik {local_filename} jest za mały (prawdopodobnie błąd dostępu do pliku w GDrive).")
+            return public_url_path
+
         optimize_and_save_image(local_filepath)
         print(f"Pobrano i zoptymalizowano zdjęcie: {local_filename}")
         return public_url_path
     except Exception as e:
-        print(f"Nie udało się pobrać zdjęcia {url} przez lh3: {e}")
-        try:
-            fallback_url = f"https://drive.google.com/uc?export=download&id={file_id}"
-            req = urllib.request.Request(fallback_url, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req) as response, open(local_filepath, 'wb') as out_file:
-                shutil.copyfileobj(response, out_file)
-            optimize_and_save_image(local_filepath)
-            return public_url_path
-        except Exception as err:
-            print(f"Całkowity błąd pobierania zdjęcia {file_id}: {err}")
-            # Zwracamy lokalną ścieżkę, aby nie generować uszkodzonych linków zewnętrznych we front-matter
-            return public_url_path
+        print(f"Nie udało się pobrać zdjęcia {file_id} przez endpoint uc: {e}")
+        return public_url_path
 
 def sanitize_text(text):
     if not isinstance(text, str):
