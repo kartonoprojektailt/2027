@@ -105,7 +105,7 @@ def optimize_and_save_image(filepath):
     except Exception as e:
         print(f"Błąd optymalizacji pliku {filepath}: {e}")
 
-def download_and_cache_image(url, filename_prefix, index_suffix=0):
+def download_and_cache_image(url, filename_prefix):
     if not isinstance(url, str) or not url.strip() or str(url).lower() == "nan":
         return ""
     url = url.strip()
@@ -115,7 +115,7 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
         return f"/images/{url}"
         
     file_id = extract_gdrive_id(url)
-    local_filename = f"{filename_prefix}-{index_suffix}.jpg" if index_suffix > 0 else f"{filename_prefix}.jpg"
+    local_filename = f"{filename_prefix}.jpg"
     local_filepath = os.path.join(images_dir, local_filename)
     public_url_path = f"/images/{local_filename}"
 
@@ -149,7 +149,7 @@ print("Generuojami Markdown puslapiai ir prekės...")
 
 for _, row in df.iterrows():
     slug = str(row.get('slug', '')).strip()
-    if not slug or slug.lower() == 'nan':
+    if not slug or slug.lower() == 'nan' or slug == 'Unikalus puslapio adresas':
         continue
         
     source_tab = str(row.get('source_tab', 'puslapiai')).strip()
@@ -160,17 +160,28 @@ for _, row in df.iterrows():
         continue
 
     title = str(row.get('title', slug)).strip()
+    if title.lower() == 'nan':
+        title = slug
     
     hero_raw = row.get('hero_image', '')
-    hero_image = download_and_cache_image(hero_raw, slug) if hero_raw else ""
+    hero_image = download_and_cache_image(hero_raw, slug) if hero_raw and str(hero_raw).lower() != 'nan' else ""
     
+    # Obsługa galerii (wspiera zarówno kolumny gallery_1..5 jak i wpis z przecinkami gallery_images)
     gallery_images = []
-    for i in range(1, 6):
-        g_raw = row.get(f'gallery_{i}', '')
-        if g_raw and str(g_raw).lower() != 'nan':
-            g_img = download_and_cache_image(g_raw, f"{slug}-g{i}")
+    gallery_raw = row.get('gallery_images', '')
+    if gallery_raw and str(gallery_raw).lower() != 'nan':
+        urls = [u.strip() for u in str(gallery_raw).split(',') if u.strip()]
+        for idx, u in enumerate(urls, start=1):
+            g_img = download_and_cache_image(u, f"{slug}-g{idx}")
             if g_img:
                 gallery_images.append(g_img)
+    else:
+        for i in range(1, 6):
+            g_raw = row.get(f'gallery_{i}', '')
+            if g_raw and str(g_raw).lower() != 'nan':
+                g_img = download_and_cache_image(g_raw, f"{slug}-g{i}")
+                if g_img:
+                    gallery_images.append(g_img)
 
     fm = [
         "---",
@@ -179,11 +190,17 @@ for _, row in df.iterrows():
         f"type: {json.dumps('sandelyje' if source_tab == 'sandelyje' else 'page')}",
     ]
     
+    meta_desc = row.get('meta_description ', '') or row.get('meta_description', '')
+    if meta_desc and str(meta_desc).lower() != 'nan':
+        fm.append(f"description: {json.dumps(str(meta_desc).strip())}")
+    
     if source_tab == 'sandelyje':
         fm.append("layout: \"single\"")
-        for col in ['category', 'offer_code', 'price', 'unit', 'stock', 'sale_reason', 'assembled_specs', 'flatpack_specs', 'units_per_pack']:
+        for col in ['category', 'code', 'price', 'unit', 'stock', 'sale_reason', 'assembled_specs', 'flatpack_specs', 'units_per_pack']:
             val = row.get(col, '')
             if val and str(val).lower() != 'nan':
+                if col == 'code':
+                    fm.append(f"offer_code: {json.dumps(str(val))}")
                 fm.append(f"{col}: {json.dumps(str(val))}")
         
         stock_val = str(row.get('stock', '')).lower()
@@ -200,17 +217,20 @@ for _, row in df.iterrows():
         for g in gallery_images:
             fm.append(f"  - {json.dumps(g)}")
             
-    if source_tab == 'sandelyje':
-        search_cloud = [title, row.get('category', ''), row.get('offer_code', '')]
-        search_cloud = [str(x) for x in search_cloud if x and str(x).lower() != 'nan']
-        if search_cloud:
+    search_cloud_val = row.get('search_cloud', '')
+    if search_cloud_val and str(search_cloud_val).lower() != 'nan':
+        clouds = [c.strip() for c in str(search_cloud_val).replace('\n', ',').split(',') if c.strip()]
+        if clouds:
             fm.append("search_cloud:")
-            for sc in search_cloud:
+            for sc in clouds:
                 fm.append(f"  - {json.dumps(sc)}")
 
     fm.append("---\n")
     
-    content_body = str(row.get('content', '')).strip()
+    # Pobieramy właściwą treść z kolumny content_body (oraz zabezpieczenie zapasowe na kolumnę content)
+    content_body = str(row.get('content_body', '')).strip()
+    if not content_body or content_body.lower() == 'nan':
+        content_body = str(row.get('content', '')).strip()
     
     filename = f"{slug}.md"
     filepath = os.path.join(content_dir, filename)
