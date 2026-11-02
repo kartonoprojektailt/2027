@@ -66,6 +66,8 @@ except Exception as e:
 
 images_dir = os.path.join("static", "images")
 os.makedirs(images_dir, exist_ok=True)
+content_dir = "content"
+os.makedirs(content_dir, exist_ok=True)
 
 def extract_gdrive_id(url):
     if not isinstance(url, str) or not url.strip():
@@ -116,3 +118,100 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
     local_filename = f"{filename_prefix}-{index_suffix}.jpg" if index_suffix > 0 else f"{filename_prefix}.jpg"
     local_filepath = os.path.join(images_dir, local_filename)
     public_url_path = f"/images/{local_filename}"
+
+    if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000:
+        return public_url_path
+
+    download_urls = []
+    if file_id:
+        download_urls = [
+            f"https://drive.google.com/uc?export=download&id={file_id}",
+            f"https://lh3.googleusercontent.com/d/{file_id}=s1600"
+        ]
+    elif url.startswith("http"):
+        download_urls = [url]
+
+    for d_url in download_urls:
+        try:
+            req = urllib.request.Request(d_url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=15) as response, open(local_filepath, 'wb') as out_file:
+                shutil.copyfileobj(response, out_file)
+            
+            if os.path.getsize(local_filepath) > 1000:
+                optimize_and_save_image(local_filepath)
+                return public_url_path
+        except Exception:
+            continue
+            
+    return url
+
+print("Generuojami Markdown puslapiai ir prekės...")
+
+for _, row in df.iterrows():
+    slug = str(row.get('slug', '')).strip()
+    if not slug or slug.lower() == 'nan':
+        continue
+        
+    title = str(row.get('title', slug)).strip()
+    source_tab = str(row.get('source_tab', 'puslapiai')).strip()
+    
+    hero_raw = row.get('hero_image', '')
+    hero_image = download_and_cache_image(hero_raw, slug) if hero_raw else ""
+    
+    gallery_images = []
+    for i in range(1, 6):
+        g_raw = row.get(f'gallery_{i}', '')
+        if g_raw and str(g_raw).lower() != 'nan':
+            g_img = download_and_cache_image(g_raw, f"{slug}-g{i}")
+            if g_img:
+                gallery_images.append(g_img)
+
+    fm = [
+        "---",
+        f"title: {json.dumps(title)}",
+        f"slug: {json.dumps(slug)}",
+        f"type: {json.dumps('sandelyje' if source_tab == 'sandelyje' else 'page')}",
+    ]
+    
+    if source_tab == 'sandelyje':
+        fm.append("layout: \"single\"")
+        for col in ['category', 'offer_code', 'price', 'unit', 'stock', 'sale_reason', 'assembled_specs', 'flatpack_specs', 'units_per_pack']:
+            val = row.get(col, '')
+            if val and str(val).lower() != 'nan':
+                fm.append(f"{col}: {json.dumps(str(val))}")
+        
+        stock_val = str(row.get('stock', '')).lower()
+        if stock_val in ['0', '0 vnt.', 'parduota']:
+            fm.append("is_sold: true")
+        else:
+            fm.append("is_sold: false")
+            
+    if hero_image:
+        fm.append(f"hero_image: {json.dumps(hero_image)}")
+        
+    if gallery_images:
+        fm.append("gallery_images:")
+        for g in gallery_images:
+            fm.append(f"  - {json.dumps(g)}")
+            
+    if source_tab == 'sandelyje':
+        search_cloud = [title, row.get('category', ''), row.get('offer_code', '')]
+        search_cloud = [str(x) for x in search_cloud if x and str(x).lower() != 'nan']
+        if search_cloud:
+            fm.append("search_cloud:")
+            for sc in search_cloud:
+                fm.append(f"  - {json.dumps(sc)}")
+
+    fm.append("---\n")
+    
+    content_body = str(row.get('content', '')).strip()
+    
+    filename = f"{slug}.md"
+    filepath = os.path.join(content_dir, filename)
+    
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write("\n".join(fm))
+        if content_body and content_body.lower() != 'nan':
+            f.write(content_body + "\n")
+
+print("Generavimas sėkmingai baigtas!")
