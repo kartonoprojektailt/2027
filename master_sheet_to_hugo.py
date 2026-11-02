@@ -73,18 +73,30 @@ def sanitize_text(text):
     return text.strip()
 
 def fix_gdrive_url(url, max_width=1000):
-    if "drive.google.com" in url:
+    if not isinstance(url, str) or not url.strip():
+        return ""
+    url = url.strip()
+    file_id = ""
+    
+    # Obsługa różnych formatów linków z Google Drive oraz lh3
+    if "/file/d/" in url:
         try:
-            file_id = ""
-            if "/file/d/" in url:
-                file_id = url.split("/file/d/")[1].split("/")[0]
-            elif "id=" in url:
-                file_id = url.split("id=")[1].split("&")[0]
-            
-            if file_id:
-                return f"https://lh3.googleusercontent.com/d/{file_id}=w{max_width}"
+            file_id = url.split("/file/d/")[1].split("/")[0]
         except Exception:
-            return url
+            pass
+    elif "id=" in url:
+        try:
+            file_id = url.split("id=")[1].split("&")[0]
+        except Exception:
+            pass
+    elif "lh3.googleusercontent.com/d/" in url:
+        try:
+            file_id = url.split("lh3.googleusercontent.com/d/")[1].split("=")[0].rstrip("/")
+        except Exception:
+            pass
+            
+    if file_id:
+        return f"https://lh3.googleusercontent.com/d/{file_id}=w{max_width}"
     return url
 
 def get_category_url(category_name):
@@ -114,3 +126,56 @@ def get_category_url(category_name):
         return "/cnc-paslaugos/"
     elif "projektavim" in cat_lower:
         return "/projektavimo-paslaugos/"
+    return "/"
+
+# Generowanie plików Markdown dla Hugo z uwzględnieniem hero_image i galerii
+output_dir = "content"
+os.makedirs(output_dir, exist_ok=True)
+
+for index, row in df.iterrows():
+    title = sanitize_text(row.get("title", ""))
+    slug = sanitize_text(row.get("slug", ""))
+    if not title and not slug:
+        continue
+        
+    if not slug:
+        slug = title.lower().replace(" ", "-").replace("ą", "a").replace("č", "c").replace("ę", "e").replace("ė", "e").replace("į", "i").replace("š", "s").replace("ų", "u").replace("ū", "u").replace("ž", "z")
+    
+    description = sanitize_text(row.get("description", ""))
+    content = sanitize_text(row.get("content", ""))
+    
+    # Przetwarzanie zdjęcia głównego
+    hero_raw = row.get("hero_image", "")
+    hero_image = fix_gdrive_url(hero_raw, max_width=1200)
+    
+    # Przetwarzanie galerii zdjęć (rozdzielanie po przecinku lub nowej linii)
+    gallery_raw = row.get("gallery_images", "")
+    gallery_images = []
+    if gallery_raw:
+        parts = gallery_raw.replace("\n", ",").split(",")
+        for p in parts:
+            p_clean = p.strip()
+            if p_clean:
+                fixed_p = fix_gdrive_url(p_clean, max_width=1000)
+                if fixed_p:
+                    gallery_images.append(fixed_p)
+
+    front_matter = f"""---
+title: "{title}"
+date: 2026-03-23T00:00:00Z
+draft: false
+description: "{description}"
+hero_image: "{hero_image}"
+gallery_images:
+"""
+    for img in gallery_images:
+        front_matter += f"  - \"{img}\"\n"
+    front_matter += "---\n\n"
+    
+    file_content = front_matter + content
+    
+    file_path = os.path.join(output_dir, f"{slug}.md")
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(file_content)
+
+print("Wygenerowano pliki Markdown pomyślnie wraz z obsługą obrazów CDN.")
