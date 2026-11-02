@@ -107,4 +107,12 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
     if not isinstance(url, str) or not url.strip() or str(url).lower() == "nan":
         return ""
     url = url.strip()
-    if url
+    if url.startswith("/images/"):
+        return url
+    if "." in url and not url.startswith("http") and "/" not in url and "\\" not in url:
+        return f"/images/{url}"
+        
+    file_id = extract_gdrive_id(url)
+    local_filename = f"{filename_prefix}-{index_suffix}.jpg" if index_suffix > 0 else f"{filename_prefix}.jpg"
+    local_filepath = os.path.join(images_dir, local_filename)
+    public_url_path = f"/images/{local_filename}"
