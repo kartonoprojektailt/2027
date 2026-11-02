@@ -44,7 +44,6 @@ try:
         headers = [str(h).strip() for h in data[0]]
         
         # data[1] to wiersz z instrukcjami/komentarzami ownera - pomijamy go całkowicie!
-        # Właściwe dane produktów zaczynają się od data[2]
         rows_data = data[2:] 
         
         df_sheet = pd.DataFrame(rows_data, columns=headers)
@@ -120,28 +119,33 @@ def optimize_and_save_image(filepath):
         print(f"Błąd optymalizacji pliku {filepath}: {e}")
 
 def download_and_cache_image(url, filename_prefix, index_suffix=0):
-    # Jeśli podano już lokalną ścieżkę lub nazwę pliku
+    if not isinstance(url, str) or not url.strip() or str(url).lower() == "nan":
+        return ""
+
+    url = url.strip()
+
+    # Jeśli podano już lokalną ścieżkę
     if url.startswith("/images/"):
         return url
+
+    # Jeśli właściciel podał samą nazwę pliku (np. foto.jpg)
+    if "." in url and not url.startswith("http") and "/" not in url and "\\" not in url:
+        return f"/images/{url}"
         
     file_id = extract_gdrive_id(url)
     
-    # Tworzymy stabilną nazwę pliku lokalnego na podstawie prefiksu i indeksu
     local_filename = f"{filename_prefix}-{index_suffix}.jpg" if index_suffix > 0 else f"{filename_prefix}.jpg"
     local_filepath = os.path.join(images_dir, local_filename)
     public_url_path = f"/images/{local_filename}"
     
     if not file_id:
-        # Jeśli to nie jest GDrive ID, ale zwykła nazwa pliku wpisana przez usera
-        if "." in url and not url.startswith("http"):
-            return f"/images/{url.strip()}"
         return ""
         
     # Jeśli plik już istnieje i ma sensowny rozmiar (> 1KB), pomijamy ponowne pobieranie
     if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000:
         return public_url_path
 
-    # Próbujemy pobrać przez endpoint export=download
+    # Podwójny fallback dla pobierania z Google Drive
     download_urls = [
         f"https://drive.google.com/uc?export=download&id={file_id}",
         f"https://lh3.googleusercontent.com/d/{file_id}"
@@ -151,20 +155,19 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
     for d_url in download_urls:
         try:
             req = urllib.request.Request(d_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
-            with urllib.request.urlopen(req) as response, open(local_filepath, 'wb') as out_file:
+            with urllib.request.urlopen(req, timeout=12) as response, open(local_filepath, 'wb') as out_file:
                 shutil.copyfileobj(response, out_file)
             
-            # Sprawdzamy czy pobrało grafikę, a nie stronę HTML z błędem
             if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000:
                 optimize_and_save_image(local_filepath)
-                print(f"Pobrano i zoptymalizowano zdjęcie: {local_filename}")
+                print(f"✓ Pobrano i zoptymalizowano zdjęcie: {local_filename}")
                 success = True
                 break
-        except Exception as e:
+        except Exception:
             continue
             
     if not success:
-        print(f"Nie udało się pobrać pliku dla ID: {file_id}")
+        print(f"⚠ Ostrzeżenie: Nie udało się pobrać pliku dla ID: {file_id}")
         return ""
         
     return public_url_path
@@ -177,9 +180,13 @@ def sanitize_text(text):
 output_dir = "content"
 os.makedirs(output_dir, exist_ok=True)
 
+processed_count = 0
+generated_files = []
+
 for index, row in df.iterrows():
     title = sanitize_text(row.get("title", ""))
     slug = sanitize_text(row.get("slug", ""))
+    
     if not title and not slug:
         continue
         
@@ -189,15 +196,18 @@ for index, row in df.iterrows():
     description = sanitize_text(row.get("description", ""))
     content = sanitize_text(row.get("content body", "") or row.get("content", ""))
     
-    # Obsługa kolumny ze spacją ("hero image") oraz alternatywnej ("hero_image")
+    # Fallback jeśli treść jest pusta
+    if not content:
+        content = f"Informacija apie {title} atnaujinama."
+
+    # Obsługa kolumny ze spacją oraz bez
     hero_raw = row.get("hero image", "") or row.get("hero_image", "")
     hero_image = download_and_cache_image(hero_raw, f"{slug}-hero") if hero_raw else ""
     
-    # Obsługa kolumny ze spacją ("gallery images") oraz rozdzielanie po przecinku
     gallery_raw = row.get("gallery images", "") or row.get("gallery_images", "")
     gallery_images = []
-    if gallery_raw:
-        parts = gallery_raw.replace("\n", ",").split(",")
+    if gallery_raw and str(gallery_raw).lower() != "nan":
+        parts = str(gallery_raw).replace("\n", ",").split(",")
         idx = 1
         for p in parts:
             p_clean = p.strip()
@@ -207,6 +217,7 @@ for index, row in df.iterrows():
                     gallery_images.append(cached_img)
                     idx += 1
 
+    # BUDOWANIE ZAWSZE PEŁNEGO I POPRAWNEGO FRONT-MATTER
     front_matter = f"""---
 title: "{title}"
 date: 2026-03-23T00:00:00Z
@@ -224,5 +235,11 @@ gallery_images:
     file_path = os.path.join(output_dir, f"{slug}.md")
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(file_content)
+        
+    processed_count += 1
+    generated_files.append(f"{slug}.md")
 
-print("Wygenerowano pliki Markdown oraz zoptymalizowano wszystkie zdjęcia w static/images/.")
+print("\n" + "="*50)
+print(f"SUDERINIMAS BAIGTAS: Sėkmingai sugeneruoti {processed_count} puslapiai!")
+print(f"Puslapiai išsaugoti kataloge: {output_dir}/")
+print("="*50)
