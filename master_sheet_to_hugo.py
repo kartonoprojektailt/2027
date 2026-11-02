@@ -80,20 +80,29 @@ def extract_gdrive_id(url):
         return ""
     url = url.strip()
     
-    # Dodatkowe zabezpieczenie przed tekstem instrukcji
+    # Dodatkowe zabezpieczenie przed tekstem instrukcji w arkuszu
     if "tinkami norodu" in url.lower() or "grafika tik" in url.lower() or "cia tik" in url.lower():
         return ""
     
     # Usuwanie podwójnych slashy w ścieżce ID (np. /d//ID)
-    url = url.replace("/d//", "/d/")
+    url = url.replace("/d//", "/")
     
     if "/file/d/" in url:
-        return url.split("/file/d/")[1].split("/")[0]
+        try:
+            return url.split("/file/d/")[1].split("/")[0].split("?")[0]
+        except Exception:
+            pass
     elif "id=" in url:
-        return url.split("id=")[1].split("&")[0]
+        try:
+            return url.split("id=")[1].split("&")[0].split("/")[0]
+        except Exception:
+            pass
     elif "googleusercontent.com/d/" in url:
-        clean = url.split("googleusercontent.com/d/")[1].replace("//", "/")
-        return clean.split("/")[0].split("=")[0].split("?")[0]
+        try:
+            clean = url.split("googleusercontent.com/d/")[1].replace("//", "/")
+            return clean.split("/")[0].split("=")[0].split("?")[0]
+        except Exception:
+            pass
     return ""
 
 def optimize_and_save_image(filepath):
@@ -111,6 +120,10 @@ def optimize_and_save_image(filepath):
         print(f"Błąd optymalizacji pliku {filepath}: {e}")
 
 def download_and_cache_image(url, filename_prefix, index_suffix=0):
+    # Jeśli podano już lokalną ścieżkę lub nazwę pliku
+    if url.startswith("/images/"):
+        return url
+        
     file_id = extract_gdrive_id(url)
     
     # Tworzymy stabilną nazwę pliku lokalnego na podstawie prefiksu i indeksu
@@ -119,31 +132,42 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
     public_url_path = f"/images/{local_filename}"
     
     if not file_id:
+        # Jeśli to nie jest GDrive ID, ale zwykła nazwa pliku wpisana przez usera
+        if "." in url and not url.startswith("http"):
+            return f"/images/{url.strip()}"
         return ""
         
     # Jeśli plik już istnieje i ma sensowny rozmiar (> 1KB), pomijamy ponowne pobieranie
     if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000:
         return public_url_path
 
-    # Używamy bezpośredniego endpointu pobierania Google Drive, który unika błędu 400
-    download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    # Próbujemy pobrać przez endpoint export=download
+    download_urls = [
+        f"https://drive.google.com/uc?export=download&id={file_id}",
+        f"https://lh3.googleusercontent.com/d/{file_id}"
+    ]
     
-    try:
-        req = urllib.request.Request(download_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
-        with urllib.request.urlopen(req) as response, open(local_filepath, 'wb') as out_file:
-            shutil.copyfileobj(response, out_file)
+    success = False
+    for d_url in download_urls:
+        try:
+            req = urllib.request.Request(d_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+            with urllib.request.urlopen(req) as response, open(local_filepath, 'wb') as out_file:
+                shutil.copyfileobj(response, out_file)
+            
+            # Sprawdzamy czy pobrało grafikę, a nie stronę HTML z błędem
+            if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000:
+                optimize_and_save_image(local_filepath)
+                print(f"Pobrano i zoptymalizowano zdjęcie: {local_filename}")
+                success = True
+                break
+        except Exception as e:
+            continue
+            
+    if not success:
+        print(f"Nie udało się pobrać pliku dla ID: {file_id}")
+        return ""
         
-        # Sprawdzamy czy pobrało faktycznie grafikę, a nie stronę HTML z błędem
-        if os.path.getsize(local_filepath) < 1000:
-            print(f"Ostrzeżenie: Plik {local_filename} jest za mały (prawdopodobnie błąd dostępu do pliku w GDrive).")
-            return public_url_path
-
-        optimize_and_save_image(local_filepath)
-        print(f"Pobrano i zoptymalizowano zdjęcie: {local_filename}")
-        return public_url_path
-    except Exception as e:
-        print(f"Nie udało się pobrać zdjęcia {file_id} przez endpoint uc: {e}")
-        return public_url_path
+    return public_url_path
 
 def sanitize_text(text):
     if not isinstance(text, str):
