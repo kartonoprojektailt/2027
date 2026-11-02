@@ -157,7 +157,6 @@ for _, row in df.iterrows():
         
     source_tab = str(row.get('source_tab', 'puslapiai')).strip()
     
-    # Apsauga: neperrašome pagrindinio sandėlio _index.md iš puslapių tabo
     if source_tab == 'puslapiai' and slug == 'sandelyje':
         continue
 
@@ -191,11 +190,12 @@ for _, row in df.iterrows():
     if source_tab == 'sandelyje':
         fm.append('layout: "single"')
         
-        # Przypisanie kluczowych pól dla szablonów (single.html i sandelio_bloko.html)
         code_val = row.get('code', '')
         if code_val and str(code_val).lower() != 'nan':
+            # Zapisujemy wszystkie warianty kodu, żeby szablon na pewno go znalazł
             fm.append(f"code: {json.dumps(str(code_val))}")
             fm.append(f"offer_code: {json.dumps(str(code_val))}")
+            fm.append(f"sku: {json.dumps(str(code_val))}")
             
         category_val = row.get('category', '')
         if category_val and str(category_val).lower() != 'nan':
@@ -204,6 +204,7 @@ for _, row in df.iterrows():
         price_val = row.get('price', '')
         if price_val and str(price_val).lower() != 'nan':
             fm.append(f"price: {json.dumps(str(price_val))}")
+            fm.append(f"kaina: {json.dumps(str(price_val))}")
             
         unit_val = row.get('unit', '')
         if unit_val and str(unit_val).lower() != 'nan':
@@ -212,6 +213,7 @@ for _, row in df.iterrows():
         stock_val = row.get('stock', '')
         if stock_val and str(stock_val).lower() != 'nan':
             fm.append(f"stock: {json.dumps(str(stock_val))}")
+            fm.append(f"likutis: {json.dumps(str(stock_val))}")
             
         sale_reason_val = row.get('sale_reason', '')
         if sale_reason_val and str(sale_reason_val).lower() != 'nan':
@@ -246,7 +248,6 @@ for _, row in df.iterrows():
 
     fm.append("---\n")
     
-    # Pobieranie treści Markdown z content_body
     content_body = str(row.get('content_body', '')).strip()
     if not content_body or content_body.lower() == 'nan':
         content_body = str(row.get('content', '')).strip()
