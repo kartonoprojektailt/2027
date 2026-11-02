@@ -17,7 +17,7 @@ SCOPES = [
 
 print("Jungiamasi prie Google Sheets per API...")
 try:
-    credentials_json_str = os.environ.get("GCP_CREDENTIALS_JSON")
+    credentials_json_str = os.environ.get("GCP_CREDENTIALS")
     
     if credentials_json_str:
         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_cred:
