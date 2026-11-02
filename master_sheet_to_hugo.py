@@ -42,21 +42,17 @@ try:
             return pd.DataFrame()
         
         headers = [str(h).strip() for h in data[0]]
-        
-        # data[1] to wiersz z instrukcjami/komentarzami ownera - pomijamy go całkowicie!
         rows_data = data[2:] 
         
         df_sheet = pd.DataFrame(rows_data, columns=headers)
         df_sheet = df_sheet.loc[:, df_sheet.columns != '']
         return df_sheet
 
-    # 1. Zakładka 'puslapiai'
     df_puslapiai = fetch_sheet_as_df("puslapiai")
     df_puslapiai['source_tab'] = 'puslapiai'
     
     dfs_to_concat = [df_puslapiai]
     
-    # 2. Zakładka 'sandelyje'
     try:
         df_sandelyje = fetch_sheet_as_df("sandelyje")
         df_sandelyje['source_tab'] = 'sandelyje'
@@ -70,7 +66,6 @@ except Exception as e:
     print(f"Klaida jungiantis prie Google Sheets: {e}")
     exit(1)
 
-# Przygotowanie folderu na pobrane i zoptymalizowane zdjęcia lokalne
 images_dir = os.path.join("static", "images")
 os.makedirs(images_dir, exist_ok=True)
 
@@ -79,11 +74,9 @@ def extract_gdrive_id(url):
         return ""
     url = url.strip()
     
-    # Dodatkowe zabezpieczenie przed tekstem instrukcji w arkuszu
     if "tinkami norodu" in url.lower() or "grafika tik" in url.lower() or "cia tik" in url.lower():
         return ""
     
-    # Usuwanie podwójnych slashy w ścieżce ID (np. /d//ID)
     url = url.replace("/d//", "/")
     
     if "/file/d/" in url:
@@ -105,7 +98,6 @@ def extract_gdrive_id(url):
     return ""
 
 def optimize_and_save_image(filepath):
-    """Automatyczna optymalizacja obrazu: resize do 1600px, zmiana formatu na JPEG i kompresja jakości 85%"""
     try:
         with Image.open(filepath) as img:
             if img.mode in ("RGBA", "P"):
@@ -124,11 +116,9 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
 
     url = url.strip()
 
-    # Jeśli podano już lokalną ścieżkę
     if url.startswith("/images/"):
         return url
 
-    # Jeśli właściciel podał samą nazwę pliku (np. foto.jpg)
     if "." in url and not url.startswith("http") and "/" not in url and "\\" not in url:
         return f"/images/{url}"
         
@@ -141,11 +131,9 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
     if not file_id:
         return ""
         
-    # Jeśli plik już istnieje i ma sensowny rozmiar (> 1KB), pomijamy ponowne pobieranie
     if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000:
         return public_url_path
 
-    # Podwójny fallback dla pobierania z Google Drive
     download_urls = [
         f"https://drive.google.com/uc?export=download&id={file_id}",
         f"https://lh3.googleusercontent.com/d/{file_id}"
@@ -181,7 +169,6 @@ output_dir = "content"
 os.makedirs(output_dir, exist_ok=True)
 
 processed_count = 0
-generated_files = []
 
 for index, row in df.iterrows():
     title = sanitize_text(row.get("title", ""))
@@ -196,11 +183,9 @@ for index, row in df.iterrows():
     description = sanitize_text(row.get("description", ""))
     content = sanitize_text(row.get("content body", "") or row.get("content", ""))
     
-    # Fallback jeśli treść jest pusta
     if not content:
         content = f"Informacija apie {title} atnaujinama."
 
-    # Obsługa kolumny ze spacją oraz bez
     hero_raw = row.get("hero image", "") or row.get("hero_image", "")
     hero_image = download_and_cache_image(hero_raw, f"{slug}-hero") if hero_raw else ""
     
@@ -217,7 +202,6 @@ for index, row in df.iterrows():
                     gallery_images.append(cached_img)
                     idx += 1
 
-    # BUDOWANIE ZAWSZE PEŁNEGO I POPRAWNEGO FRONT-MATTER
     front_matter = f"""---
 title: "{title}"
 date: 2026-03-23T00:00:00Z
@@ -232,14 +216,14 @@ gallery_images:
     
     file_content = front_matter + content
     
+    # PŁASKA HIERARCHIA: bezpośrednio pliki content/slug.md
     file_path = os.path.join(output_dir, f"{slug}.md")
+    
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(file_content)
         
     processed_count += 1
-    generated_files.append(f"{slug}.md")
 
 print("\n" + "="*50)
-print(f"SUDERINIMAS BAIGTAS: Sėkmingai sugeneruoti {processed_count} puslapiai!")
-print(f"Puslapiai išsaugoti kataloge: {output_dir}/")
+print(f"SUDERINIMAS BAIGTAS: Sėkmingai sugeneruoti {processed_count} puslapiai płaskiej struktury (content/slug.md)!")
 print("="*50)
