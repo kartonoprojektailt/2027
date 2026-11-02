@@ -23,7 +23,6 @@ Renginių foto sienelės ir mobilios reklaminės konstrukcijos
 
 Foto sienelės – praktiškas sprendimas renginiams ir šventėms. 
 
-[GALLERY]
 
 ## Techninės specifikacijos
 

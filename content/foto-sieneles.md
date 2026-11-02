@@ -6,8 +6,7 @@ description: ""
 hero_image: "/images/foto-sieneles-hero.jpg"
 gallery_images:
   - "/images/foto-sieneles-gallery-1.jpg"
-  - "/images/Reklaminiai-stendai-kartono-projektai.jpg"
-  - "/images/Kartono-projektai-foto-sieneles-renginiui.jpg"
-  - "/images/foto-sieneles-gallery-4.jpg"
+  - "/images/foto-sieneles-gallery-2.jpg"
+  - "/images/foto-sieneles-gallery-3.jpg"
 ---
 
