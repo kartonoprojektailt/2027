@@ -8,6 +8,7 @@ import urllib.request
 import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
+from PIL import Image
 
 SPREADSHEET_ID = "1q2qOk7SwMZYn3uz46MjlU4_1bZ47nFLdWEIjIMpHHn4"
 CREDENTIALS_FILE = "credentials.json"
@@ -68,7 +69,7 @@ except Exception as e:
     print(f"Klaida jungiantis prie Google Sheets: {e}")
     exit(1)
 
-# Przygotowanie folderu na pobrane zdjęcia lokalne
+# Przygotowanie folderu na pobrane i zoptymalizowane zdjęcia lokalne
 images_dir = os.path.join("static", "images")
 os.makedirs(images_dir, exist_ok=True)
 
@@ -86,6 +87,23 @@ def extract_gdrive_id(url):
         return clean.split("/")[0].split("=")[0].split("?")[0]
     return ""
 
+def optimize_and_save_image(filepath):
+    """Automatyczna optymalizacja obrazu: resize, zmiana formatu na JPEG i kompresja jakości"""
+    try:
+        with Image.open(filepath) as img:
+            # Konwersja kanałów przezroczystości (np. PNG z alfą) do RGB dla formatu JPEG
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
+            
+            # Maksymalne wymiary (np. 1600x1600px w zupełności wystarcza na hero i galerie, oszczędzając MB)
+            max_dimension = 1600
+            img.thumbnail((max_dimension, max_dimension), Image.Resampling.LANCZOS)
+            
+            # Zapis z optymalizacją i jakością 85%
+            img.save(filepath, "JPEG", quality=85, optimize=True)
+    except Exception as e:
+        print(f"Błąd optymalizacji pliku {filepath}: {e}")
+
 def download_and_cache_image(url, filename_prefix, index_suffix=0):
     file_id = extract_gdrive_id(url)
     if not file_id:
@@ -96,4 +114,80 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
     public_url_path = f"/images/{local_filename}"
     
     # Jeśli plik już istnieje, nie pobieramy go ponownie
-    if os.path.exists(local_filepath) and os.path
+    if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 0:
+        return public_url_path
+
+    # Endpoint do pobierania bezpośredniego z Google Drive
+    download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    
+    try:
+        req = urllib.request.Request(download_url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req) as response, open(local_filepath, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+        
+        # Wywołanie automatycznej optymalizacji zaraz po pobraniu
+        optimize_and_save_image(local_filepath)
+        
+        print(f"Pobrano i zoptymalizowano zdjęcie: {local_filename}")
+        return public_url_path
+    except Exception as e:
+        print(f"Nie udało się pobrać zdjęcia {url}: {e}")
+        return f"https://drive.google.com/uc?export=view&id={file_id}"
+
+def sanitize_text(text):
+    if not isinstance(text, str):
+        return ""
+    return text.strip()
+
+output_dir = "content"
+os.makedirs(output_dir, exist_ok=True)
+
+for index, row in df.iterrows():
+    title = sanitize_text(row.get("title", ""))
+    slug = sanitize_text(row.get("slug", ""))
+    if not title and not slug:
+        continue
+        
+    if not slug:
+        slug = title.lower().replace(" ", "-").replace("ą", "a").replace("č", "c").replace("ę", "e").replace("ė", "e").replace("į", "i").replace("š", "s").replace("ų", "u").replace("ū", "u").replace("ž", "z")
+    
+    description = sanitize_text(row.get("description", ""))
+    content = sanitize_text(row.get("content", ""))
+    
+    # Pobieranie, optymalizacja i buforowanie zdjęcia głównego
+    hero_raw = row.get("hero_image", "")
+    hero_image = download_and_cache_image(hero_raw, f"{slug}-hero") if hero_raw else ""
+    
+    # Pobieranie, optymalizacja i buforowanie galerii
+    gallery_raw = row.get("gallery_images", "")
+    gallery_images = []
+    if gallery_raw:
+        parts = gallery_raw.replace("\n", ",").split(",")
+        idx = 1
+        for p in parts:
+            p_clean = p.strip()
+            if p_clean:
+                cached_img = download_and_cache_image(p_clean, f"{slug}-gallery", idx)
+                if cached_img:
+                    gallery_images.append(cached_img)
+                    idx += 1
+
+    front_matter = f"""---
+title: "{title}"
+date: 2026-03-23T00:00:00Z
+draft: false
+description: "{description}"
+hero_image: "{hero_image}"
+gallery_images:
+"""
+    for img in gallery_images:
+        front_matter += f"  - \"{img}\"\n"
+    front_matter += "---\n\n"
+    
+    file_content = front_matter + content
+    
+    file_path = os.path.join(output_dir, f"{slug}.md")
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(file_content)
+
+print("Wygenerowano pliki Markdown oraz zoptymalizowano wszystkie zdjęcia w static/images/.")
