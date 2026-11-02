@@ -78,7 +78,7 @@ def fix_gdrive_url(url, max_width=1000):
     url = url.strip()
     file_id = ""
     
-    # Obsługa różnych formatów linków z Google Drive oraz lh3
+    # Precyzyjne wyciąganie ID pliku z różnych formatów linków Google Drive / lh3
     if "/file/d/" in url:
         try:
             file_id = url.split("/file/d/")[1].split("/")[0]
@@ -91,12 +91,13 @@ def fix_gdrive_url(url, max_width=1000):
             pass
     elif "lh3.googleusercontent.com/d/" in url:
         try:
-            file_id = url.split("lh3.googleusercontent.com/d/")[1].split("=")[0].rstrip("/")
+            file_id = url.split("lh3.googleusercontent.com/d/")[1].split("=")[0].rstrip("/").split("/")[0]
         except Exception:
             pass
             
     if file_id:
-        return f"https://lh3.googleusercontent.com/d/{file_id}=w{max_width}"
+        # Używamy uniwersalnego endpointu bezpośredniego podglądu z Google Drive
+        return f"https://drive.google.com/uc?export=view&id={file_id}"
     return url
 
 def get_category_url(category_name):
@@ -178,4 +179,4 @@ gallery_images:
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(file_content)
 
-print("Wygenerowano pliki Markdown pomyślnie wraz z obsługą obrazów CDN.")
+print("Wygenerowano pliki Markdown pomyślnie wraz z obsługą bezpośrednich linków do obrazów.")
