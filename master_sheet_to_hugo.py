@@ -38,18 +38,22 @@ try:
     def fetch_sheet_as_df(sheet_name):
         worksheet = spreadsheet.worksheet(sheet_name)
         data = worksheet.get_all_values()
-        if not data:
+        if not data or len(data) < 3:
             return pd.DataFrame()
+        
         headers = [str(h).strip() for h in data[0]]
-        df_sheet = pd.DataFrame(data[1:], columns=headers)
+        
+        # data[1] to wiersz z instrukcjami/komentarzami ownera - pomijamy go całkowicie!
+        # Właściwe dane produktów zaczynają się od data[2]
+        rows_data = data[2:] 
+        
+        df_sheet = pd.DataFrame(rows_data, columns=headers)
         df_sheet = df_sheet.loc[:, df_sheet.columns != '']
         return df_sheet
 
     # 1. Zakładka 'puslapiai'
     df_puslapiai = fetch_sheet_as_df("puslapiai")
     df_puslapiai['source_tab'] = 'puslapiai'
-    if len(df_puslapiai) > 0:
-        df_puslapiai = df_puslapiai.iloc[1:].reset_index(drop=True)
     
     dfs_to_concat = [df_puslapiai]
     
@@ -57,12 +61,10 @@ try:
     try:
         df_sandelyje = fetch_sheet_as_df("sandelyje")
         df_sandelyje['source_tab'] = 'sandelyje'
-        if len(df_sandelyje) > 0:
-            df_sandelyje = df_sandelyje.iloc[1:].reset_index(drop=True)
         dfs_to_concat.append(df_sandelyje)
         print("Zakładka 'sandelyje' pomyślnie dołączona.")
     except Exception as e:
-        print(f"Brak zakładki 'sandelyje' lub klaida: {e}")
+        print(f"Brak zakładki 'sandelyje' lub błąd: {e}")
 
     df = pd.concat(dfs_to_concat, ignore_index=True)
 except Exception as e:
@@ -78,6 +80,10 @@ def extract_gdrive_id(url):
         return ""
     url = url.strip()
     
+    # Dodatkowe zabezpieczenie przed tekstem instrukcji
+    if "tinkami norodu" in url.lower() or "grafika tik" in url.lower() or "cia tik" in url.lower():
+        return ""
+    
     if "/file/d/" in url:
         return url.split("/file/d/")[1].split("/")[0]
     elif "id=" in url:
@@ -88,18 +94,15 @@ def extract_gdrive_id(url):
     return ""
 
 def optimize_and_save_image(filepath):
-    """Automatyczna optymalizacja obrazu: resize, zmiana formatu na JPEG i kompresja jakości"""
+    """Automatyczna optymalizacja obrazu: resize do 1600px, zmiana formatu na JPEG i kompresja jakości 85%"""
     try:
         with Image.open(filepath) as img:
-            # Konwersja kanałów przezroczystości (np. PNG z alfą) do RGB dla formatu JPEG
             if img.mode in ("RGBA", "P"):
                 img = img.convert("RGB")
             
-            # Maksymalne wymiary (np. 1600x1600px w zupełności wystarcza na hero i galerie, oszczędzając MB)
             max_dimension = 1600
             img.thumbnail((max_dimension, max_dimension), Image.Resampling.LANCZOS)
             
-            # Zapis z optymalizacją i jakością 85%
             img.save(filepath, "JPEG", quality=85, optimize=True)
     except Exception as e:
         print(f"Błąd optymalizacji pliku {filepath}: {e}")
@@ -113,26 +116,32 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
     local_filepath = os.path.join(images_dir, local_filename)
     public_url_path = f"/images/{local_filename}"
     
-    # Jeśli plik już istnieje, nie pobieramy go ponownie
     if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 0:
         return public_url_path
 
-    # Endpoint do pobierania bezpośredniego z Google Drive
-    download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    download_url = f"https://lh3.googleusercontent.com/d/{file_id}"
     
     try:
         req = urllib.request.Request(download_url, headers={'User-Agent': 'Mozilla/5.0'})
         with urllib.request.urlopen(req) as response, open(local_filepath, 'wb') as out_file:
             shutil.copyfileobj(response, out_file)
         
-        # Wywołanie automatycznej optymalizacji zaraz po pobraniu
         optimize_and_save_image(local_filepath)
         
         print(f"Pobrano i zoptymalizowano zdjęcie: {local_filename}")
         return public_url_path
     except Exception as e:
-        print(f"Nie udało się pobrać zdjęcia {url}: {e}")
-        return f"https://drive.google.com/uc?export=view&id={file_id}"
+        print(f"Nie udało się pobrać zdjęcia {url} przez lh3: {e}")
+        try:
+            fallback_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+            req = urllib.request.Request(fallback_url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req) as response, open(local_filepath, 'wb') as out_file:
+                shutil.copyfileobj(response, out_file)
+            optimize_and_save_image(local_filepath)
+            return public_url_path
+        except Exception as err:
+            print(f"Całkowity błąd pobierania zdjęcia {file_id}: {err}")
+            return f"https://drive.google.com/uc?export=view&id={file_id}"
 
 def sanitize_text(text):
     if not isinstance(text, str):
@@ -152,14 +161,14 @@ for index, row in df.iterrows():
         slug = title.lower().replace(" ", "-").replace("ą", "a").replace("č", "c").replace("ę", "e").replace("ė", "e").replace("į", "i").replace("š", "s").replace("ų", "u").replace("ū", "u").replace("ž", "z")
     
     description = sanitize_text(row.get("description", ""))
-    content = sanitize_text(row.get("content", ""))
+    content = sanitize_text(row.get("content body", "") or row.get("content", ""))
     
-    # Pobieranie, optymalizacja i buforowanie zdjęcia głównego
-    hero_raw = row.get("hero_image", "")
+    # Obsługa kolumny ze spacją ("hero image") oraz alternatywnej ("hero_image")
+    hero_raw = row.get("hero image", "") or row.get("hero_image", "")
     hero_image = download_and_cache_image(hero_raw, f"{slug}-hero") if hero_raw else ""
     
-    # Pobieranie, optymalizacja i buforowanie galerii
-    gallery_raw = row.get("gallery_images", "")
+    # Obsługa kolumny ze spacją ("gallery images") oraz rozdzielanie po przecinku
+    gallery_raw = row.get("gallery images", "") or row.get("gallery_images", "")
     gallery_images = []
     if gallery_raw:
         parts = gallery_raw.replace("\n", ",").split(",")
