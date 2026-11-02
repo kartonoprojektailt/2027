@@ -3,6 +3,8 @@ import json
 import tempfile
 import shutil
 import subprocess
+import re
+import urllib.request
 import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
@@ -39,11 +41,10 @@ try:
             return pd.DataFrame()
         headers = [str(h).strip() for h in data[0]]
         df_sheet = pd.DataFrame(data[1:], columns=headers)
-        # Czyszczenie ewentualnych pustych nagłówków bez nazwy
         df_sheet = df_sheet.loc[:, df_sheet.columns != '']
         return df_sheet
 
-    # 1. Zakładka 'puslapiai' - pomijamy wiersz 2 (instrukcyjny)
+    # 1. Zakładka 'puslapiai'
     df_puslapiai = fetch_sheet_as_df("puslapiai")
     df_puslapiai['source_tab'] = 'puslapiai'
     if len(df_puslapiai) > 0:
@@ -51,7 +52,7 @@ try:
     
     dfs_to_concat = [df_puslapiai]
     
-    # 2. Zakładka 'sandelyje' - pomijamy wiersz 2 (instrukcyjny)
+    # 2. Zakładka 'sandelyje'
     try:
         df_sandelyje = fetch_sheet_as_df("sandelyje")
         df_sandelyje['source_tab'] = 'sandelyje'
@@ -67,69 +68,56 @@ except Exception as e:
     print(f"Klaida jungiantis prie Google Sheets: {e}")
     exit(1)
 
+# Przygotowanie folderu na pobrane zdjęcia lokalne
+images_dir = os.path.join("static", "images")
+os.makedirs(images_dir, exist_ok=True)
+
+def extract_gdrive_id(url):
+    if not isinstance(url, str) or not url.strip():
+        return ""
+    url = url.strip()
+    
+    if "/file/d/" in url:
+        return url.split("/file/d/")[1].split("/")[0]
+    elif "id=" in url:
+        return url.split("id=")[1].split("&")[0]
+    elif "googleusercontent.com/d/" in url:
+        clean = url.split("googleusercontent.com/d/")[1].replace("//", "/")
+        return clean.split("/")[0].split("=")[0].split("?")[0]
+    return ""
+
+def download_and_cache_image(url, filename_prefix, index_suffix=0):
+    file_id = extract_gdrive_id(url)
+    if not file_id:
+        return url
+        
+    local_filename = f"{filename_prefix}-{index_suffix}.jpg" if index_suffix > 0 else f"{filename_prefix}.jpg"
+    local_filepath = os.path.join(images_dir, local_filename)
+    public_url_path = f"/images/{local_filename}"
+    
+    # Jeśli plik już istnieje, nie pobieramy go ponownie
+    if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 0:
+        return public_url_path
+
+    # Endpoint do pobierania bezpośredniego z Google Drive
+    download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    
+    try:
+        req = urllib.request.Request(download_url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req) as response, open(local_filepath, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+        print(f"Pobrano zdjęcie: {local_filename}")
+        return public_url_path
+    except Exception as e:
+        print(f"Nie udało się pobrać zdjęcia {url}: {e}")
+        # Awaryjnie wracamy do formatu uc view
+        return f"https://drive.google.com/uc?export=view&id={file_id}"
+
 def sanitize_text(text):
     if not isinstance(text, str):
         return ""
     return text.strip()
 
-def fix_gdrive_url(url, max_width=1000):
-    if not isinstance(url, str) or not url.strip():
-        return ""
-    url = url.strip()
-    file_id = ""
-    
-    # Precyzyjne wyciąganie ID pliku z różnych formatów linków Google Drive / lh3
-    if "/file/d/" in url:
-        try:
-            file_id = url.split("/file/d/")[1].split("/")[0]
-        except Exception:
-            pass
-    elif "id=" in url:
-        try:
-            file_id = url.split("id=")[1].split("&")[0]
-        except Exception:
-            pass
-    elif "lh3.googleusercontent.com/d/" in url:
-        try:
-            file_id = url.split("lh3.googleusercontent.com/d/")[1].split("=")[0].rstrip("/").split("/")[0]
-        except Exception:
-            pass
-            
-    if file_id:
-        # Używamy uniwersalnego endpointu bezpośredniego podglądu z Google Drive
-        return f"https://drive.google.com/uc?export=view&id={file_id}"
-    return url
-
-def get_category_url(category_name):
-    cat_lower = category_name.strip().lower()
-    
-    if "fefco" in cat_lower:
-        return "/fefco-dezes/"
-    elif "dovan" in cat_lower:
-        return "/dovanu-dezutes/"
-    elif "dėžutė" in cat_lower or "dezute" in cat_lower:
-        return "/dezutes/"
-    elif "dėžė" in cat_lower or "deze" in cat_lower or "pakuot" in cat_lower:
-        return "/pakuotes/"
-    elif "stend" in cat_lower or "stov" in cat_lower or "posm" in cat_lower:
-        return "/reklaminiai-stendai-stovai/"
-    elif "foto" in cat_lower or "sienel" in cat_lower:
-        return "/foto-sieneles/"
-    elif "dekorac" in cat_lower:
-        return "/parduotuviu-dekoracijos/"
-    elif "akril" in cat_lower:
-        return "/akrilo-gaminiai/"
-    elif "frezavim" in cat_lower:
-        return "/cnc-frezavimas/"
-    elif "pjovim" in cat_lower:
-        return "/cnc-pjovimas/"
-    elif "cnc" in cat_lower:
-        return "/cnc-paslaugos/"
-    elif "projektavim" in cat_lower:
-        return "/projektavimo-paslaugos/"
-    return "/"
-
-# Generowanie plików Markdown dla Hugo z uwzględnieniem hero_image i galerii
 output_dir = "content"
 os.makedirs(output_dir, exist_ok=True)
 
@@ -145,38 +133,19 @@ for index, row in df.iterrows():
     description = sanitize_text(row.get("description", ""))
     content = sanitize_text(row.get("content", ""))
     
-    # Przetwarzanie zdjęcia głównego
+    # Pobieranie i buforowanie zdjęcia głównego lokalnie
     hero_raw = row.get("hero_image", "")
-    hero_image = fix_gdrive_url(hero_raw, max_width=1200)
+    hero_image = download_and_cache_image(hero_raw, f"{slug}-hero") if hero_raw else ""
     
-    # Przetwarzanie galerii zdjęć (rozdzielanie po przecinku lub nowej linii)
+    # Pobieranie i buforowanie galerii lokalnie
     gallery_raw = row.get("gallery_images", "")
     gallery_images = []
     if gallery_raw:
         parts = gallery_raw.replace("\n", ",").split(",")
+        idx = 1
         for p in parts:
             p_clean = p.strip()
             if p_clean:
-                fixed_p = fix_gdrive_url(p_clean, max_width=1000)
-                if fixed_p:
-                    gallery_images.append(fixed_p)
-
-    front_matter = f"""---
-title: "{title}"
-date: 2026-03-23T00:00:00Z
-draft: false
-description: "{description}"
-hero_image: "{hero_image}"
-gallery_images:
-"""
-    for img in gallery_images:
-        front_matter += f"  - \"{img}\"\n"
-    front_matter += "---\n\n"
-    
-    file_content = front_matter + content
-    
-    file_path = os.path.join(output_dir, f"{slug}.md")
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(file_content)
-
-print("Wygenerowano pliki Markdown pomyślnie wraz z obsługą bezpośrednich linków do obrazów.")
+                cached_img = download_and_cache_image(p_clean, f"{slug}-gallery", idx)
+                if cached_img:
+                    gallery_images.append(cached_img
