@@ -25,10 +25,10 @@ try:
             temp_cred.write(credentials_json_str)
             temp_cred_path = temp_cred.name
         creds = Credentials.from_service_account_file(temp_cred_path, scopes=SCOPES)
-        print("Użyto poświadczeń z GitHub Secrets.")
+        print("Užteko poświadczeń z GitHub Secrets.")
     else:
         creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
-        print("Użyto lokalnego pliku credentials.json.")
+        print("Užteko lokalnego pliku credentials.json.")
 
     client = gspread.authorize(creds)
     spreadsheet = client.open_by_key(SPREADSHEET_ID)
@@ -189,21 +189,41 @@ for _, row in df.iterrows():
         fm.append(f"description: {json.dumps(str(meta_desc).strip())}")
         
     if source_tab == 'sandelyje':
-        fm.append("layout: \"single\"")
+        fm.append('layout: "single"')
         
-        # Kluczowe mapowanie pól dla ogłoszeń magazynowych
+        # Przypisanie kluczowych pól dla szablonów (single.html i sandelio_bloko.html)
         code_val = row.get('code', '')
         if code_val and str(code_val).lower() != 'nan':
             fm.append(f"code: {json.dumps(str(code_val))}")
             fm.append(f"offer_code: {json.dumps(str(code_val))}")
             
-        for col in ['category', 'price', 'unit', 'stock', 'sale_reason', 'assembled_specs', 'flatpack_specs', 'units_per_pack']:
+        category_val = row.get('category', '')
+        if category_val and str(category_val).lower() != 'nan':
+            fm.append(f"category: {json.dumps(str(category_val))}")
+            
+        price_val = row.get('price', '')
+        if price_val and str(price_val).lower() != 'nan':
+            fm.append(f"price: {json.dumps(str(price_val))}")
+            
+        unit_val = row.get('unit', '')
+        if unit_val and str(unit_val).lower() != 'nan':
+            fm.append(f"unit: {json.dumps(str(unit_val))}")
+            
+        stock_val = row.get('stock', '')
+        if stock_val and str(stock_val).lower() != 'nan':
+            fm.append(f"stock: {json.dumps(str(stock_val))}")
+            
+        sale_reason_val = row.get('sale_reason', '')
+        if sale_reason_val and str(sale_reason_val).lower() != 'nan':
+            fm.append(f"sale_reason: {json.dumps(str(sale_reason_val))}")
+
+        for col in ['assembled_specs', 'flatpack_specs', 'units_per_pack']:
             val = row.get(col, '')
             if val and str(val).lower() != 'nan':
                 fm.append(f"{col}: {json.dumps(str(val))}")
         
-        stock_val = str(row.get('stock', '')).lower()
-        if stock_val in ['0', '0 vnt.', 'parduota']:
+        stock_str = str(stock_val).lower()
+        if stock_str in ['0', '0 vnt.', 'parduota']:
             fm.append("is_sold: true")
         else:
             fm.append("is_sold: false")
@@ -226,7 +246,7 @@ for _, row in df.iterrows():
 
     fm.append("---\n")
     
-    # Pobieranie pełnej treści z content_body dla obu zakładek
+    # Pobieranie treści Markdown z content_body
     content_body = str(row.get('content_body', '')).strip()
     if not content_body or content_body.lower() == 'nan':
         content_body = str(row.get('content', '')).strip()
