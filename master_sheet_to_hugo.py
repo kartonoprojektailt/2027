@@ -84,6 +84,9 @@ def extract_gdrive_id(url):
     if "tinkami norodu" in url.lower() or "grafika tik" in url.lower() or "cia tik" in url.lower():
         return ""
     
+    # Usuwanie podwójnych slashy w ścieżce ID (np. /d//ID)
+    url = url.replace("/d//", "/d/")
+    
     if "/file/d/" in url:
         return url.split("/file/d/")[1].split("/")[0]
     elif "id=" in url:
@@ -109,13 +112,15 @@ def optimize_and_save_image(filepath):
 
 def download_and_cache_image(url, filename_prefix, index_suffix=0):
     file_id = extract_gdrive_id(url)
-    if not file_id:
-        return url
-        
+    
+    # Tworzymy stabilną nazwę pliku lokalnego na podstawie prefiksu i indeksu
     local_filename = f"{filename_prefix}-{index_suffix}.jpg" if index_suffix > 0 else f"{filename_prefix}.jpg"
     local_filepath = os.path.join(images_dir, local_filename)
     public_url_path = f"/images/{local_filename}"
     
+    if not file_id:
+        return ""
+        
     if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 0:
         return public_url_path
 
@@ -127,7 +132,6 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
             shutil.copyfileobj(response, out_file)
         
         optimize_and_save_image(local_filepath)
-        
         print(f"Pobrano i zoptymalizowano zdjęcie: {local_filename}")
         return public_url_path
     except Exception as e:
@@ -141,7 +145,8 @@ def download_and_cache_image(url, filename_prefix, index_suffix=0):
             return public_url_path
         except Exception as err:
             print(f"Całkowity błąd pobierania zdjęcia {file_id}: {err}")
-            return f"https://drive.google.com/uc?export=view&id={file_id}"
+            # Zwracamy lokalną ścieżkę, aby nie generować uszkodzonych linków zewnętrznych we front-matter
+            return public_url_path
 
 def sanitize_text(text):
     if not isinstance(text, str):
