@@ -181,7 +181,15 @@ for index, row in df.iterrows():
         slug = title.lower().replace(" ", "-").replace("ą", "a").replace("č", "c").replace("ę", "e").replace("ė", "e").replace("į", "i").replace("š", "s").replace("ų", "u").replace("ū", "u").replace("ž", "z")
     
     description = sanitize_text(row.get("description", ""))
-    content = sanitize_text(row.get("content body", "") or row.get("content", ""))
+    
+    # NAPRAWA: Bezpieczne wyciąganie treści ze wszystkich możliwych wariantów nagłówka kolumny w arkuszu
+    content = sanitize_text(
+        row.get("content_body", "") or 
+        row.get("content body", "") or 
+        row.get("content", "") or 
+        row.get("aprasymas", "") or 
+        row.get("tekstas", "")
+    )
     
     if not content:
         content = f"Informacija apie {title} atnaujinama."
@@ -216,7 +224,6 @@ gallery_images:
     
     file_content = front_matter + content
     
-    # PŁASKA HIERARCHIA: bezpośrednio pliki content/slug.md
     file_path = os.path.join(output_dir, f"{slug}.md")
     
     with open(file_path, "w", encoding="utf-8") as f:
@@ -225,5 +232,5 @@ gallery_images:
     processed_count += 1
 
 print("\n" + "="*50)
-print(f"SUDERINIMAS BAIGTAS: Sėkmingai sugeneruoti {processed_count} puslapiai płaskiej struktury (content/slug.md)!")
+print(f"SUDERINIMAS BAIGTAS: Sėkmingai sugeneruoti {processed_count} puslapiai su pilnais tekstais!")
 print("="*50)

@@ -9,4 +9,4 @@ gallery_images:
   - "/images/kartono-lentyna-kp20261018a-gallery-2.jpg"
 ---
 
-Informacija apie Kartono lentyna atnaujinama.
+Kartono lentyna telefonams. Pati susirenka ir ardosi

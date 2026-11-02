@@ -9,4 +9,4 @@ gallery_images:
   - "/images/cnc-pjovimas-kp20261016c-gallery-2.jpg"
 ---
 
-Informacija apie CNC Pjovimo paslaugos atnaujinama.
+Tikslus CNC kartono ir lakštinių medžiagų pjovimas Kaune. Greitas ir tikslus atilikimas, pristatymas kitą rytą iki 9:00

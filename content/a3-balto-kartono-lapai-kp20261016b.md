@@ -8,4 +8,4 @@ gallery_images:
   - "/images/a3-balto-kartono-lapai-kp20261016b-gallery-1.jpg"
 ---
 
-Informacija apie A3 balto kartono lapai atnaujinama.
+A3 formato balto kartono lapai šventinėms dekoracijoms. Atsparus ugniai ir vandeniui. Saugus naudojimui namuose, ekologiškas
