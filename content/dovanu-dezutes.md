@@ -16,3 +16,4 @@ gallery_images:
   - "/images/dovanu-dezutes-gallery-9.jpg"
 ---
 
+Informacija apie Dovanų dėžutės ir reprezentacinės pakuotės atnaujinama.

@@ -11,3 +11,4 @@ gallery_images:
   - "/images/parduotuviu-dekoracijos-gallery-4.jpg"
 ---
 
+Informacija apie Parduotuvių ir prekybos vietų dekoracijos (POSM) atnaujinama.

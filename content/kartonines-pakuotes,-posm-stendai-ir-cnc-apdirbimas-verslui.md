@@ -7,3 +7,4 @@ hero_image: "/images/kartonines-pakuotes,-posm-stendai-ir-cnc-apdirbimas-verslui
 gallery_images:
 ---
 
+Informacija apie Kartoninės pakuotės, POSM stendai ir CNC apdirbimas verslui atnaujinama.

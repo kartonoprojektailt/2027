@@ -7,3 +7,4 @@ hero_image: ""
 gallery_images:
 ---
 
+Informacija apie Paieška atnaujinama.

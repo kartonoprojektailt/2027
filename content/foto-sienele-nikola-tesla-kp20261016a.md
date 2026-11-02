@@ -10,3 +10,4 @@ gallery_images:
   - "/images/foto-sienele-nikola-tesla-kp20261016a-gallery-3.jpg"
 ---
 
+Informacija apie Foto sienelės Nikola Tesla atnaujinama.

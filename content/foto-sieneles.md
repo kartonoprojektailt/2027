@@ -10,3 +10,4 @@ gallery_images:
   - "/images/foto-sieneles-gallery-3.jpg"
 ---
 
+Informacija apie Foto sienelės ir renginių dekoracijos atnaujinama.

@@ -41,3 +41,4 @@ gallery_images:
   - "/images/stendai-stovai-gallery-34.jpg"
 ---
 
+Informacija apie Stendai ir stovai atnaujinama.

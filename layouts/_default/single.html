@@ -1,9 +1,15 @@
 {{- define "main" }}
 
-<article class="post-single">
+<article class="post-single" itemscope itemtype="https://schema.org/Article">
+  <meta itemprop="headline" content="{{ .Title }}">
+  {{- if .Description }}
+  <meta itemprop="description" content="{{ .Description }}">
+  {{- end }}
+  <meta itemprop="mainEntityOfPage" content="{{ .Permalink }}">
+
   <header class="post-header">
     {{ partial "breadcrumbs.html" . }}
-    <h1 class="post-title">
+    <h1 class="post-title" itemprop="name">
       {{ .Title }}
     </h1>
     {{- if .Description }}
@@ -22,34 +28,50 @@
   {{- partial "cover.html" (dict "cxt" . "IsSingle" true) -}}
   {{- end }}
 
-  <!-- ZDJĘCIE GŁÓWNE (HERO IMAGE) - PEŁNY OBRAZ BEZ PRZYCINANIA -->
+  <!-- ZDJĘCIE GŁÓWNE (HERO IMAGE) - PEŁNY OBRAZ Z OPTYMALIZACJĄ SEO/AI & UX -->
   {{- if .Params.hero_image }}
-  <div class="hero-image-block" style="margin: 20px 0; text-align: center; background: rgba(255, 255, 255, 0.03); padding: 10px; border-radius: 8px;">
+  <figure class="hero-image-block" itemprop="image" itemscope itemtype="https://schema.org/ImageObject" style="margin: 20px 0; text-align: center; background: rgba(255, 255, 255, 0.03); padding: 10px; border-radius: 8px;">
+    <meta itemprop="contentUrl" content="{{ .Params.hero_image | absURL }}">
     <img src="{{ .Params.hero_image }}" 
          alt="{{ .Title }} - pagrindinė nuotrauka" 
          title="{{ .Title }}" 
          loading="eager"
-         style="max-width: 100%; height: auto; max-height: 600px; object-fit: contain; margin: 0 auto; display: block; border-radius: 6px;" />
-  </div>
+         decoding="async"
+         fetchpriority="high"
+         onclick="openImageLightbox(this.src, this.alt)"
+         style="max-width: 100%; height: auto; max-height: 600px; object-fit: contain; margin: 0 auto; display: block; border-radius: 6px; cursor: zoom-in;" />
+    <figcaption style="font-size: 0.85rem; color: #888; margin-top: 8px;">{{ .Title }} - pagrindinė nuotrauka</figcaption>
+  </figure>
   {{- end }}
 
-  <!-- GALERIA ZDJĘĆ Z AUTOMATYCZNYM SEO ALT -->
+  <!-- GALERIA ZDJĘĆ Z AUTOMATYCZNYM SEO ALT, SCHEMA.ORG & LIGHTBOX UX -->
   {{- if .Params.gallery_images }}
-  <div class="post-gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0 30px 0;">
-    {{ range $index, $img := .Params.gallery_images }}
-      <a href="{{ $img }}" target="_blank" rel="noopener" title="{{ $.Title }} - pavyzdys {{ add $index 1 }}">
-        <img src="{{ $img }}" 
-             alt="{{ $.Title }} - gamyba ir pavyzdžiai {{ add $index 1 }}" 
-             loading="lazy"
-             style="width: 100%; height: 180px; object-fit: contain; background: rgba(255, 255, 255, 0.02); border-radius: 6px; border: 1px solid #333;" />
-      </a>
-    {{ end }}
-  </div>
+  <section class="post-gallery-section" style="margin: 25px 0;">
+    <h3 style="font-size: 1.2rem; margin-bottom: 12px; color: var(--primary);">Gamybos ir pavyzdžių galerija</h3>
+    <div class="post-gallery" itemscope itemtype="https://schema.org/ItemList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px;">
+      {{ range $index, $img := .Params.gallery_images }}
+        <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ImageObject" style="position: relative;">
+          <meta itemprop="position" content="{{ add $index 1 }}">
+          <meta itemprop="contentUrl" content="{{ $img | absURL }}">
+          <a href="{{ $img }}" onclick="event.preventDefault(); openImageLightbox('{{ $img }}', '{{ $.Title }} - pavyzdys {{ add $index 1 }}');" title="{{ $.Title }} - pavyzdys {{ add $index 1 }}">
+            <img src="{{ $img }}" 
+                 alt="{{ $.Title }} - gamyba ir pavyzdžiai {{ add $index 1 }}" 
+                 title="{{ $.Title }} - pavyzdys {{ add $index 1 }}"
+                 loading="lazy"
+                 decoding="async"
+                 style="width: 100%; height: 180px; object-fit: contain; background: rgba(255, 255, 255, 0.02); border-radius: 6px; border: 1px solid var(--border, #333); transition: transform 0.2s ease, border-color 0.2s ease; cursor: zoom-in;"
+                 onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='scale(1.02)';"
+                 onmouseout="this.style.borderColor='var(--border, #333)'; this.style.transform='scale(1)';" />
+          </a>
+        </div>
+      {{ end }}
+    </div>
+  </section>
   {{- end }}
 
-  <!-- GŁÓWNA TREŚĆ STRONY -->
+  <!-- GŁÓWNA TREŚĆ STRONY ZE SPRAWNOŚCIĄ DLA ROBOTÓW AI / LLM EXTRACTORS -->
   {{- if .Content }}
-  <div class="post-content">
+  <div class="post-content" itemprop="articleBody">
     {{- if not (.Param "disableAnchoredHeadings") }}
     {{- partial "anchored_headings.html" .Content -}}
     {{- else }}{{ .Content }}{{ end -}}
@@ -75,5 +97,32 @@
   {{- end -}}
 
 </article>
+
+<!-- LIGHTBOX MODAL DLA ZDJĘĆ DLA ZERO-DEPENDENCY CZYSTEGO UX -->
+<div id="custom-lightbox" onclick="closeImageLightbox()" style="display: none; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.88); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px;">
+  <span style="position: absolute; top: 15px; right: 25px; color: #fff; font-size: 35px; font-weight: bold; cursor: pointer;">&times;</span>
+  <img id="lightbox-img" style="max-width: 95%; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" alt="Zoomed view">
+</div>
+
+<script>
+function openImageLightbox(src, alt) {
+  const lightbox = document.getElementById('custom-lightbox');
+  const img = document.getElementById('lightbox-img');
+  if (lightbox && img) {
+    img.src = src;
+    img.alt = alt || '';
+    lightbox.style.display = 'flex';
+  }
+}
+function closeImageLightbox() {
+  const lightbox = document.getElementById('custom-lightbox');
+  if (lightbox) {
+    lightbox.style.display = 'none';
+  }
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeImageLightbox();
+});
+</script>
 
 {{- end }}{{/* end main */}}

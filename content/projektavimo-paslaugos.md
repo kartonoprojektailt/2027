@@ -7,3 +7,4 @@ hero_image: ""
 gallery_images:
 ---
 
+Informacija apie Pakuočių ir stendų projektavimo paslaugos atnaujinama.

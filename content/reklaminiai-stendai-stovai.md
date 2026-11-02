@@ -7,3 +7,4 @@ hero_image: "/images/reklaminiai-stendai-stovai-hero.jpg"
 gallery_images:
 ---
 
+Informacija apie Reklaminiai stendai ir stovai atnaujinama.
