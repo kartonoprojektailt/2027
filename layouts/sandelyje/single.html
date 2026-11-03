@@ -108,7 +108,7 @@
       </div>
     </div>
 
-    <!-- 5. PRZYCISKI AKCJI (LEKKI, ELEGANCKI SZARY STYL DLA WSZYSTKICH MOTYWÓW) -->
+    <!-- 5. PRZYCISKI AKCJI (LEKKI, ELEGANCKI SZARY STYL) -->
     <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px;" class="no-print">
       
       <button onclick="window.print();" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1.05rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: background 0.2s;">
@@ -119,9 +119,10 @@
         📞 +370 652 85223
       </a>
 
-      {{ $cleanSubject := printf "Sandėlio užklausa: %s (%s)" .Title (.Params.offer_code | default "KP") }}
-      <a href="mailto:info@kartonoprojektai.lt?subject={{ $cleanSubject | urlize }}" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; display: block; font-size: 1.05rem; text-align: center; box-sizing: border-box; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: background 0.2s;">
-        ✉️ Siųsti užklausą el. paštu
+      {{ $cleanCode := .Params.offer_code | default "KP" }}
+      {{ $emailSubject := printf "Užklausa dėl prekės: %s" $cleanCode }}
+      <a href="mailto:info@kartonoprojektai.lt?subject={{ $emailSubject | urlize }}" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; display: block; font-size: 1.05rem; text-align: center; box-sizing: border-box; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: background 0.2s;">
+        ✉️ Siųsti užklausą el. paštu ({{ $cleanCode }})
       </a>
 
     </div>
@@ -151,10 +152,10 @@
       <img id="modalImg" style="max-width:90%; max-height:90%; border-radius:6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
     </div>
 
-    <!-- SPECJALNA SEKCJA DO DRUKU (W PEŁNYM ROZMIARZE: WSZYSTKIE ZDJĘCIA + NAGŁÓWEK POGLĄDOWY Z LINKIEM) -->
+    <!-- SPECJALNA SEKCJA DO DRUKU -->
     <div id="print-header-section" style="display: none;">
       <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 12px;">
-        <h2 style="font-size: 1.3rem; font-weight: bold; margin: 0 0 5px 0; text-transform: uppercase;">Kartono projektų sandėlio pasiūlymas</h2>
+        <h2 style="font-size: 1.3rem; font-weight: bold; margin: 0 0 5px 0; text-transform: uppercase;">Poglądowy Kartono projektai sandėlio pasiūlymas</h2>
         <p style="font-size: 0.95rem; margin: 0;">Oficialus katalogas: <a href="https://kartonoprojektai.lt/sandelyje/" style="color: #000; text-decoration: underline;">https://kartonoprojektai.lt/sandelyje/</a></p>
       </div>
       
@@ -176,13 +177,13 @@
       </div>
     </div>
 
-    <!-- STOPKA DO DRUKU PDF Z WYRAŹNYM QR KODEM DO TEGO OGŁOSZENIA -->
+    <!-- STOPKA DO DRUKU PDF Z QR KODEM DO TEGO OGŁOSZENIA -->
     <div id="print-footer" style="display: none; margin-top: 30px; border-top: 2px solid #000; padding-top: 15px; page-break-inside: avoid;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
           <p style="font-size: 0.9rem; font-weight: bold; margin: 0 0 4px 0;">UAB „Kartono projektai" sandėlio pasiūlymas</p>
           <p style="font-size: 0.8rem; margin: 0; color: #333;">Raudondvario pl. 164, Kaunas | Tel. +370 652 85223 | info@kartonoprojektai.lt</p>
-          <p style="font-size: 0.75rem; margin: 6px 0 0 0; max-width: 380px; font-weight: bold;">QR kodas skirtas šiam pasiūlymui internete peržiūrėti.</p>
+          <p style="font-size: 0.75rem; margin: 6px 0 0 0; max-width: 380px; font-weight: bold;">QR kodas skirtas tiesiogiai šiam konkrečiam pasiūlymui internete peržiūrėti.</p>
         </div>
         <div id="qrcode" style="background: white; padding: 4px; border: 1px solid #ccc; text-align: center;">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=95x95&data={{ .Permalink }}" alt="QR Kodas" style="width: 95px; height: 95px; display: block; margin: 0 auto;">
