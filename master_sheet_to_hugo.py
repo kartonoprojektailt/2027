@@ -3,6 +3,7 @@ import json
 import tempfile
 import shutil
 import urllib.request
+import re
 import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
@@ -66,11 +67,9 @@ except Exception as e:
 
 images_dir = os.path.join("static", "images")
 content_dir = "content"
-sandelyje_dir = os.path.join(content_dir, "sandelyje")
 
 os.makedirs(images_dir, exist_ok=True)
 os.makedirs(content_dir, exist_ok=True)
-os.makedirs(sandelyje_dir, exist_ok=True)
 
 def extract_gdrive_id(url):
     if not isinstance(url, str) or not url.strip():
@@ -79,6 +78,11 @@ def extract_gdrive_id(url):
     if "tinkami norodu" in url.lower() or "grafika tik" in url.lower() or "cia tik" in url.lower():
         return ""
     url = url.replace("/d//", "/")
+    
+    match = re.search(r'(?:/file/d/|id=|usercontent\.com/d/)([a-zA-Z0-9_-]{25,})', url)
+    if match:
+        return match.group(1)
+        
     if "/file/d/" in url:
         try:
             return url.split("/file/d/")[1].split("/")[0].split("?")[0]
@@ -129,14 +133,15 @@ def download_and_cache_image(url, filename_prefix):
     if file_id:
         download_urls = [
             f"https://drive.google.com/uc?export=download&id={file_id}",
-            f"https://lh3.googleusercontent.com/d/{file_id}=s1600"
+            f"https://lh3.googleusercontent.com/d/{file_id}=s1600",
+            f"https://drive.google.com/thumbnail?id={file_id}&sz=w1600"
         ]
     elif url.startswith("http"):
         download_urls = [url]
 
     for d_url in download_urls:
         try:
-            req = urllib.request.Request(d_url, headers={'User-Agent': 'Mozilla/5.0'})
+            req = urllib.request.Request(d_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
             with urllib.request.urlopen(req, timeout=15) as response, open(local_filepath, 'wb') as out_file:
                 shutil.copyfileobj(response, out_file)
             
@@ -146,22 +151,30 @@ def download_and_cache_image(url, filename_prefix):
         except Exception:
             continue
             
-    return url
+    return public_url_path if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000 else url
 
 print("Generuojami Markdown puslapiai ir prekės iš Google Sheets...")
 
+# Zapewniamy, że sandelyje jest traktowane jako chroniony slug
+valid_slugs = {"sandelyje"}
+
 for _, row in df.iterrows():
     slug = str(row.get('slug', '')).strip()
+    title = str(row.get('title', slug)).strip()
+    
     if not slug or slug.lower() == 'nan' or slug == 'Unikalus puslapio adresas':
         continue
         
-    source_tab = str(row.get('source_tab', 'puslapiai')).strip()
-    
-    # Apsauga: neperrašome pagrindinio sandėlio _index.md iš puslapių tabo
-    if source_tab == 'puslapiai' and slug == 'sandelyje':
+    # Automatyczne odfiltrowanie błędnego ogłoszenia o tytule/slug "Kartono projektų sandėlio pasiūlymai"
+    if "sandėlio pasiūlymai" in title.lower() or slug.lower() == "kartono-projektu-sandelio-pasiulymai":
         continue
 
-    title = str(row.get('title', slug)).strip()
+    source_tab = str(row.get('source_tab', 'puslapiai')).strip()
+    if source_tab == 'puslapiai' and slug == 'sandelyje':
+        continue
+        
+    valid_slugs.add(slug)
+
     if title.lower() == 'nan':
         title = slug
         
@@ -171,7 +184,7 @@ for _, row in df.iterrows():
     gallery_images = []
     gallery_raw = row.get('gallery_images', '')
     if gallery_raw and str(gallery_raw).lower() != 'nan':
-        urls = [u.strip() for u in str(gallery_raw).split(',') if u.strip()]
+        urls = [u.strip() for u in str(gallery_raw).replace('\n', ',').split(',') if u.strip()]
         for idx, u in enumerate(urls, start=1):
             g_img = download_and_cache_image(u, f"{slug}-g{idx}")
             if g_img:
@@ -189,9 +202,9 @@ for _, row in df.iterrows():
         fm.append(f"description: {json.dumps(str(meta_desc).strip())}")
         
     if source_tab == 'sandelyje':
+        fm.append(f"url: {json.dumps('/' + slug + '/')}")
         fm.append('layout: "single"')
         
-        # Uniwersalne mapowanie kluczy handlowych z wieloma aliasami dla pewności szablonów Hugo
         code_val = row.get('code', '')
         if code_val and str(code_val).lower() != 'nan':
             fm.append(f"code: {json.dumps(str(code_val))}")
@@ -220,11 +233,18 @@ for _, row in df.iterrows():
         if sale_reason_val and str(sale_reason_val).lower() != 'nan':
             fm.append(f"sale_reason: {json.dumps(str(sale_reason_val))}")
 
-        for col in ['assembled_specs', 'flatpack_specs', 'units_per_pack']:
-            val = row.get(col, '')
-            if val and str(val).lower() != 'nan':
-                fm.append(f"{col}: {json.dumps(str(val))}")
+        excluded_cols = {
+            'slug', 'title', 'code', 'offer_code', 'sku', 'category', 
+            'price', 'kaina', 'unit', 'stock', 'likutis', 'sale_reason', 
+            'hero_image', 'gallery_images', 'search_cloud', 'content_body', 
+            'content', 'source_tab', 'meta_description', 'meta_description '
+        }
         
+        for col, val in row.items():
+            col_clean = str(col).strip()
+            if col_clean not in excluded_cols and val and str(val).strip() and str(val).lower() != 'nan':
+                fm.append(f"{col_clean}: {json.dumps(str(val).strip())}")
+
         stock_str = str(stock_val).lower()
         if stock_str in ['0', '0 vnt.', 'parduota']:
             fm.append("is_sold: true")
@@ -254,15 +274,25 @@ for _, row in df.iterrows():
         content_body = str(row.get('content', '')).strip()
     
     filename = f"{slug}.md"
-    
-    if source_tab == 'sandelyje':
-        filepath = os.path.join(sandelyje_dir, filename)
-    else:
-        filepath = os.path.join(content_dir, filename)
+    filepath = os.path.join(content_dir, filename)
     
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write("\n".join(fm))
         if content_body and content_body.lower() != 'nan':
             f.write(content_body + "\n")
+
+# Automatyczne czyszczenie starych plików produktów, które zniknęły z arkusza (chroniąc _index.md oraz sandelyje.md)
+for filename in os.listdir(content_dir):
+    if filename.endswith(".md") and filename not in ["_index.md", "sandelyje.md"]:
+        file_slug = filename[:-3]
+        if file_slug not in valid_slugs:
+            old_path = os.path.join(content_dir, filename)
+            os.remove(old_path)
+            print(f"Pašalintas pasenęs failas: {filename}")
+
+# Bezpieczne usunięcie starego folderu podrzędnego, jeśli jeszcze istnieje
+old_sandelyje_dir = os.path.join(content_dir, "sandelyje")
+if os.path.exists(old_sandelyje_dir):
+    shutil.rmtree(old_sandelyje_dir)
 
 print("Generavimas sėkmingai baigtas!")

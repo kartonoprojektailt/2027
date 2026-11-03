@@ -6,67 +6,172 @@
 
   <div class="post-content">
     
-    <!-- POBIERANIE OFERT BEZPOŚREDNIO Z .Pages DANEJ SEKCJI -->
-    {{ $items := .Pages }}
-    {{ if not $items }}
-      {{ $items = where site.RegularPages "Section" "sandelyje" }}
-    {{ end }}
+    <!-- POBIERANIE WSZYSTKICH OFERT (POMIJAMY SAM SLUG sandelyje) -->
+    {{ $items := where (where site.RegularPages "Type" "sandelyje") "Params.slug" "!=" "sandelyje" }}
 
-    <div class="inventory-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px;">
+    <!-- PRZYCISKI FILTRÓW NA GÓRZE -->
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; margin-top: 10px;" class="no-print">
+      <button id="active-toggle-btn" onclick="toggleActiveOnly()" style="background: #e74c3c; color: #ffffff; border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s;">
+        ✓ Galiojantys pasiūlymai
+      </button>
+
+      <div style="width: 1px; background: var(--border); margin: 0 5px;"></div>
+
+      <button onclick="filterByCategory('all', event)" class="cat-filter-btn active-cat" style="background: #e74c3c; color: #ffffff; border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s;">
+        Visi
+      </button>
+      <button onclick="filterByCategory('stendai', event)" class="cat-filter-btn" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 0.95rem; transition: all 0.2s;">
+        Reklaminiai stendai ir POSM
+      </button>
+      <button onclick="filterByCategory('pakuotes', event)" class="cat-filter-btn" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 0.95rem; transition: all 0.2s;">
+        Kartono pakuotės
+      </button>
+      <button onclick="filterByCategory('paslaugos', event)" class="cat-filter-btn" style="background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 0.95rem; transition: all 0.2s;">
+        Paslaugos
+      </button>
+    </div>
+
+    <!-- SIATKA KAFELKÓW -->
+    <div class="inventory-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 50px;">
       {{ range $items }}
-      <div class="item-card" onclick="location.href='{{ .Permalink }}';" style="border: 1px solid var(--border); padding: 20px; border-radius: 8px; background: var(--entry); display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='none';">
-        
-        <div>
-          <!-- Miniatura / Obrazek -->
-          {{ if .Params.hero_image }}
-          <div style="margin-bottom: 12px; height: 160px; overflow: hidden; border-radius: 4px; background: #f0f0f0;">
-            <img src="{{ .Params.hero_image }}" alt="{{ .Title }}" style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
-          {{ end }}
-
-          <!-- Tytuł -->
-          <h2 style="font-size: 1.1rem; margin-bottom: 8px; margin-top: 0;">
-            <a href="{{ .Permalink }}" style="color: var(--primary); text-decoration: none;">{{ .Title }}</a>
-          </h2>
+        {{ if ne .Params.slug "sandelyje" }}
+          {{ $cat := lower (.Params.category | default "") }}
+          {{ $stockVal := string .Params.stock }}
+          {{ $isSoldVal := or .Params.is_sold (eq $stockVal "0") (eq $stockVal "0 vnt.") (eq $stockVal "Parduota") (eq $stockVal "parduota") }}
           
-          <!-- Kategoria -->
-          {{ if .Params.category }}
-          <p style="font-size: 0.85rem; color: var(--secondary); margin-bottom: 8px;">
-            Kategorija: <strong>{{ .Params.category }}</strong>
-          </p>
+          {{ $filterClass := "other" }}
+          {{ $catLink := "/pakuotes/" }}
+          {{ if or (in $cat "stend") (in $cat "posm") (in $cat "reklamin") (in $cat "stovas") }}
+            {{ $filterClass = "stendai" }}
+            {{ $catLink = "/reklaminiai-stendai-stovai/" }}
+          {{ else if or (in $cat "pakuot") (in $cat "dež") (in $cat "lapai") }}
+            {{ $filterClass = "pakuotes" }}
+            {{ $catLink = "/pakuotes/" }}
+          {{ else if or (in $cat "paslaug") (in $cat "cnc") (in $cat "projekt") }}
+            {{ $filterClass = "paslaugos" }}
+            {{ $catLink = "/cnc-paslaugos/" }}
           {{ end }}
 
-          <!-- Cena + Jednostka / Likutis -->
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.95rem;">
-            <span style="font-size: 1.1rem; font-weight: bold; color: var(--primary);">
-              {{ .Params.price }} {{ if .Params.unit }}<span style="font-size: 0.85rem; font-weight: normal; opacity: 0.8;">/ {{ .Params.unit }}</span>{{ end }}
-            </span>
-            {{ if .Params.stock }}
-            <span style="font-size: 0.85rem; color: var(--secondary);">Likutis: <strong>{{ .Params.stock }}</strong></span>
+        <div class="item-card" data-category="{{ $filterClass }}" data-sold="{{ if $isSoldVal }}true{{ else }}false{{ end }}" style="border: 1px solid var(--border); padding: 20px; border-radius: 8px; background: var(--entry); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='none';">
+          
+          <div>
+            {{ if $isSoldVal }}
+            <div style="background: #e74c3c; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; text-align: center; margin-bottom: 10px;">
+              PARDUOTA
+            </div>
+            {{ end }}
+
+            {{ if .Params.hero_image }}
+            <div style="margin-bottom: 12px; height: 160px; overflow: hidden; border-radius: 4px; background: #f0f0f0; cursor: pointer;" onclick="location.href='/{{ .Params.slug }}/';">
+              <img src="{{ .Params.hero_image }}" alt="{{ .Title }}" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            {{ end }}
+
+            <h2 style="font-size: 1.1rem; margin-bottom: 8px; margin-top: 0;">
+              <a href="/{{ .Params.slug }}/" style="color: var(--primary); text-decoration: none;">{{ .Title }}</a>
+            </h2>
+            
+            {{ if .Params.category }}
+            <p style="font-size: 0.85rem; color: var(--secondary); margin-bottom: 8px;">
+              Kategorija: <a href="{{ $catLink }}" style="color: var(--primary); font-weight: bold; text-decoration: underline;">{{ .Params.category }}</a>
+            </p>
+            {{ end }}
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.95rem;">
+              <span style="font-size: 1.1rem; font-weight: bold; color: var(--primary);">
+                {{ .Params.price }} {{ if .Params.unit }}<span style="font-size: 0.85rem; font-weight: normal; opacity: 0.8;">/ {{ .Params.unit }}</span>{{ end }}
+              </span>
+              {{ if .Params.stock }}
+              <span style="font-size: 0.85rem; color: var(--secondary);">Likutis: <strong>{{ .Params.stock }}</strong></span>
+              {{ end }}
+            </div>
+            
+            {{ if .Params.offer_code }}
+            <p style="font-size: 0.8rem; font-family: monospace; opacity: 0.7; margin-bottom: 15px;">Kodas: {{ .Params.offer_code }}</p>
             {{ end }}
           </div>
           
-          <!-- Kod SKU -->
-          {{ if .Params.offer_code }}
-          <p style="font-size: 0.8rem; font-family: monospace; opacity: 0.7; margin-bottom: 15px;">Kodas: {{ .Params.offer_code }}</p>
-          {{ end }}
-        </div>
-        
-        <div style="margin-top: 15px;">
-          <a href="{{ .Permalink }}" style="display: block; background: var(--tertiary); color: var(--primary); padding: 10px; text-align: center; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--border);">
-            Peržiūrėti pasiūlymą
-          </a>
-        </div>
+          <div style="margin-top: 15px;">
+            <a href="/{{ .Params.slug }}/" style="display: block; background: var(--tertiary); color: var(--primary); padding: 10px; text-align: center; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--border);">
+              Peržiūrėti pasiūlymą
+            </a>
+          </div>
 
-      </div>
+        </div>
+        {{ end }}
       {{ end }}
     </div>
 
-    <!-- OPIS OPISOWY Z _index.md -->
-    <div class="section-description-text" style="border-top: 1px solid var(--border); padding-top: 30px;">
+    <!-- TEKST OPISOWY POD OGŁOSZENIAMI -->
+    <div class="section-description-text" style="border-top: 2px solid var(--border); padding-top: 40px; margin-top: 40px;">
+      <h2>Apie Kartono projektų sandėlį</h2>
       {{ .Content }}
     </div>
 
   </div>
 </article>
+
+<script>
+let currentCategory = 'all';
+let activeOnly = true;
+
+function applyFilters() {
+  const cards = document.querySelectorAll('.item-card');
+  cards.forEach(card => {
+    const cardCat = card.getAttribute('data-category');
+    const isSold = card.getAttribute('data-sold') === 'true';
+
+    let matchesCategory = (currentCategory === 'all' || cardCat === currentCategory);
+    let matchesActive = true;
+
+    if (activeOnly && isSold) {
+      matchesActive = false;
+    }
+
+    if (matchesCategory && matchesActive) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function toggleActiveOnly() {
+  activeOnly = !activeOnly;
+  const btn = document.getElementById('active-toggle-btn');
+  if (activeOnly) {
+    btn.style.background = '#e74c3c';
+    btn.style.color = '#ffffff';
+    btn.textContent = '✓ Galiojantys pasiūlymai';
+  } else {
+    btn.style.background = 'var(--tertiary)';
+    btn.style.color = 'var(--primary)';
+    btn.textContent = 'Galiojantys pasiūlymai';
+  }
+  applyFilters();
+}
+
+function filterByCategory(category, evt) {
+  currentCategory = category;
+  const buttons = document.querySelectorAll('.cat-filter-btn');
+
+  buttons.forEach(btn => {
+    btn.style.background = 'var(--tertiary)';
+    btn.style.color = 'var(--primary)';
+    btn.style.fontWeight = '500';
+  });
+
+  if (evt && evt.target) {
+    evt.target.style.background = '#e74c3c';
+    evt.target.style.color = '#ffffff';
+    evt.target.style.fontWeight = '600';
+  }
+
+  applyFilters();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  applyFilters();
+});
+</script>
 {{ end }}

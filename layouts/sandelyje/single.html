@@ -2,9 +2,9 @@
 {{ $stockVal := string .Params.stock }}
 {{ $isSold := or .Params.is_sold (eq $stockVal "0") (eq $stockVal "0 vnt.") (eq $stockVal "Parduota") (eq $stockVal "parduota") }}
 
-<article class="post-single" style="font-size: 1.05rem; line-height: 1.7; font-family: inherit; word-break: break-word; overflow-wrap: break-word;">
+<article class="post-single" style="max-width: 900px; margin: 0 auto; padding: 20px 15px; font-size: 1.05rem; line-height: 1.7; font-family: inherit; word-break: break-word; overflow-wrap: break-word;">
   
-  <header class="post-header" style="margin-bottom: 24px;">
+  <header class="post-header" style="margin-bottom: 24px; text-align: center;">
     <h1 class="post-title" style="font-size: 2.2rem; font-weight: 700; line-height: 1.3; color: var(--primary);">{{ .Title }}</h1>
   </header>
 
@@ -17,20 +17,20 @@
     </div>
     {{ end }}
 
-    <!-- 1. GŁÓWNE ZDJĘCIE / HERO -->
+    <!-- 1. GŁÓWNE ZDJĘCIE / HERO IMAGE -->
     {{ if .Params.hero_image }}
-    <div style="margin-bottom: 28px; border-radius: 8px; overflow: hidden; background: var(--tertiary); max-height: 480px; text-align: center; border: 1px solid var(--border);">
-      <img src="{{ .Params.hero_image }}" alt="{{ .Title }}" style="max-width: 100%; height: auto; object-fit: contain; max-height: 480px; cursor: pointer;" onclick="openModal(this.src)">
+    <div style="margin-bottom: 24px; border-radius: 10px; overflow: hidden; background: var(--tertiary); text-align: center; border: 1px solid var(--border); padding: 10px;">
+      <img src="{{ .Params.hero_image }}" alt="{{ .Title }}" style="max-width: 100%; height: auto; object-fit: contain; max-height: 420px; border-radius: 6px; cursor: pointer;" onclick="openModal(this.src)">
     </div>
     {{ end }}
 
-    <!-- 2. GALERIA ZDJĘĆ -->
+    <!-- 2. GALERIA ZDJĘĆ (WIDOCZNA NA EKRANIE) -->
     {{ if .Params.gallery_images }}
     <div style="margin-bottom: 32px;" class="no-print">
       <h3 style="margin-bottom: 12px; font-size: 1.15rem; font-weight: 600; opacity: 0.9;">Nuotraukų galerija</h3>
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px;">
         {{ range .Params.gallery_images }}
-        <div style="border-radius: 6px; overflow: hidden; border: 1px solid var(--border); height: 120px; background: var(--tertiary); cursor: pointer;" onclick="openModal('{{ . }}')">
+        <div style="border-radius: 8px; overflow: hidden; border: 1px solid var(--border); height: 110px; background: var(--tertiary); cursor: pointer;" onclick="openModal('{{ . }}')">
           <img src="{{ . }}" alt="Galerijos nuotrauka" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';">
         </div>
         {{ end }}
@@ -39,50 +39,54 @@
     {{ end }}
 
     <!-- 3. TREŚĆ GŁÓWNA OPISU -->
-    <div style="font-size: 1.05rem; line-height: 1.8; margin-bottom: 32px;">
+    <div style="font-size: 1.05rem; line-height: 1.8; margin-bottom: 32px; background: var(--entry); border: 1px solid var(--border); padding: 20px; border-radius: 10px;">
       {{ .Content }}
     </div>
 
-    <!-- 4. KATEGORIA, KOD, CENA, LIKUTIS I LOGISTYKA -->
-    <div style="background: var(--entry); border: 1px solid var(--border); padding: 20px; border-radius: 10px; margin-bottom: 32px; display: flex; flex-direction: column; gap: 16px; font-size: 1.05rem; font-weight: 400; color: var(--content);">
+    <!-- 4. TECH SPECS / TECHNINĖ INFORMACIJA IR PARAMETRAI -->
+    {{ $excludedKeys := slice "title" "slug" "type" "description" "hero_image" "gallery_images" "search_cloud" "code" "offer_code" "sku" "category" "price" "kaina" "unit" "stock" "likutis" "is_sold" "draft" "url" "layout" "category_url" }}
+    
+    <div style="background: var(--entry); border: 1px solid var(--border); padding: 24px; border-radius: 10px; margin-bottom: 32px;">
+      <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 1.2rem; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 8px;">Techninė informacija ir parametrai</h3>
       
-      <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; flex-direction: column; gap: 12px; font-size: 1.05rem;">
         {{ if .Params.category }}
         <div>
-          Kategorija: <a href="{{ .Params.category_url | default "/sandelyje/" }}" style="color: var(--primary); text-decoration: underline; font-weight: 400;">{{ .Params.category }}</a>
+          <strong>Kategorija:</strong> 
+          {{ $cat := lower (.Params.category | default "") }}
+          {{ $catLink := "/pakuotes/" }}
+          {{ if or (in $cat "stend") (in $cat "posm") (in $cat "reklamin") (in $cat "stovas") }}
+            {{ $catLink = "/reklaminiai-stendai-stovai/" }}
+          {{ else if or (in $cat "pakuot") (in $cat "dež") (in $cat "lapai") }}
+            {{ $catLink = "/pakuotes/" }}
+          {{ else if or (in $cat "paslaug") (in $cat "cnc") (in $cat "projekt") }}
+            {{ $catLink = "/cnc-paslaugos/" }}
+          {{ end }}
+          <a href="{{ $catLink }}" style="color: var(--primary); text-decoration: underline; font-weight: 500;">{{ .Params.category }}</a>
         </div>
         {{ end }}
-        {{ if .Params.offer_code }}
-        <div>
-          Kodas: {{ .Params.offer_code }}
-        </div>
-        {{ end }}
-        {{ if .Params.sale_reason }}
-        <div>
-          Pasiūlymo kilmė / priežastis: <span style="background: var(--tertiary); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); font-size: 0.95rem;">{{ .Params.sale_reason }}</span>
-        </div>
-        {{ end }}
-      </div>
 
-      <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px;">
-        {{ if .Params.price }}
-        <div>
-          Kaina: {{ .Params.price }}{{ if .Params.unit }} / {{ .Params.unit }}{{ end }}
-        </div>
+        {{ if .Params.offer_code }}
+        <div><strong>Prekės kodas (SKU):</strong> {{ .Params.offer_code }}</div>
         {{ end }}
+
+        {{ if .Params.sale_reason }}
+        <div><strong>Pardavimo priežastis:</strong> <span style="background: var(--tertiary); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); font-size: 0.95rem;">{{ .Params.sale_reason }}</span></div>
+        {{ end }}
+
+        {{ if .Params.price }}
+        <div><strong>Kaina:</strong> {{ .Params.price }}{{ if .Params.unit }} / {{ .Params.unit }}{{ end }}</div>
+        {{ end }}
+
         <div>
-          Likutis sandėlyje: 
+          <strong>Likutis sandėlyje:</strong> 
           {{ if $isSold }}
             <span style="color: #e74c3c; font-weight: 600;">Parduota</span>
           {{ else }}
             <span style="font-weight: 600;">{{ .Params.stock }}</span>
           {{ end }}
         </div>
-      </div>
 
-      {{ if or .Params.assembled_specs .Params.flatpack_specs .Params.units_per_pack }}
-      <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px; font-size: 0.95rem;">
-        <strong style="font-size: 1rem;">Logistikos ir matmenų informacija:</strong>
         {{ if .Params.assembled_specs }}
         <div><strong>Išskleisto / surinkto matmenys:</strong> {{ .Params.assembled_specs }}</div>
         {{ end }}
@@ -92,47 +96,40 @@
         {{ if .Params.units_per_pack }}
         <div><strong>Kiekis pakuotėje / paletėje:</strong> {{ .Params.units_per_pack }}</div>
         {{ end }}
-      </div>
-      {{ end }}
 
-    </div>
-
-    <!-- 5. PRZYCISKI AKCJI -->
-    <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px;" class="no-print">
-      
-      <button onclick="window.print();" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 12px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 1rem; text-align: center;">
-        Pilno skelbimo PDF su QR
-      </button>
-
-      <a href="tel:+37065285223" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 12px 16px; border-radius: 8px; text-decoration: none; font-weight: 500; display: block; font-size: 1rem; text-align: center; box-sizing: border-box;">
-        +370 652 85223
-      </a>
-
-      {{ $cleanSubject := printf "Sandėlio užklausa: %s (%s)" .Title (.Params.offer_code | default "KP") }}
-      <a href="mailto:info@kartonoprojektai.lt?subject={{ $cleanSubject | urlize }}" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 12px 16px; border-radius: 8px; text-decoration: none; font-weight: 500; display: block; font-size: 1rem; text-align: center; box-sizing: border-box;">
-        Siųsti užklausą el. paštu
-      </a>
-
-    </div>
-
-    <!-- 6. SUSIJUSIOS PAIEŠKOS CHMURKI -->
-    {{ if .Params.search_cloud }}
-    <div style="margin-top: 32px; margin-bottom: 40px;" class="no-print">
-      <h4 style="margin: 0 0 14px 0; font-size: 0.95rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Susijusios paieškos frazės:</h4>
-      <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-        {{ range .Params.search_cloud }}
-        <a href="/search/?q={{ . | urlize }}" target="_blank" rel="noopener noreferrer" style="font-size: 0.95rem; background: var(--tertiary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; color: var(--primary); text-decoration: none; font-weight: 400;">
-          {{ . }}
-        </a>
+        {{ range $key, $value := .Params }}
+          {{ $kLower := lower $key }}
+          {{ if and (not (in $excludedKeys $kLower)) (not (eq $kLower "sale_reason")) (not (eq $kLower "assembled_specs")) (not (eq $kLower "flatpack_specs")) (not (eq $kLower "units_per_pack")) }}
+            {{ if and $value (ne (string $value) "nan") }}
+            <div><strong>{{ replace $key "_" " " | title }}:</strong> {{ $value }}</div>
+            {{ end }}
+          {{ end }}
         {{ end }}
       </div>
     </div>
-    {{ end }}
 
-    <!-- 7. INNE AKTYWNE OFERTY -->
+    <!-- 5. PRZYCISKI AKCJI (LEKKI, ELEGANCKI SZARY STYL DLA WSZYSTKICH MOTYWÓW) -->
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px;" class="no-print">
+      
+      <button onclick="window.print();" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1.05rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: background 0.2s;">
+        🖨️ Pilno skelbimo PDF su QR ir visomis nuotraukomis
+      </button>
+
+      <a href="tel:+37065285223" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; display: block; font-size: 1.05rem; text-align: center; box-sizing: border-box; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: background 0.2s;">
+        📞 +370 652 85223
+      </a>
+
+      {{ $cleanSubject := printf "Sandėlio užklausa: %s (%s)" .Title (.Params.offer_code | default "KP") }}
+      <a href="mailto:info@kartonoprojektai.lt?subject={{ $cleanSubject | urlize }}" style="width: 100%; background: var(--tertiary); color: var(--primary); border: 1px solid var(--border); padding: 14px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; display: block; font-size: 1.05rem; text-align: center; box-sizing: border-box; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: background 0.2s;">
+        ✉️ Siųsti užklausą el. paštu
+      </a>
+
+    </div>
+
+    <!-- 6. KITI KARTONO PROJEKTO SKELBIMAI -->
     <div style="margin-top: 48px; border: 1px solid var(--border); padding: 20px; border-radius: 10px; background: var(--entry);" class="no-print">
       <h3 style="margin-bottom: 16px; font-size: 1.15rem; font-weight: 600;">
-        Kiti galiojantys <a href="/sandelyje/" style="color: var(--primary); text-decoration: underline; font-weight: 600;">Kartono projektų sandėlio pasiūlymai</a>:
+        Kiti Kartono projekto skelbimai (<a href="/sandelyje/" style="color: var(--primary); text-decoration: underline; font-weight: 600;">žiūrėti visą sandėlį</a>):
       </h3>
       
       <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px;">
@@ -154,16 +151,42 @@
       <img id="modalImg" style="max-width:90%; max-height:90%; border-radius:6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
     </div>
 
-    <!-- STOPKA DO DRUKU PDF Z QR -->
-    <div id="print-footer" style="display: none; margin-top: 50px; border-top: 2px solid #000; padding-top: 20px;">
+    <!-- SPECJALNA SEKCJA DO DRUKU (W PEŁNYM ROZMIARZE: WSZYSTKIE ZDJĘCIA + NAGŁÓWEK POGLĄDOWY Z LINKIEM) -->
+    <div id="print-header-section" style="display: none;">
+      <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 12px;">
+        <h2 style="font-size: 1.3rem; font-weight: bold; margin: 0 0 5px 0; text-transform: uppercase;">Kartono projektų sandėlio pasiūlymas</h2>
+        <p style="font-size: 0.95rem; margin: 0;">Oficialus katalogas: <a href="https://kartonoprojektai.lt/sandelyje/" style="color: #000; text-decoration: underline;">https://kartonoprojektai.lt/sandelyje/</a></p>
+      </div>
+      
+      <!-- Pełnowymiarowe zdjęcia w druku -->
+      <div style="margin-bottom: 25px;">
+        {{ if .Params.hero_image }}
+        <div style="margin-bottom: 20px; text-align: center; page-break-inside: avoid;">
+          <img src="{{ .Params.hero_image }}" alt="{{ .Title }}" style="max-width: 100%; max-height: 400px; object-fit: contain; border: 1px solid #ccc; padding: 5px;">
+        </div>
+        {{ end }}
+        
+        {{ if .Params.gallery_images }}
+          {{ range .Params.gallery_images }}
+          <div style="margin-bottom: 20px; text-align: center; page-break-inside: avoid;">
+            <img src="{{ . }}" alt="Papildoma nuotrauka" style="max-width: 100%; max-height: 400px; object-fit: contain; border: 1px solid #ccc; padding: 5px;">
+          </div>
+          {{ end }}
+        {{ end }}
+      </div>
+    </div>
+
+    <!-- STOPKA DO DRUKU PDF Z WYRAŹNYM QR KODEM DO TEGO OGŁOSZENIA -->
+    <div id="print-footer" style="display: none; margin-top: 30px; border-top: 2px solid #000; padding-top: 15px; page-break-inside: avoid;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <p style="font-size: 0.9rem; font-weight: bold; margin: 0 0 5px 0;">UAB „Kartono projektai" sandėlio pasiūlymas</p>
-          <p style="font-size: 0.8rem; margin: 0; color: #555;">Raudondvario pl. 164, Kaunas | Tel. +370 652 85223 | info@kartonoprojektai.lt</p>
-          <p style="font-size: 0.75rem; margin: 10px 0 0 0; max-width: 400px;">Šis dokumentas yra oficialus sandėlio pasiūlymas. Nuskenavę QR kodą galite peržiūrėti pasiūlymą internete.</p>
+          <p style="font-size: 0.9rem; font-weight: bold; margin: 0 0 4px 0;">UAB „Kartono projektai" sandėlio pasiūlymas</p>
+          <p style="font-size: 0.8rem; margin: 0; color: #333;">Raudondvario pl. 164, Kaunas | Tel. +370 652 85223 | info@kartonoprojektai.lt</p>
+          <p style="font-size: 0.75rem; margin: 6px 0 0 0; max-width: 380px; font-weight: bold;">QR kodas skirtas šiam pasiūlymui internete peržiūrėti.</p>
         </div>
-        <div id="qrcode" style="background: white; padding: 5px; border: 1px solid #ccc;">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ .Permalink }}" alt="QR Kodas" style="width: 100px; height: 100px; display: block;">
+        <div id="qrcode" style="background: white; padding: 4px; border: 1px solid #ccc; text-align: center;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=95x95&data={{ .Permalink }}" alt="QR Kodas" style="width: 95px; height: 95px; display: block; margin: 0 auto;">
+          <span style="font-size: 0.65rem; display: block; margin-top: 2px; font-weight: bold;">Šis skelbimas</span>
         </div>
       </div>
     </div>
@@ -226,9 +249,11 @@ function closeModal() {
 <style>
 @media print {
   .no-print, header, footer, .nav, .mobile-menu-icon { display: none !important; }
-  body { background: white !important; color: black !important; }
+  body { background: white !important; color: black !important; font-size: 11pt !important; }
+  #print-header-section { display: block !important; }
   #print-footer { display: block !important; page-break-inside: avoid; }
-  .post-single { padding: 0 !important; }
+  .post-single { padding: 0 !important; max-width: 100% !important; }
+  h1.post-title { font-size: 1.6rem !important; margin-bottom: 10px !important; text-align: center !important; }
 }
 </style>
 {{ end }}

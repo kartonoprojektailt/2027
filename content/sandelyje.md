@@ -1,11 +1,12 @@
 ---
-title: "Šiuo metu sandėlyje"
-draft: false
+title: "Kartono projektų sandėlio pasiūlymai"
+slug: "sandelyje"
 type: "sandelyje"
 layout: "list"
+draft: false
 ---
 
-## Apie Kartono projektų sandėlio išpardavimą
+# Apie Kartono projektų sandėlį
 
 Šis sandėlis – tai galimybė operatyviai įsigyti kokybiškas kartonines pakuotes, prekybinius stendus bei POSM sprendimus už mažesnę kainą, tiesiai iš <a href="https://maps.app.goo.gl/yBs4vuL5MTLH3qVa9" target="_blank" rel="noopener" style="background: none !important; border: none !important; padding: 0 !important; margin: 0 !important; color: inherit !important; text-decoration: underline !important; font-weight: bold !important; box-shadow: none !important; border-radius: 0 !important; display: inline !important;">gamybinio Kartono projektų sandėlio Kaune</a>.
 
@@ -13,7 +14,7 @@ layout: "list"
 
 1. **Peržiūrėti visą asortimentą** – susipažinti su visais esamais sandėlio pasiūlymais vienoje vietoje.
 2. **Filtruoti pagal kategorijas** – greitai rasti ieškomą prekę pasinaudojant viršutiniu filtrų meniu (*Stovai, Pakuotės, Medžiagos, Paslaugos*).
-3. **Peržiūrėti išsamią informaciją** – paspaudus ant bet kurio pasiūlymo pamatyti detalius aprašymus, nuotraukų galeriją, kainą, likutį ir techninius brėžinius.
+3. **Peržiūrėti išsamią informaciję** – paspaudus ant bet kurio pasiūlymo pamatyti detalius aprašymus, nuotraukų galeriją, kainą, likutį ir techninius brėžinius.
 4. **Teirautis ir užsisakyti** – lengvai susisiekti el. paštu arba telefonu dėl pirkimo, rezervacijos ar papildomos informacijos.
 5. **Atsisiųsti PDF su QR kodu** – kiekvieną pasiūlymą galite išsisaugoti PDF formatu arba atspausdinti su unikaliu QR kodu, kuris leis kolegai ar vadovui iš karto atidaryti šį pasiūlymą telefone.
 

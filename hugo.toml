@@ -6,6 +6,7 @@ theme = "PaperMod"
 [permalinks]
   page = "/:slug/"
   section = "/:slug/"
+  sandelyje = "/:slug/"
 
 # ==========================================
 # WŁĄCZENIE HTML W MARKDOWN (GOLDMARK)

@@ -10,17 +10,18 @@
 
 <div style="margin-top: 3.5rem; padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--secondary-bg); box-sizing: border-box; width: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
   <h2 style="margin: 0 0 0.5rem 0; font-size: 1.35rem; line-height: 1.4;">
-    <a href="/sandelyje/" style="color: var(--primary); text-decoration: none;">Kartono projektų sandėlio pasiūlymi (atnaujinta)</a>
+    <a href="/sandelyje/" style="color: var(--primary); text-decoration: none;">Kartono projektų sandėlio pasiūlymai (atnaujinta)</a>
   </h2>
   <p style="margin: 0 0 1.2rem 0; font-size: 1.125rem; line-height: 1.6; color: var(--secondary);">
     Paruošta produkcija, stendai, POSM, pakuočių ir medžiagų likučiai
   </p>
 
   <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-    {{- /* Pobieramy tylko te strony z sekcji sandelyje, które NIE są sprzedane */ -}}
-    {{- $sandelyje := where (where .Site.RegularPages "Section" "sandelyje") ".Params.is_sold" "!=" true -}}
-    {{- range first 3 $sandelyje -}}
-    <a href="{{ .Permalink }}" class="sandelio-kafeleka" style="display: block; padding: 0.85rem 1rem; background: var(--theme); border: 1px solid var(--border); border-radius: var(--radius); color: var(--primary); text-decoration: none; font-size: 1.125rem; line-height: 1.5; transition: all 0.2s ease-in-out;">
+    {{- /* Pobieramy wszystkie strony z typem sandelyje, które nie są sprzedane */ -}}
+    {{- $sandelyje := where site.RegularPages ".Params.type" "sandelyje" -}}
+    {{- $active := where $sandelyje ".Params.is_sold" "!=" true -}}
+    {{- range first 3 $active -}}
+    <a href="/{{ .Params.slug }}/" class="sandelio-kafeleka" style="display: block; padding: 0.85rem 1rem; background: var(--theme); border: 1px solid var(--border); border-radius: var(--radius); color: var(--primary); text-decoration: none; font-size: 1.125rem; line-height: 1.5; transition: all 0.2s ease-in-out;">
       <strong>{{ .Title }}</strong> | {{ .Params.category }} | Likutis: {{ .Params.stock }} | {{ .Params.price }} | {{ .Params.offer_code }}
     </a>
     {{- end -}}
