@@ -31,6 +31,14 @@ jobs:
         run: |
           python master_sheet_to_hugo.py
 
+      - name: Commit and push generated markdown files
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add content/
+          git commit -m "Auto-update content from Google Sheets [skip ci]" || exit 0
+          git push
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
