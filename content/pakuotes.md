@@ -6,7 +6,7 @@ description: "Gaminame kartonines d\u0117\u017ees, transportavimo tar\u0105 ir n
 ---
 Kartoniniai pakuočių sprendimai, gofrokartono dėžės ir pramoninė tara
 
-UAB „Kartono projektai“ projektuoja ir gaminiai patikimus pakuotės bei logistikos sprendimus verslui. Užtikriname optimalų apsaugos lygis, tikslius inžinerinius parametrus (BCT / ECT gniuždimo rodiklius) ir nepriekaištingą reprezentacinę išvaizdą.
+UAB „Kartono projektai“ projektuoja ir gamina patikimus pakuotės bei logistikos sprendimus verslui. Užtikriname optimalų apsaugos lygį, tikslius inžinerinius parametrus (BCT / ECT gniuždimo rodiklius) ir nepriekaištingą reprezentacinę išvaizdą.
 
 ## Techninės specifikacijos
 
