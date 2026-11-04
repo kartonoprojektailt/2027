@@ -20,6 +20,7 @@ SCOPES = [
 ]
 
 print("Jungiamasi prie Google Sheets (Master_turinys_kartonoprojektai) per API...")
+df = None
 try:
     credentials_json_str = os.environ.get("GCP_CREDENTIALS_JSON") or os.environ.get("GCP_CREDENTIALS")
     
@@ -67,6 +68,10 @@ except Exception as e:
     print(f"Klaida jungiantis prie Google Sheets: {e}")
     exit(1)
 
+if df is None or df.empty:
+    print("[KLAIDA] DataFrame `df` jest pusty lub nie został zainicjalizowany.")
+    exit(1)
+
 images_dir = os.path.join("static", "images")
 content_dir = "content"
 
@@ -90,7 +95,7 @@ def clean_slug(val):
 def extract_gdrive_id(url):
     if not isinstance(url, str) or not url.strip():
         return ""
-    url = url.strip()
+    url = url.strip().split()[0]
     if "tinkami norodu" in url.lower() or "grafika tik" in url.lower() or "cia tik" in url.lower():
         return ""
     url = url.replace("/d//", "/")
@@ -131,7 +136,7 @@ def optimize_and_save_image(filepath):
 def download_and_cache_image(url, filename_prefix):
     if not is_valid_val(url):
         return ""
-    url = str(url).strip()
+    url = str(url).strip().split()[0]
     if url.startswith("/images/"):
         return url
     if "." in url and not url.startswith("http") and "/" not in url and "\\" not in url:
@@ -167,7 +172,7 @@ def download_and_cache_image(url, filename_prefix):
         except Exception:
             continue
             
-    return public_url_path if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000 else url
+    return public_url_path if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000 else ""
 
 def process_gallery_concurrently(urls, slug):
     gallery_images = []
@@ -187,27 +192,82 @@ def process_gallery_concurrently(urls, slug):
 
 print("Generuojami Markdown puslapiai ir prekės iš Google Sheets...")
 
-valid_slugs = {"sandelyje"}
+valid_slugs = {"sandelyje", "_index"}
 
 for _, row in df.iterrows():
-    raw_slug = row.get('slug', '')
-    slug = clean_slug(raw_slug)
+    raw_slug = str(row.get('slug', '')).strip()
+    title_raw = str(row.get('title', '')).strip()
     
+    # Strona główna (_index) - sprawdzamy surowy slug lub tytuł strony głównej
+    if raw_slug in ['_index', 'index', '/'] or "kartoninės pakuotės" in title_raw.lower():
+        title = title_raw if is_valid_val(title_raw) else "Pradžia"
+        
+        hero_raw = row.get('hero_image', '')
+        hero_image = download_and_cache_image(hero_raw, "index-hero") if is_valid_val(hero_raw) else ""
+        
+        print(f"[DEBUG] Strona główna (_index). Odczytany hero_raw: '{hero_raw}' -> Wynik hero_image: '{hero_image}'")
+
+        fm = [
+            "---",
+            f"title: {json.dumps(title)}",
+            f"slug: {json.dumps('_index')}",
+            'type: "page"',
+        ]
+        
+        meta_desc = row.get('meta_description ', '') or row.get('meta_description', '')
+        if is_valid_val(meta_desc):
+            fm.append(f"description: {json.dumps(str(meta_desc).strip())}")
+            
+        if hero_image:
+            fm.append(f"hero_image: {json.dumps(hero_image)}")
+            fm.append(f"image: {json.dumps(hero_image)}")
+            fm.append(f"featured_image: {json.dumps(hero_image)}")
+            fm.append("cover:")
+            fm.append(f"  image: {json.dumps(hero_image)}")
+            
+        gallery_images = []
+        gallery_raw = row.get('gallery_images', '')
+        if is_valid_val(gallery_raw):
+            urls = [u.strip() for u in str(gallery_raw).replace('\n', ',').split(',') if is_valid_val(u.strip())]
+            gallery_images = process_gallery_concurrently(urls, "index")
+            
+        if gallery_images:
+            fm.append("gallery_images:")
+            for g in gallery_images:
+                fm.append(f"  - {json.dumps(g)}")
+                
+        search_cloud_val = row.get('search_cloud', '')
+        if is_valid_val(search_cloud_val):
+            clouds = [c.strip() for c in str(search_cloud_val).replace('\n', ',').split(',') if is_valid_val(c.strip())]
+            if clouds:
+                fm.append("search_cloud:")
+                for sc in clouds:
+                    fm.append(f"  - {json.dumps(sc)}")
+
+        fm.append("---\n")
+        
+        content_body = str(row.get('content_body', '')).strip()
+        if not is_valid_val(content_body):
+            content_body = str(row.get('content', '')).strip()
+            
+        filepath = os.path.join(content_dir, "_index.md")
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write("\n".join(fm))
+            if is_valid_val(content_body):
+                f.write(content_body + "\n")
+        continue
+
+    slug = clean_slug(raw_slug)
     if not slug or slug == 'unikalus-puslapio-adresas':
         continue
         
-    title_raw = str(row.get('title', '')).strip()
     title = title_raw if is_valid_val(title_raw) else slug
     
-    # Ignoruojame instrukcinę arba nepageidaujamą eilutę
     if "sandėlio pasiūlymai" in title.lower() and slug != "sandelyje":
         continue
 
     source_tab = str(row.get('source_tab', 'puslapiai')).strip()
     
-    # ----------------------------------------------------
-    # 1. SPECIFINIS PUSLAPIS: /sandelyje/ (PAGRINDINIS KATALOGAS)
-    # ----------------------------------------------------
     if slug == "sandelyje":
         valid_slugs.add("sandelyje")
         hero_raw = row.get('hero_image', '')
@@ -228,6 +288,7 @@ for _, row in df.iterrows():
             
         if hero_image:
             fm.append(f"hero_image: {json.dumps(hero_image)}")
+            fm.append(f"image: {json.dumps(hero_image)}")
             
         fm.append("---\n")
         
@@ -242,9 +303,6 @@ for _, row in df.iterrows():
                 f.write(content_body + "\n")
         continue
 
-    # ----------------------------------------------------
-    # 2. VISI KITI SKELBIMAI IR PUSLAPIAI
-    # ----------------------------------------------------
     valid_slugs.add(slug)
 
     hero_raw = row.get('hero_image', '')
@@ -323,6 +381,7 @@ for _, row in df.iterrows():
 
     if hero_image:
         fm.append(f"hero_image: {json.dumps(hero_image)}")
+        fm.append(f"image: {json.dumps(hero_image)}")
         
     if gallery_images:
         fm.append("gallery_images:")

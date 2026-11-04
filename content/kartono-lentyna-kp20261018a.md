@@ -20,6 +20,7 @@ assembled_specs: "120x60x180 cm | 4.2 kg"
 flatpack_specs: "120x80x15 cm | 22 kg"
 units_per_pack: "1"
 hero_image: "/images/kartono-lentyna-kp20261018a.jpg"
+image: "/images/kartono-lentyna-kp20261018a.jpg"
 gallery_images:
   - "/images/kartono-lentyna-kp20261018a-g1.jpg"
   - "/images/kartono-lentyna-kp20261018a-g2.jpg"

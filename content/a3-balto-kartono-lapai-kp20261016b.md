@@ -20,6 +20,7 @@ assembled_specs: "120x60x180 cm | 4.2 kg"
 flatpack_specs: "120x80x15 cm | 22 kg"
 units_per_pack: "100"
 hero_image: "/images/a3-balto-kartono-lapai-kp20261016b.jpg"
+image: "/images/a3-balto-kartono-lapai-kp20261016b.jpg"
 gallery_images:
   - "/images/a3-balto-kartono-lapai-kp20261016b-g1.jpg"
 search_cloud:

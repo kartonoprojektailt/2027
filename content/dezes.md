@@ -4,6 +4,7 @@ slug: "dezes"
 type: "page"
 description: "Sustiprint\u0173 gofruoto kartono d\u0117\u017ei\u0173 gamyba pakavimui, logistikai ir sand\u0117liavimui. Klapin\u0117s d\u0117\u017e\u0117s, fasoniniai modeliai, standartiniai ir individual\u016bs matmenys."
 hero_image: "/images/dezes.jpg"
+image: "/images/dezes.jpg"
 ---
 Kartoninės dėžės pakavimui, logistikai ir sandėliavimui
 

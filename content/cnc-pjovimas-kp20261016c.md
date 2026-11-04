@@ -17,6 +17,7 @@ likutis: "0"
 is_sold: true
 sale_reason: "Gamybos perteklius"
 hero_image: "/images/cnc-pjovimas-kp20261016c.jpg"
+image: "/images/cnc-pjovimas-kp20261016c.jpg"
 gallery_images:
   - "/images/cnc-pjovimas-kp20261016c-g1.jpg"
   - "/images/cnc-pjovimas-kp20261016c-g2.jpg"

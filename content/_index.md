@@ -2,7 +2,11 @@
 title: "Kartonin\u0117s pakuot\u0117s, POSM stendai ir CNC apdirbimas verslui"
 slug: "_index"
 type: "page"
-hero_image: "/images/_index.jpg"
+hero_image: "/images/index-hero.jpg"
+image: "/images/index-hero.jpg"
+featured_image: "/images/index-hero.jpg"
+cover:
+  image: "/images/index-hero.jpg"
 ---
 # Tvarūs pakuočių, reklamos stendų ir konstrukcijų inžineriniai sprendimai
 

@@ -4,6 +4,7 @@ slug: "dovanu-dezutes"
 type: "page"
 description: "Eleganti\u0161k\u0173 dovan\u0173 d\u0117\u017eu\u010di\u0173 gamyba verslui: deko d\u0117\u017e\u0117s, dviej\u0173 dali\u0173 d\u0117\u017eut\u0117s su dangteliu, kal\u0117din\u0117s pakuot\u0117s, d\u0117\u017eut\u0117s su spauda, folijavimu bei individualiomis lo\u017eet\u0117mis nuo 2014 m."
 hero_image: "/images/dovanu-dezutes.jpg"
+image: "/images/dovanu-dezutes.jpg"
 gallery_images:
   - "/images/dovanu-dezutes-g1.jpg"
   - "/images/dovanu-dezutes-g2.jpg"

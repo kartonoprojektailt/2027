@@ -4,6 +4,7 @@ slug: "projektavimo-paslaugos"
 type: "page"
 description: "Profesionalus kartonini\u0173 pakuo\u010di\u0173, POSM stend\u0173 ir konstrukcij\u0173 CAD projektavimas. Prototip\u0173 i\u0161pjovimas nuo 1 vnt., 3D vizualizacija ir in\u017eineriniai sprendimai."
 hero_image: "/images/projektavimo-paslaugos.jpg"
+image: "/images/projektavimo-paslaugos.jpg"
 gallery_images:
   - "/images/projektavimo-paslaugos-g1.jpg"
   - "/images/projektavimo-paslaugos-g2.jpg"

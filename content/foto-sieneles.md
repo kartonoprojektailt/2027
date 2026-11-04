@@ -4,6 +4,7 @@ slug: "foto-sieneles"
 type: "page"
 description: "Mobili\u0173 foto sieneli\u0173, pres-sieneli\u0173 ir modulini\u0173 reklamini\u0173 sieneli\u0173 gamyba renginiams, parodoms bei \u0161vent\u0117ms i\u0161 tvaraus kartono. Tiesiogin\u0117 spauda."
 hero_image: "/images/foto-sieneles.jpg"
+image: "/images/foto-sieneles.jpg"
 gallery_images:
   - "/images/foto-sieneles-g1.jpg"
   - "/images/foto-sieneles-g2.jpg"

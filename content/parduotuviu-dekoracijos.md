@@ -4,6 +4,7 @@ slug: "parduotuviu-dekoracijos"
 type: "page"
 description: "Profesionalios vitrin\u0173 dekoracijos, kartonin\u0117s skulpt\u016bros, paletin\u0117s dekoracijos, apsaugos varteli\u0173 apvalkalai ir ekspoziciniai podestai i\u0161 kartono. Ekologi\u0161ki POSM sprendimai."
 hero_image: "/images/parduotuviu-dekoracijos.jpg"
+image: "/images/parduotuviu-dekoracijos.jpg"
 gallery_images:
   - "/images/parduotuviu-dekoracijos-g1.jpg"
   - "/images/parduotuviu-dekoracijos-g2.jpg"

@@ -4,6 +4,7 @@ slug: "individualios-nestandartines-pakuotes"
 type: "page"
 description: "Unikali\u0173 konstrukcij\u0173, nestandartini\u0173 matmen\u0173 ir sud\u0117ting\u0173 kartonini\u0173 pakuo\u010di\u0173 gamyba. CAD projektavimas, prototipavimas nuo 1 vnt., lo\u017eet\u0117s ir spauda."
 hero_image: "/images/individualios-nestandartines-pakuotes.jpg"
+image: "/images/individualios-nestandartines-pakuotes.jpg"
 gallery_images:
   - "/images/individualios-nestandartines-pakuotes-g1.jpg"
   - "/images/individualios-nestandartines-pakuotes-g2.jpg"

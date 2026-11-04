@@ -19,6 +19,7 @@ sale_reason: "Spaudos brokas"
 assembled_specs: "120x60x180 cm | 4.2 kg"
 flatpack_specs: "120x80x15 cm | 22 kg"
 hero_image: "/images/ofisinis-krokodilas-kp20268939a.jpg"
+image: "/images/ofisinis-krokodilas-kp20268939a.jpg"
 gallery_images:
   - "/images/ofisinis-krokodilas-kp20268939a-g1.jpg"
 search_cloud:

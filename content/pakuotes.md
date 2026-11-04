@@ -4,6 +4,7 @@ slug: "pakuotes"
 type: "page"
 description: "Gaminame kartonines d\u0117\u017ees, transportavimo tar\u0105 ir nestandartinius pakuot\u0117s sprendimus verslui. Individual\u016bs i\u0161matavimai, ma\u017ei ir dideli tira\u017eai, greitas pristatymas visoje Lietuvoje."
 hero_image: "/images/pakuotes.jpg"
+image: "/images/pakuotes.jpg"
 gallery_images:
   - "/images/pakuotes-g1.jpg"
   - "/images/pakuotes-g2.jpg"
