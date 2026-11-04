@@ -14,11 +14,11 @@ kaina: "150 EUR"
 unit: "vnt."
 stock: "5"
 likutis: "5"
+is_sold: false
 sale_reason: "Spaudos brokas"
 assembled_specs: "120x60x180 cm | 4.2 kg"
 flatpack_specs: "120x80x15 cm | 22 kg"
 units_per_pack: "10"
-is_sold: false
 hero_image: "/images/foto-sienele-nikola-tesla-kp20261016a.jpg"
 gallery_images:
   - "/images/foto-sienele-nikola-tesla-kp20261016a-g1.jpg"

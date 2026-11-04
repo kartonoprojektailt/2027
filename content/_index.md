@@ -1,22 +1,12 @@
 ---
-title: "Kartoninės pakuotės, POSM stendai ir CNC apdirbimas verslui"
-hero_image: "https://lh3.googleusercontent.com/d/1JPAbvFa5DJZ22LFGNnxQnI6i3rFyRRgh=w1000"
-offer_code: "nan"
-sale_reason: "nan"
-price: "nan"
-unit: "nan"
-stock: "nan"
-is_sold: false
-availability_schema: "https://schema.org/InStock"
-assembled_specs: "nan"
-flatpack_specs: "nan"
-units_per_pack: "nan"
-draft: false
+title: "Kartonin\u0117s pakuot\u0117s, POSM stendai ir CNC apdirbimas verslui"
+slug: "_index"
+type: "page"
+hero_image: "/images/_index.jpg"
 ---
-
 # Tvarūs pakuočių, reklamos stendų ir konstrukcijų inžineriniai sprendimai
 
-UAB „Kartono projektai“ projektuje ir gamina individualias pakuotes iš gofruoto kartono, prekybinius POSM stendus, foto sieneles bei akrilo gaminius verslui. Valdome pilną gamybos ciklą – nuo inžinerinio CAD projektavimo bei pavyzdžių išpjovimo iki didelio formato skaitmeninės UV spaudos ir serijinio kirtimo. Įmonė įsikūrusi Kaune, užtikrinant operatyvų pristatymą visoje Lietuvoje bei ES.
+UAB „Kartono projektai“ projektuoja ir gamina individualias pakuotes iš gofruoto kartono, prekybinius POSM stendus, foto sieneles bei akrilo gaminius verslui. Valdome pilną gamybos ciklą – nuo inžinerinio CAD projektavimo bei pavyzdžių išpjovimo iki didelio formato skaitmeninės UV spaudos ir serijinio kirtimo. Įmonė įsikūrusi Kaune, užtikrinant operatyvų pristatymą visoje Lietuvoje bei ES.
 
 ---
 

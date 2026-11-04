@@ -344,3 +344,20 @@ figure.highlight code {
         transform: none;
     }
 }
+
+/* ================================================= */
+/* BEZPIECZNY ODSTĘP LIST NA TELEFONACH               */
+/* ================================================= */
+@media screen and (max-width: 768px) {
+  .post-content ul, 
+  .post-content ol, 
+  .content ul, 
+  .content ol,
+  article ul,
+  article ol {
+    padding-left: 20px !important;  /* Wcięcie dla kropek/numerów */
+    margin-left: 8px !important;    /* Odstęp od lewej krawędzi ekranu */
+    margin-right: 12px !important;  /* Odstęp z prawej strony */
+    max-width: calc(100% - 20px) !important;
+  }
+}

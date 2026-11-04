@@ -2,9 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/a3-balto-kartono-lapai-kp20261016b/</loc>
-  </url><url>
     <loc>http://localhost:1313/akrilo-gaminiai/</loc>
+  </url><url>
+    <loc>http://localhost:1313/a3-balto-kartono-lapai-kp20261016b/</loc>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
   </url><url>
@@ -40,8 +40,6 @@
   </url><url>
     <loc>http://localhost:1313/kartono-lentyna-kp20261018a/</loc>
   </url><url>
-    <loc>http://localhost:1313/sandelyje/</loc>
-  </url><url>
     <loc>http://localhost:1313/kontaktai/</loc>
   </url><url>
     <loc>http://localhost:1313/ofisinis-krokodilas-kp20268939a/</loc>
@@ -54,9 +52,13 @@
   </url><url>
     <loc>http://localhost:1313/parduotuviu-dekoracijos/</loc>
   </url><url>
+    <loc>http://localhost:1313/prekystalio-displejai-stoveliai/</loc>
+  </url><url>
     <loc>http://localhost:1313/reklaminiai-stendai-stovai/</loc>
   </url><url>
     <loc>http://localhost:1313/rekvizitai/</loc>
+  </url><url>
+    <loc>http://localhost:1313/sandelyje/</loc>
   </url><url>
     <loc>http://localhost:1313/stendai-stovai/</loc>
   </url><url>

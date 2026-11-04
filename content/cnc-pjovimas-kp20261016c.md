@@ -14,8 +14,8 @@ kaina: "100 EUR"
 unit: "val."
 stock: "0"
 likutis: "0"
-sale_reason: "Gamybos perteklius"
 is_sold: true
+sale_reason: "Gamybos perteklius"
 hero_image: "/images/cnc-pjovimas-kp20261016c.jpg"
 gallery_images:
   - "/images/cnc-pjovimas-kp20261016c-g1.jpg"

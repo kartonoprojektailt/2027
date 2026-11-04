@@ -1,5 +1,5 @@
 ---
-title: "Akrilo gaminiai ir balsad\u0117\u017e\u0117s"
+title: "/prekystalio-displejai-stoveliai/"
 slug: "akrilo-gaminiai"
 type: "page"
 description: "Profesionali balsavimo, auk\u0173, loterij\u0173, pasi\u016blym\u0173 d\u0117\u017ei\u0173 renginiams, rinkimams bei akcijoms gamyba i\u0161 organinio stiklo (akrilo) Plexiglas\u00ae. Individual\u016bs matmenys, spauda, lipdukai ir spynos."

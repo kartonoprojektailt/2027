@@ -14,10 +14,10 @@ kaina: "180"
 unit: "vnt."
 stock: "2"
 likutis: "2"
+is_sold: false
 sale_reason: "Spaudos brokas"
 assembled_specs: "120x60x180 cm | 4.2 kg"
 flatpack_specs: "120x80x15 cm | 22 kg"
-is_sold: false
 hero_image: "/images/ofisinis-krokodilas-kp20268939a.jpg"
 gallery_images:
   - "/images/ofisinis-krokodilas-kp20268939a-g1.jpg"

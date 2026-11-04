@@ -1,5 +1,5 @@
 ---
-title: "Parduotuvi\u0173 ir prekybos viet\u0173 dekoracijos (POSM)"
+title: "parduotuviu-dekoracijos"
 slug: "parduotuviu-dekoracijos"
 type: "page"
 description: "Profesionalios vitrin\u0173 dekoracijos, kartonin\u0117s skulpt\u016bros, paletin\u0117s dekoracijos, apsaugos varteli\u0173 apvalkalai ir ekspoziciniai podestai i\u0161 kartono. Ekologi\u0161ki POSM sprendimai."

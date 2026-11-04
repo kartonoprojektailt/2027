@@ -4,6 +4,8 @@ import tempfile
 import shutil
 import urllib.request
 import re
+import unicodedata
+from concurrent.futures import ThreadPoolExecutor
 import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
@@ -71,6 +73,20 @@ content_dir = "content"
 os.makedirs(images_dir, exist_ok=True)
 os.makedirs(content_dir, exist_ok=True)
 
+def is_valid_val(val):
+    if val is None:
+        return False
+    s = str(val).strip().lower()
+    return bool(s and s != 'nan' and s != 'none' and s != 'null' and s != 'undefined')
+
+def clean_slug(val):
+    if not is_valid_val(val):
+        return ""
+    slug = str(val).strip().lower()
+    slug = ''.join(c for c in unicodedata.normalize('NFD', slug) if unicodedata.category(c) != 'Mn')
+    slug = re.sub(r'[^a-z0-9_-]', '-', slug)
+    return re.sub(r'-+', '-', slug).strip('-')
+
 def extract_gdrive_id(url):
     if not isinstance(url, str) or not url.strip():
         return ""
@@ -113,9 +129,9 @@ def optimize_and_save_image(filepath):
         print(f"Błąd optymalizacji pliku {filepath}: {e}")
 
 def download_and_cache_image(url, filename_prefix):
-    if not isinstance(url, str) or not url.strip() or str(url).lower() == "nan":
+    if not is_valid_val(url):
         return ""
-    url = url.strip()
+    url = str(url).strip()
     if url.startswith("/images/"):
         return url
     if "." in url and not url.startswith("http") and "/" not in url and "\\" not in url:
@@ -123,4 +139,229 @@ def download_and_cache_image(url, filename_prefix):
         
     file_id = extract_gdrive_id(url)
     local_filename = f"{filename_prefix}.jpg"
-    local
+    local_filepath = os.path.join(images_dir, local_filename)
+    public_url_path = f"/images/{local_filename}"
+
+    if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000:
+        return public_url_path
+
+    download_urls = []
+    if file_id:
+        download_urls = [
+            f"https://drive.google.com/uc?export=download&id={file_id}",
+            f"https://lh3.googleusercontent.com/d/{file_id}=s1600",
+            f"https://drive.google.com/thumbnail?id={file_id}&sz=w1600"
+        ]
+    elif url.startswith("http"):
+        download_urls = [url]
+
+    for d_url in download_urls:
+        try:
+            req = urllib.request.Request(d_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+            with urllib.request.urlopen(req, timeout=15) as response, open(local_filepath, 'wb') as out_file:
+                shutil.copyfileobj(response, out_file)
+            
+            if os.path.getsize(local_filepath) > 1000:
+                optimize_and_save_image(local_filepath)
+                return public_url_path
+        except Exception:
+            continue
+            
+    return public_url_path if os.path.exists(local_filepath) and os.path.getsize(local_filepath) > 1000 else url
+
+def process_gallery_concurrently(urls, slug):
+    gallery_images = []
+    if not urls:
+        return gallery_images
+        
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = [
+            executor.submit(download_and_cache_image, u, f"{slug}-g{idx}") 
+            for idx, u in enumerate(urls, start=1)
+        ]
+        for future in futures:
+            res = future.result()
+            if res:
+                gallery_images.append(res)
+    return gallery_images
+
+print("Generuojami Markdown puslapiai ir prekės iš Google Sheets...")
+
+valid_slugs = {"sandelyje"}
+
+for _, row in df.iterrows():
+    raw_slug = row.get('slug', '')
+    slug = clean_slug(raw_slug)
+    
+    if not slug or slug == 'unikalus-puslapio-adresas':
+        continue
+        
+    title_raw = str(row.get('title', '')).strip()
+    title = title_raw if is_valid_val(title_raw) else slug
+    
+    # Ignoruojame instrukcinę arba nepageidaujamą eilutę
+    if "sandėlio pasiūlymai" in title.lower() and slug != "sandelyje":
+        continue
+
+    source_tab = str(row.get('source_tab', 'puslapiai')).strip()
+    
+    # ----------------------------------------------------
+    # 1. SPECIFINIS PUSLAPIS: /sandelyje/ (PAGRINDINIS KATALOGAS)
+    # ----------------------------------------------------
+    if slug == "sandelyje":
+        valid_slugs.add("sandelyje")
+        hero_raw = row.get('hero_image', '')
+        hero_image = download_and_cache_image(hero_raw, slug) if is_valid_val(hero_raw) else ""
+        
+        fm = [
+            "---",
+            f"title: {json.dumps(title)}",
+            f"slug: {json.dumps(slug)}",
+            'type: "sandelyje"',
+            'layout: "list"',
+            f"url: {json.dumps('/sandelyje/')}"
+        ]
+        
+        meta_desc = row.get('meta_description ', '') or row.get('meta_description', '')
+        if is_valid_val(meta_desc):
+            fm.append(f"description: {json.dumps(str(meta_desc).strip())}")
+            
+        if hero_image:
+            fm.append(f"hero_image: {json.dumps(hero_image)}")
+            
+        fm.append("---\n")
+        
+        content_body = str(row.get('content_body', '')).strip()
+        if not is_valid_val(content_body):
+            content_body = str(row.get('content', '')).strip()
+            
+        filepath = os.path.join(content_dir, "sandelyje.md")
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write("\n".join(fm))
+            if is_valid_val(content_body):
+                f.write(content_body + "\n")
+        continue
+
+    # ----------------------------------------------------
+    # 2. VISI KITI SKELBIMAI IR PUSLAPIAI
+    # ----------------------------------------------------
+    valid_slugs.add(slug)
+
+    hero_raw = row.get('hero_image', '')
+    hero_image = download_and_cache_image(hero_raw, slug) if is_valid_val(hero_raw) else ""
+    
+    gallery_images = []
+    gallery_raw = row.get('gallery_images', '')
+    if is_valid_val(gallery_raw):
+        urls = [u.strip() for u in str(gallery_raw).replace('\n', ',').split(',') if is_valid_val(u.strip())]
+        gallery_images = process_gallery_concurrently(urls, slug)
+
+    fm = [
+        "---",
+        f"title: {json.dumps(title)}",
+        f"slug: {json.dumps(slug)}",
+        f"type: {json.dumps('sandelyje' if source_tab == 'sandelyje' else 'page')}",
+    ]
+    
+    meta_desc = row.get('meta_description ', '') or row.get('meta_description', '')
+    if is_valid_val(meta_desc):
+        fm.append(f"description: {json.dumps(str(meta_desc).strip())}")
+        
+    if source_tab == 'sandelyje':
+        fm.append(f"url: {json.dumps('/' + slug + '/')}")
+        fm.append('layout: "single"')
+        
+        code_val = row.get('code', '')
+        if is_valid_val(code_val):
+            code_str = str(code_val).strip()
+            fm.append(f"code: {json.dumps(code_str)}")
+            fm.append(f"offer_code: {json.dumps(code_str)}")
+            fm.append(f"sku: {json.dumps(code_str)}")
+            
+        category_val = row.get('category', '')
+        if is_valid_val(category_val):
+            fm.append(f"category: {json.dumps(str(category_val).strip())}")
+            
+        price_val = row.get('price', '')
+        if is_valid_val(price_val):
+            fm.append(f"price: {json.dumps(str(price_val).strip())}")
+            fm.append(f"kaina: {json.dumps(str(price_val).strip())}")
+            
+        unit_val = row.get('unit', '')
+        if is_valid_val(unit_val):
+            fm.append(f"unit: {json.dumps(str(unit_val).strip())}")
+            
+        stock_val = row.get('stock', '')
+        if is_valid_val(stock_val):
+            stock_str = str(stock_val).strip()
+            fm.append(f"stock: {json.dumps(stock_str)}")
+            fm.append(f"likutis: {json.dumps(stock_str)}")
+            
+            stock_clean_digits = re.sub(r'[^0-9]', '', stock_str)
+            if stock_clean_digits == '0' or 'parduota' in stock_str.lower():
+                fm.append("is_sold: true")
+            else:
+                fm.append("is_sold: false")
+        else:
+            fm.append("is_sold: false")
+            
+        sale_reason_val = row.get('sale_reason', '')
+        if is_valid_val(sale_reason_val):
+            fm.append(f"sale_reason: {json.dumps(str(sale_reason_val).strip())}")
+
+        excluded_cols = {
+            'slug', 'title', 'code', 'offer_code', 'sku', 'category', 
+            'price', 'kaina', 'unit', 'stock', 'likutis', 'sale_reason', 
+            'hero_image', 'gallery_images', 'search_cloud', 'content_body', 
+            'content', 'source_tab', 'meta_description', 'meta_description '
+        }
+        
+        for col, val in row.items():
+            col_clean = str(col).strip()
+            if col_clean not in excluded_cols and is_valid_val(val):
+                fm.append(f"{col_clean}: {json.dumps(str(val).strip())}")
+
+    if hero_image:
+        fm.append(f"hero_image: {json.dumps(hero_image)}")
+        
+    if gallery_images:
+        fm.append("gallery_images:")
+        for g in gallery_images:
+            fm.append(f"  - {json.dumps(g)}")
+            
+    search_cloud_val = row.get('search_cloud', '')
+    if is_valid_val(search_cloud_val):
+        clouds = [c.strip() for c in str(search_cloud_val).replace('\n', ',').split(',') if is_valid_val(c.strip())]
+        if clouds:
+            fm.append("search_cloud:")
+            for sc in clouds:
+                fm.append(f"  - {json.dumps(sc)}")
+
+    fm.append("---\n")
+    
+    content_body = str(row.get('content_body', '')).strip()
+    if not is_valid_val(content_body):
+        content_body = str(row.get('content', '')).strip()
+    
+    filename = f"{slug}.md"
+    filepath = os.path.join(content_dir, filename)
+    
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write("\n".join(fm))
+        if is_valid_val(content_body):
+            f.write(content_body + "\n")
+
+# Senų failų valymas
+for filename in os.listdir(content_dir):
+    if filename.endswith(".md") and filename not in ["_index.md"]:
+        file_slug = filename[:-3]
+        if file_slug not in valid_slugs:
+            old_path = os.path.join(content_dir, filename)
+            os.remove(old_path)
+            print(f"Pašalintas pasenęs failas: {filename}")
+
+old_sandelyje_dir = os.path.join(content_dir, "sandelyje")
+if os.path.exists(old_sandelyje_dir):
+    shutil.rmtree(old_sandelyje_dir)
+
+print("Generavimas sėkmingai baigtas!")
