@@ -8,6 +8,7 @@ gallery_images:
   - "/images/projektavimo-paslaugos-g1.jpg"
   - "/images/projektavimo-paslaugos-g2.jpg"
   - "/images/projektavimo-paslaugos-g3.jpg"
+  - "/images/projektavimo-paslaugos-g4.jpg"
 ---
 Pakuočių ir POSM konstrukcijų CAD projektavimo paslaugos
 
