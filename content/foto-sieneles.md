@@ -7,12 +7,16 @@ hero_image: "/images/foto-sieneles.jpg"
 gallery_images:
   - "/images/foto-sieneles-g1.jpg"
   - "/images/foto-sieneles-g2.jpg"
+  - "/images/foto-sieneles-g3.jpg"
+  - "/images/foto-sieneles-g4.jpg"
+  - "/images/foto-sieneles-g5.jpg"
+  - "/images/foto-sieneles-g6.jpg"
+  - "/images/foto-sieneles-g7.jpg"
+  - "/images/foto-sieneles-g8.jpg"
+  - "/images/foto-sieneles-g9.jpg"
 ---
-Renginių foto sienelės ir mobilios reklaminės konstrukcijos
+Renginių foto sienelės ir mobilios reklaminės konstrukcijos. Foto sienelės – praktiškas sprendimas renginiams ir šventėms. 
 
-Foto sienelės – praktiškas sprendimas renginiams ir šventėms. 
-
-[GALLERY]
 
 ## Techninės specifikacijos
 

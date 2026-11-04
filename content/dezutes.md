@@ -9,6 +9,7 @@ gallery_images:
   - "/images/dezutes-g2.jpg"
   - "/images/dezutes-g3.jpg"
   - "/images/dezutes-g4.jpg"
+  - "/images/dezutes-g5.jpg"
 ---
 Kartoninių dėžučių gamyba ir pakuotės sprendimai 
 

@@ -14,6 +14,7 @@ gallery_images:
   - "/images/dovanu-dezutes-g7.jpg"
   - "/images/dovanu-dezutes-g8.jpg"
   - "/images/dovanu-dezutes-g9.jpg"
+  - "/images/dovanu-dezutes-g10.jpg"
 ---
 Visų tipų dovanų dėžučių, dekoratyvinių deko dėžių ir reprezentacinės taros verslui pasirinkimas
 
