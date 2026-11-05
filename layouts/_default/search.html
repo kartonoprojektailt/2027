@@ -17,7 +17,7 @@
     <div id="searchbox" class="searchbox" style="width: 100%; max-width: 700px; position: relative;">
         <div style="display: flex; gap: 10px; align-items: center; background: var(--entry); border: 2px solid var(--border); border-radius: 12px; padding: 6px 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); transition: border-color 0.2s;">
             <svg style="width: 22px; height: 22px; opacity: 0.5; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <input id="searchInput" placeholder="Ieškoti prekės, sprendimo ar raktažodžio..." aria-label="search" type="search" autocomplete="off" autofocus maxlength="128" style="flex: 1; background: transparent; border: none; color: var(--primary); padding: 10px; font-size: 1.1rem; outline: none;">
+            <input id="searchInput" placeholder="Ieškoti" aria-label="search" type="search" autocomplete="off" autofocus maxlength="128" style="flex: 1; background: transparent; border: none; color: var(--primary); padding: 10px; font-size: 1.1rem; outline: none;">
             <button id="clearSearch" style="background: transparent; border: none; color: var(--secondary); cursor: pointer; font-size: 1.2rem; padding: 4px 8px; display: none;" title="Išvalyti">&times;</button>
         </div>
         <ul id="searchResults" class="searchResults" aria-label="search results" style="text-align: left; position: absolute; width: 100%; z-index: 99; background: var(--entry); border-radius: 8px; margin-top: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);"></ul>
@@ -29,10 +29,11 @@
         <button class="search-chip" data-query="reklaminiai stendai iš kartono">reklaminiai stendai</button>
         <button class="search-chip" data-query="dėžučių gamyba">dėžučių gamyba</button>
         <button class="search-chip" data-query="FEFCO standartas">FEFCO standartas</button>
-        <button class="search-chip" data-query="CNC pjovimas">CNC pjovimas</button>
+        <button class="search-chip" data-query="CNC paslaugos">CNC paslaugos</button>
         <button class="search-chip" data-query="dovanų dėžutės">dovanų dėžutės</button>
         <button class="search-chip" data-query="UV spauda">UV spauda</button>
-        <button class="search-chip" data-query="Prototipas nuo 1 vnt.">prototipas</button>
+        <button class="search-chip" data-query="Sandėlyje">Sandėlyje</button>
+
     </div>
 
 </div>
@@ -40,7 +41,7 @@
 <!-- ROZWIJANY KATALOG (SECPOS / SEO / AI ARCHITEKTURA UKRYTA W HARMONIJCE) -->
 <details class="full-matrix-accordion" style="max-width: 900px; margin: 2rem auto 4rem auto; background: var(--entry); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
     <summary style="cursor: pointer; font-weight: 700; color: var(--primary); font-size: 1rem; outline: none; display: flex; justify-content: space-between; align-items: center;">
-        <span>📂 Peržiūrėti visą paslaugų ir inžinerinių raktažodžių katalogą (SEO ir AI struktūra)</span>
+        <span>📂 Visų Kartono projektų paslaugų katalogas</span>
         <span style="font-size: 0.8rem; color: var(--secondary); font-weight: 400;">Spustelėkite, kad išskleistumėte</span>
     </summary>
 
@@ -122,7 +123,7 @@
 
     </div>
 </details>
-
+f
 <!-- STYLE -->
 <style>
     .search-chip {
