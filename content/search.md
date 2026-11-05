@@ -1,5 +1,6 @@
 ---
-title: "Paie\u0161ka"
+title: "Paieška"
 slug: "search"
-type: "page"
+layout: "search"
+description: "Kartono projektai paieška ir inžineriniai raktažodžiai"
 ---

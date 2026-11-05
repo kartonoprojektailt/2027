@@ -194,12 +194,13 @@ print("Generuojami Markdown puslapiai ir prekės iš Google Sheets...")
 
 valid_slugs = {"sandelyje", "_index", "search"}
 
-# --- AUTOMATYCZNE TWORZENIE PLIKU SEARCH.MD ---
+# --- AUTOMATYCZNE TWORZENIE PLIKU SEARCH.MD Z WYMUSZENIEM LAYOUTU SEARCH ---
 search_file_path = os.path.join(content_dir, "search.md")
 search_markdown = """---
 title: "Paieška"
-description: "Kartono projektai paieška"
+slug: "search"
 layout: "search"
+description: "Kartono projektai paieška ir inžineriniai raktažodžiai"
 ---
 """
 with open(search_file_path, 'w', encoding='utf-8') as f:
@@ -216,7 +217,6 @@ for _, row in df.iterrows():
     if not is_valid_val(content_body):
         content_body = str(row.get('content', '')).strip()
     
-    # Automatyczne usuwanie podpisu firmowego na końcu treści, jeśli tam jest
     content_body = re.sub(r'UAB\s+Kartono\s+projektai', '', content_body, flags=re.IGNORECASE).strip()
 
     # Strona główna (_index)
@@ -243,7 +243,6 @@ for _, row in df.iterrows():
             fm.append(f"featured_image: {json.dumps(hero_image)}")
             fm.append("cover:")
             fm.append(f"  image: {json.dumps(hero_image)}")
-            # Celowo pomijamy 'caption', aby PaperMod nie wyświetlał głupich podpisów pod zdjęciem
             
         gallery_images = []
         gallery_raw = row.get('gallery_images', '')
@@ -274,7 +273,8 @@ for _, row in df.iterrows():
         continue
 
     slug = clean_slug(raw_slug)
-    if not slug or slug == 'unikalus-puslapio-adresas':
+    if not slug or slug in ['unikalus-puslapio-adresas', 'search']:
+        # KROK NAPRAWCZY: OMIJAMY 'search', ABY NIE NADPISAĆ SEARCH.MD Z LAYOUT: SEARCH
         continue
         
     title = title_raw if is_valid_val(title_raw) else slug
@@ -402,7 +402,6 @@ for _, row in df.iterrows():
     if hero_image:
         fm.append(f"hero_image: {json.dumps(hero_image)}")
         fm.append(f"image: {json.dumps(hero_image)}")
-        # Celowo pomijamy 'caption', aby PaperMod nie doklejał podpisu pod zdjęciem
         
     if gallery_images:
         fm.append("gallery_images:")

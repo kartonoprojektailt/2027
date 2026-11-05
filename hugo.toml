@@ -43,7 +43,7 @@ theme = "PaperMod"
     icon = ""
     iconHeight = 35
 
-  # Konfiguracja wyszukiwarki Fuse.js dla PaperMod
+  # Konfiguracja wyszukiwarki Fuse.js dla PaperMod (uwzględnia search_cloud)
   [params.fuseOpts]
     isCaseSensitive = false
     shouldSort = true
@@ -54,7 +54,7 @@ theme = "PaperMod"
     keys = ["title", "permalink", "summary", "content", "search_cloud", "offer_code", "category"]
 
 # ==========================================
-# WYTWARZANIE PLIKÓW WYJŚCIOWYCH (WYMAGANE DLA WYSZUKIWARKI)
+# WYTWARZANIE PLIKÓW WYJŚCIOWYCH
 # ==========================================
 [outputs]
   home = ["HTML", "RSS", "JSON", "llms"]
