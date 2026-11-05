@@ -1,63 +1,159 @@
 {{- define "main" }}
 
-<header class="page-header">
-    <h1>
-        {{ .Title }}
-        {{- if .Draft -}}<sup><span class="entry-isdraft">&nbsp;&nbsp;[draft]</span></sup>{{- end -}}
-    </h1>
-    {{- if .Description }}
-    <div class="post-description">
-        {{ .Description }}
-    </div>
-    {{- end }}
-</header>
+<div class="search-hero-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 55vh; text-align: center; padding: 2rem 1rem;">
+    
+    <header class="page-header" style="margin-bottom: 1.5rem;">
+        <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--primary);">
+            {{ .Title }}
+        </h1>
+        {{- if .Description }}
+        <div class="post-description" style="font-size: 1.05rem; color: var(--secondary); max-width: 600px; margin: 0 auto;">
+            {{ .Description }}
+        </div>
+        {{- end }}
+    </header>
 
-<div id="searchbox" class="searchbox">
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <input id="searchInput" placeholder="Ieškoti prekės, sprendimo ar raktažodžio..." aria-label="search" type="search" autocomplete="off" autofocus maxlength="64" style="flex: 1;">
-        <button id="clearSearch" style="background: none; border: 1px solid var(--border, #444); color: var(--primary, #fff); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; display: none;">Išvalyti</button>
+    <!-- CENTRALNE, POTĘŻNE OKNO WYSZUKIWANIA -->
+    <div id="searchbox" class="searchbox" style="width: 100%; max-width: 700px; position: relative;">
+        <div style="display: flex; gap: 10px; align-items: center; background: var(--entry); border: 2px solid var(--border); border-radius: 12px; padding: 6px 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); transition: border-color 0.2s;">
+            <svg style="width: 22px; height: 22px; opacity: 0.5; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input id="searchInput" placeholder="Ieškoti prekės, sprendimo ar raktažodžio..." aria-label="search" type="search" autocomplete="off" autofocus maxlength="128" style="flex: 1; background: transparent; border: none; color: var(--primary); padding: 10px; font-size: 1.1rem; outline: none;">
+            <button id="clearSearch" style="background: transparent; border: none; color: var(--secondary); cursor: pointer; font-size: 1.2rem; padding: 4px 8px; display: none;" title="Išvalyti">&times;</button>
+        </div>
+        <ul id="searchResults" class="searchResults" aria-label="search results" style="text-align: left; position: absolute; width: 100%; z-index: 99; background: var(--entry); border-radius: 8px; margin-top: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);"></ul>
     </div>
-    <ul id="searchResults" class="searchResults" aria-label="search results"></ul>
+
+    <!-- LEKKIE, KOMPAKTOWE SUGESTIE (INSPIRACJE NA START) -->
+    <div class="search-suggestions-bar" style="margin-top: 1.8rem; max-width: 750px; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;">
+        <span style="font-size: 0.85rem; color: var(--secondary); width: 100%; margin-bottom: 0.2rem; font-weight: 500;">Populiarios užklausos ir įkvėpimai:</span>
+        <button class="search-chip" data-query="reklaminiai stendai iš kartono">reklaminiai stendai</button>
+        <button class="search-chip" data-query="dėžučių gamyba">dėžučių gamyba</button>
+        <button class="search-chip" data-query="FEFCO standartas">FEFCO standartas</button>
+        <button class="search-chip" data-query="CNC pjovimas">CNC pjovimas</button>
+        <button class="search-chip" data-query="dovanų dėžutės">dovanų dėžutės</button>
+        <button class="search-chip" data-query="UV spauda">UV spauda</button>
+        <button class="search-chip" data-query="Prototipas nuo 1 vnt.">prototipas</button>
+    </div>
+
 </div>
 
-<!-- HUB CHMUREK / RAKTAŽODŽIŲ Z GOOGLE SHEETS -->
-<div class="search-discovery-hub" style="margin-top: 2.5rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
-        <h3 style="font-size: 1.1rem; color: var(--primary, #fff); font-weight: 600; margin: 0;">Inžineriniai raktažodžiai ir greitieji filtrai:</h3>
-        <span style="font-size: 0.8rem; color: var(--secondary, #888);">Spustelėkite, kad akimirksniu surastumėte sprendimą</span>
+<!-- ROZWIJANY KATALOG (SECPOS / SEO / AI ARCHITEKTURA UKRYTA W HARMONIJCE) -->
+<details class="full-matrix-accordion" style="max-width: 900px; margin: 2rem auto 4rem auto; background: var(--entry); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
+    <summary style="cursor: pointer; font-weight: 700; color: var(--primary); font-size: 1rem; outline: none; display: flex; justify-content: space-between; align-items: center;">
+        <span>📂 Peržiūrėti visą paslaugų ir inžinerinių raktažodžių katalogą (SEO ir AI struktūra)</span>
+        <span style="font-size: 0.8rem; color: var(--secondary); font-weight: 400;">Spustelėkite, kad išskleistumėte</span>
+    </summary>
+
+    <div class="cloud-matrix" style="display: flex; flex-direction: column; gap: 2.5rem; margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+
+        <!-- KATEGORIA 1 -->
+        <div class="matrix-category">
+            <div style="margin-bottom: 1rem;">
+                <button class="search-chip category-chip" data-query="Reklaminiai stendai ir POSM">Reklaminiai stendai ir POSM</button>
+            </div>
+            <div class="matrix-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem;">
+                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="search-chip subcategory-chip" data-query="Stendai ir ekspoziciniai stovai">Stendai ir ekspoziciniai stovai</button>
+                    <button class="search-chip" data-query="reklaminiai stendai iš kartono">reklaminiai stendai iš kartono</button>
+                    <button class="search-chip" data-query="stendai iš kartono">stendai iš kartono</button>
+                    <button class="search-chip" data-query="prekybiniai stendai">prekybiniai stendai</button>
+                </div>
+                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="search-chip subcategory-chip" data-query="Prekystalio stendai ir stoveliai">Prekystalio stendai</button>
+                    <button class="search-chip" data-query="Lentyna elektronikai">Lentyna elektronikai</button>
+                    <button class="search-chip" data-query="Prekių stendas">Prekių stendas</button>
+                </div>
+                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="search-chip subcategory-chip" data-query="Parduotuvių ir vitrinų dekoracijos">Dekoracijos</button>
+                    <button class="search-chip" data-query="Šventinės dekoracijos">Šventinės dekoracijos</button>
+                    <button class="search-chip" data-query="žaismingos figūros">žaismingos figūros</button>
+                </div>
+                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="search-chip subcategory-chip" data-query="Foto sienelės ir renginių įranga">Foto sienelės</button>
+                    <button class="search-chip" data-query="Festivaliams">Festivaliams</button>
+                    <button class="search-chip" data-query="Mokyklai">Mokyklai</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KATEGORIA 2 -->
+        <div class="matrix-category">
+            <div style="margin-bottom: 1rem;">
+                <button class="search-chip category-chip" data-query="Kartono pakuotės">Kartono pakuotės</button>
+            </div>
+            <div class="matrix-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem;">
+                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="search-chip subcategory-chip" data-query="Dėžės">Dėžės</button>
+                    <button class="search-chip" data-query="Kartonas baltas">Kartonas baltas</button>
+                    <button class="search-chip" data-query="ekologiškas kartonas">ekologiškas kartonas</button>
+                </div>
+                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="search-chip subcategory-chip" data-query="Dėžutės">Dėžutės</button>
+                    <button class="search-chip" data-query="dvejų dalių dėžutės">dvejų dalių dėžutės</button>
+                    <button class="search-chip" data-query="Dėžutės su spauda">Dėžutės su spauda</button>
+                </div>
+                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="search-chip subcategory-chip" data-query="Dovanų dėžutės">Dovanų dėžutės</button>
+                    <button class="search-chip" data-query="Magnetinis užraktas">Magnetinis užraktas</button>
+                </div>
+                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="search-chip subcategory-chip" data-query="FEFCO katalogas">FEFCO katalogas</button>
+                    <button class="search-chip" data-query="FEFCO standartas">FEFCO standartas</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KATEGORIA 3 -->
+        <div class="matrix-category">
+            <div style="margin-bottom: 1rem;">
+                <button class="search-chip category-chip" data-query="CNC Paslaugos">CNC Paslaugos</button>
+            </div>
+            <div class="matrix-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem;">
+                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="search-chip subcategory-chip" data-query="CNC frezavimas">CNC frezavimas</button>
+                    <button class="search-chip" data-query="CNC paslaugos Kaune">CNC paslaugos Kaune</button>
+                </div>
+                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="search-chip subcategory-chip" data-query="CNC pjovimas">CNC pjovimas</button>
+                    <button class="search-chip" data-query="kartono pjovimo paslaugos">kartono pjovimo paslaugos</button>
+                </div>
+            </div>
+        </div>
+
     </div>
+</details>
 
-    <div class="chips-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-        {{- $allClouds := slice -}}
-        {{- range site.RegularPages -}}
-            {{- if .Params.search_cloud -}}
-                {{- range .Params.search_cloud -}}
-                    {{- $allClouds = $allClouds | append . -}}
-                {{- end -}}
-            {{- end -}}
-        {{- end -}}
-        
-        {{- if eq (len $allClouds) 0 -}}
-            {{- $allClouds = slice "Gofruotas kartonas" "Paštomatų dėžutės" "FEFCO standartas" "POSM stendai" "CNC pjovimas" "UV spauda" "CAD projektavimas" "Akrilo gaminiai" "Prototipas nuo 1 vnt." "Magnetinis užraktas" -}}
-        {{- end -}}
-
-        {{- range ($allClouds | uniq) -}}
-            <button class="search-chip" data-query="{{ . }}">{{ . }}</button>
-        {{- end -}}
-    </div>
-</div>
-
+<!-- STYLE -->
 <style>
     .search-chip {
         background-color: var(--entry, #25262b);
         border: 1px solid var(--border, #333);
         border-radius: 20px;
-        padding: 6px 14px;
-        font-size: 0.85rem;
+        padding: 5px 12px;
+        font-size: 0.8rem;
         cursor: pointer;
         transition: all 0.2s ease;
         color: var(--secondary, #aaa);
+        text-align: left;
+        display: inline-block;
+        width: fit-content;
+        font-weight: 400;
     }
+    
+    .search-chip.category-chip {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--primary, #fff);
+        padding: 6px 14px;
+        border-radius: 20px;
+    }
+
+    .search-chip.subcategory-chip {
+        font-weight: 700;
+        color: var(--primary, #fff);
+        font-size: 0.82rem;
+    }
+
     .search-chip:hover {
         background-color: var(--primary, #fff);
         color: var(--theme, #1d1e22);
@@ -71,10 +167,12 @@
         font-weight: 600;
     }
     #clearSearch:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        opacity: 1;
+        color: var(--primary);
     }
 </style>
 
+<!-- LOGIKA -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const searchInput = document.getElementById("searchInput");
@@ -83,51 +181,60 @@
 
         const chips = document.querySelectorAll(".search-chip");
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const queryParam = urlParams.get('q');
-        if (queryParam) {
-            searchInput.value = queryParam;
-            clearBtn.style.display = "block";
-            setTimeout(() => {
-                searchInput.dispatchEvent(new Event("input"));
-            }, 300);
+        function updateChipStates() {
+            const currentVal = searchInput.value.trim().toLowerCase();
+            chips.forEach(chip => {
+                const q = chip.getAttribute("data-query").toLowerCase();
+                if (currentVal === q) {
+                    chip.classList.add("active");
+                } else {
+                    chip.classList.remove("active");
+                }
+            });
+
+            if (searchInput.value.trim().length > 0) {
+                clearBtn.style.display = "block";
+            } else {
+                clearBtn.style.display = "none";
+            }
         }
 
         chips.forEach(chip => {
             chip.addEventListener("click", function() {
                 const queryPart = this.getAttribute("data-query");
                 
-                chips.forEach(c => c.classList.remove("active"));
-                
-                if (searchInput.value === queryPart) {
+                if (searchInput.value.trim() === queryPart) {
                     searchInput.value = "";
-                    clearBtn.style.display = "none";
                 } else {
                     searchInput.value = queryPart;
-                    this.classList.add("active");
-                    clearBtn.style.display = "block";
                 }
 
+                updateChipStates();
                 searchInput.dispatchEvent(new Event("input"));
+                searchInput.focus();
             });
         });
 
         searchInput.addEventListener("input", function() {
-            if (this.value.trim().length > 0) {
-                clearBtn.style.display = "block";
-            } else {
-                clearBtn.style.display = "none";
-                chips.forEach(c => c.classList.remove("active"));
-            }
+            updateChipStates();
         });
 
         clearBtn.addEventListener("click", function() {
             searchInput.value = "";
-            chips.forEach(c => c.classList.remove("active"));
-            this.style.display = "none";
+            updateChipStates();
             searchInput.dispatchEvent(new Event("input"));
             searchInput.focus();
         });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryParam = urlParams.get('q');
+        if (queryParam) {
+            searchInput.value = queryParam;
+            updateChipStates();
+            setTimeout(() => {
+                searchInput.dispatchEvent(new Event("input"));
+            }, 300);
+        }
     });
 </script>
 
