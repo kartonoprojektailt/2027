@@ -192,21 +192,32 @@ def process_gallery_concurrently(urls, slug):
 
 print("Generuojami Markdown puslapiai ir prekės iš Google Sheets...")
 
-valid_slugs = {"sandelyje", "_index"}
+valid_slugs = {"sandelyje", "_index", "search"}
+
+# --- AUTOMATYCZNE TWORZENIE PLIKU SEARCH.MD ---
+search_file_path = os.path.join(content_dir, "search.md")
+search_markdown = """---
+title: "Paieška"
+description: "Kartono projektai paieška"
+layout: "search"
+---
+"""
+with open(search_file_path, 'w', encoding='utf-8') as f:
+    f.write(search_markdown)
+
+llms_lines = []
 
 for _, row in df.iterrows():
     raw_slug = str(row.get('slug', '')).strip()
     title_raw = str(row.get('title', '')).strip()
     
-    # Strona główna (_index) - sprawdzamy surowy slug lub tytuł strony głównej
+    # Strona główna (_index)
     if raw_slug in ['_index', 'index', '/'] or "kartoninės pakuotės" in title_raw.lower():
         title = title_raw if is_valid_val(title_raw) else "Pradžia"
         
         hero_raw = row.get('hero_image', '')
         hero_image = download_and_cache_image(hero_raw, "index-hero") if is_valid_val(hero_raw) else ""
         
-        print(f"[DEBUG] Strona główna (_index). Odczytany hero_raw: '{hero_raw}' -> Wynik hero_image: '{hero_image}'")
-
         fm = [
             "---",
             f"title: {json.dumps(title)}",
@@ -367,6 +378,15 @@ for _, row in df.iterrows():
         if is_valid_val(sale_reason_val):
             fm.append(f"sale_reason: {json.dumps(str(sale_reason_val).strip())}")
 
+        # Zbiera dane do llms.txt dla produktów ze składu
+        p_code = str(row.get('code', '')).strip()
+        p_price = str(row.get('price', '')).strip()
+        p_stock = str(row.get('stock', '')).strip()
+        p_cat = str(row.get('category', '')).strip()
+        if title and slug:
+            p_url = f"https://kartonoprojektai.lt/sandelyje/{slug}/"
+            llms_lines.append(f"- [{title} (/{slug}/)]({p_url}) - Kod: {p_code}, Kaina: {p_price} EUR, Likutis: {p_stock} vnt. Kategorija: {p_cat}")
+
         excluded_cols = {
             'slug', 'title', 'code', 'offer_code', 'sku', 'category', 
             'price', 'kaina', 'unit', 'stock', 'likutis', 'sale_reason', 
@@ -410,9 +430,15 @@ for _, row in df.iterrows():
         if is_valid_val(content_body):
             f.write(content_body + "\n")
 
+# --- AUTOMATYCZNY ZAPIS PLIKU LLMS.TXT ---
+llms_filepath = os.path.join(content_dir, "llms.txt")
+with open(llms_filepath, 'w', encoding='utf-8') as f:
+    f.write("\n".join(llms_lines) + "\n")
+print("Plik llms.txt został pomyślnie zaktualizowany z Google Sheets.")
+
 # Senų failų valymas
 for filename in os.listdir(content_dir):
-    if filename.endswith(".md") and filename not in ["_index.md"]:
+    if filename.endswith(".md") and filename not in ["_index.md", "search.md", "llms.txt"]:
         file_slug = filename[:-3]
         if file_slug not in valid_slugs:
             old_path = os.path.join(content_dir, filename)
