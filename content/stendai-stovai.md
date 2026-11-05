@@ -53,7 +53,7 @@ Reklaminiai kartono stendai ir prekybiniai stovai (POSM gamyba)
 | **Spaudos ir apdailos technologijos** | Didelio formato tiesioginė skaitmeninė UV spauda (CMYK + balta), fotorealistinė spauda, apsauginis matinis arba blizgus lakas, atsparus trinčiai ir įbrėžimams, viršutinės iškabos (*topperio*) gamyba |
 | **Priedai ir funkcijos** | Skaidrios price-holder (kainų) juostos, vidinės pertvaros produktų atskyrimui, apsauginis plastiko podestas (*anti-mop*) drėgnoms grindims valyti |
 | **Surinkimas ir logistika** | Greitas modulinis surinkimas prekybos vietoje be įrankių ir klijų; gabenami sulankstyti plokščioje pakuotėje (*flat-pack*) |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

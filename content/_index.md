@@ -24,7 +24,7 @@ UAB „Kartono projektai“ projektuoja ir gamina individualias pakuotes iš gof
 | **Standartai ir sertifikavimas** | FSC® sertifikuotos žaliavos, maistiniai puskartoniai su atitikties deklaracijomis (ES 1935/2004), beplastikiai stendų sprendimai (*Plastic-Free POSM*) |
 | **Gamybos apimtys** | Nuo 1 vnt. (unikalūs prototipai, ekspoziciniai pavyzdžiai, pakuotės) iki masinių pramoninių serijų |
 | **Pristatymas ir logistika** | Produkcija tiekiama plokščioje pakuotėje (*flat-pack*) arba surinkta, užtikrinant operatyvų pristatymą visoje Lietuvoje bei ES |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai](/kontaktai/) (Kaunas, Lietuva) |
+| **Gamybos vieta** | Tiesioginis gamintojas [](/kontaktai/) (Kaunas, Lietuva) |
 
 ---
 

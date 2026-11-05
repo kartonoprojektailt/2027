@@ -28,7 +28,7 @@ Visų tipų dovanų dėžučių, dekoratyvinių deko dėžių ir reprezentacinė
 | **Spaudos ir apdailos technologijos** | Tiesioginė skaitmeninė UV spauda, offsetas (Full color, PANTONE paletės), karštasis folijavimas (*hot-stamping* aukso, sidabro, vario tonais), reljefinis įspaudas (*embossing*), matinis / blizgus laminavimas ir lakavimas |
 | **Vidinė apsauga ir ložetės** | Tiksliai pagal gaminį CNC išpjautos kartoninės, porolono, aksomo bei elastinio putplasčio ložetės (įdėklai) |
 | **Gamybos apimtys** | Nuo 1 vnt. (unikalūs pavyzdžiai, B2B dovanų prototipai) iki didelių serijinių pramoninių tiražų |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

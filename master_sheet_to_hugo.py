@@ -211,6 +211,14 @@ for _, row in df.iterrows():
     raw_slug = str(row.get('slug', '')).strip()
     title_raw = str(row.get('title', '')).strip()
     
+    # Czyszczenie treści z niechcianego tekstu "UAB Kartono projektai"
+    content_body = str(row.get('content_body', '')).strip()
+    if not is_valid_val(content_body):
+        content_body = str(row.get('content', '')).strip()
+    
+    # Automatyczne usuwanie podpisu firmowego na końcu treści, jeśli tam jest
+    content_body = re.sub(r'UAB\s+Kartono\s+projektai', '', content_body, flags=re.IGNORECASE).strip()
+
     # Strona główna (_index)
     if raw_slug in ['_index', 'index', '/'] or "kartoninės pakuotės" in title_raw.lower():
         title = title_raw if is_valid_val(title_raw) else "Pradžia"
@@ -235,6 +243,7 @@ for _, row in df.iterrows():
             fm.append(f"featured_image: {json.dumps(hero_image)}")
             fm.append("cover:")
             fm.append(f"  image: {json.dumps(hero_image)}")
+            # Celowo pomijamy 'caption', aby PaperMod nie wyświetlał głupich podpisów pod zdjęciem
             
         gallery_images = []
         gallery_raw = row.get('gallery_images', '')
@@ -257,10 +266,6 @@ for _, row in df.iterrows():
 
         fm.append("---\n")
         
-        content_body = str(row.get('content_body', '')).strip()
-        if not is_valid_val(content_body):
-            content_body = str(row.get('content', '')).strip()
-            
         filepath = os.path.join(content_dir, "_index.md")
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write("\n".join(fm))
@@ -303,10 +308,6 @@ for _, row in df.iterrows():
             
         fm.append("---\n")
         
-        content_body = str(row.get('content_body', '')).strip()
-        if not is_valid_val(content_body):
-            content_body = str(row.get('content', '')).strip()
-            
         filepath = os.path.join(content_dir, "sandelyje.md")
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write("\n".join(fm))
@@ -378,7 +379,6 @@ for _, row in df.iterrows():
         if is_valid_val(sale_reason_val):
             fm.append(f"sale_reason: {json.dumps(str(sale_reason_val).strip())}")
 
-        # Zbiera dane do llms.txt dla produktów ze składu
         p_code = str(row.get('code', '')).strip()
         p_price = str(row.get('price', '')).strip()
         p_stock = str(row.get('stock', '')).strip()
@@ -402,6 +402,7 @@ for _, row in df.iterrows():
     if hero_image:
         fm.append(f"hero_image: {json.dumps(hero_image)}")
         fm.append(f"image: {json.dumps(hero_image)}")
+        # Celowo pomijamy 'caption', aby PaperMod nie doklejał podpisu pod zdjęciem
         
     if gallery_images:
         fm.append("gallery_images:")
@@ -417,10 +418,6 @@ for _, row in df.iterrows():
                 fm.append(f"  - {json.dumps(sc)}")
 
     fm.append("---\n")
-    
-    content_body = str(row.get('content_body', '')).strip()
-    if not is_valid_val(content_body):
-        content_body = str(row.get('content', '')).strip()
     
     filename = f"{slug}.md"
     filepath = os.path.join(content_dir, filename)

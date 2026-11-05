@@ -30,7 +30,7 @@ gallery_images:
 | **Savybės ir montavimas** | Kompaktiški matmenys, ergonomiška ir lengva konstrukcija, greitas ir intuityvus išlankstymas prekybos vietoje be papildomų įrankių ar klijų |
 | **Priedai ir funkcijos** | Skaidrios akrilo arba PET kišenėlės, informaciniai laikikliai, viršutinės iškabos (*topperiai*) maksimaliam prekės ženklo matomumui prekybos salėje |
 | **Gamybos apimtys** | Nuo 1 vnt. (prototipai, rinkodaros pavyzdžiai) iki masinių serijinių tiražų prekybos tinklams |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

@@ -19,7 +19,7 @@ FEFCO katalogo gofrokartono dėžės ir standartinė tara
 | **Pjovimas ir pritaikymas** | Kirtimas štampais (dideliems tiražams), skaitmeninis CNC pjovimas be štampų (mažiems tiražams ir prototipams) |
 | **Spaudos ir apdailos galimybės** | Tiesioginė skaitmeninė UV spauda, fleksografija, individualių logotipų bei paštomatų žymėjimų uždėjimas |
 | **Tiražai ir apimtys** | Nuo 1 vnt. (bandomieji pavyzdžiai, testiniai užsakymai) iki masinės pramoninės gamybos |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [](/kontaktai/) |
 
 ---
 

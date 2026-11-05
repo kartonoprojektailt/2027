@@ -7,7 +7,7 @@ type: "page"
 {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "name": "UAB Kartono projektai",
+  "name": "",
   "url": "https://kartonoprojektai.lt/kontaktai/",
   "telephone": "+37065285223",
   "email": "info@kartonoprojektai.lt",

@@ -15,7 +15,7 @@ Tikslus CNC frezavimas ir lakštinių medžiagų apdirbimas Kaune. Pristatymas v
 | **Tikslumas ir brėžiniai** | Preciziškas briaunų apdirbimas pagal vektorinius brėžinius (DXF, AI, PDF, DWG) su minimaliomis nuokrypių tolerancijomis |
 | **Gamybos privalumai** | Galimybė suformuoti tikslias įgilintas nišas, sulenkimo kanalyčius plokštėse bei tūrinius elementus be terminio kraštų pažeidimo |
 | **Tiražai ir apimtys** | Nuo 1 vnt. (bandomieji prototipai, individualūs užsakymai) iki serijinės gamybos partijų |
-| **Gamybos vieta** | Tiesioginis paslaugų teikėjas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis paslaugų teikėjas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

@@ -21,7 +21,7 @@ UAB „Kartono projektai“ projektuoja ir gamina patikimus pakuotės bei logist
 | **Spaudos ir apdailos technologijos** | Tiesioginė skaitmeninė UV spauda (CMYK + balta), ofsetinė spauda, šilkografija, UV lakavimas, karštasis folijavimas (*hot stamping*), reljefinis įspaudas |
 | **Pjovimas ir apdirbimas** | Tikslus skaitmeninis CNC pjovimas, frezavimas, bigavimas, štancavimas (iškirtimas) |
 | **Gamybos apimtys (Tiražai)** | Nuo 1 vnt. (bandomieji pavyzdžiai, prototipai, individualūs užsakymai) iki masinės serijinės gamybos |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

@@ -27,7 +27,7 @@ Renginių foto sienelės ir mobilios reklaminės konstrukcijos. Foto sienelės �
 | **Spaudos technologijos** | Tiesioginė didelio formato UV spauda (CMYK), fotorealistinė spaudos kokybė, neodspindintis matinis paviršius (fotografavimui) |
 | **Savybės ir mobilumas** | Lengva konstrukcija, greitas surinkimas be įrankių, stabilūs atraminiai kojelių elementai |
 | **Dydžiai ir formatai** | Standardiniai formatai (2x2 m, 3x2 m, 3x2.4 m) arba individualūs išmatavimai pagal salės aukštį |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [](/kontaktai/) |
 
 ---
 

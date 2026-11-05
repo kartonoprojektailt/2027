@@ -22,7 +22,7 @@ Individualių, nestandartinių kartoninių pakuočių projektavimas ir gamyba nu
 | **Vidinė apsauga (Ložetės)** | Individualiai pagal gaminio 3D formą išpjauti kartono, putplasčio ar minkšto poliuretano įdėklai |
 | **Projektavimas ir prototipai** | CAD inžinerinis projektavimas, 3D vizualizacija ir fizinio bandomojo pavyzdžio išpjovimas CNC ploteriu be štampų |
 | **Spaudos ir apdailos galimybės** | Didelio formato skaitmeninė UV spauda, offsetas, šilkografija, karštasis folijavimas (*hot-stamping*), selektyvinis UV lakavimas |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [](/kontaktai/) |
 
 ---
 

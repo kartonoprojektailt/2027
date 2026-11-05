@@ -22,7 +22,7 @@ Akrilo gaminiai ir balsadėžės iš organinio stiklo
 | **Saugumas ir priedai** | Įmontuojami metaliniai užraktai su rakteliais, informacinės kišenėlės anketoms, skersiniai įmetimo plyšiai |
 | **Spaudos ir personalizavimo būdai** | Tiesioginė UV spauda ant akrilo, preciziškas lazerinis graviravimas, firminiai dekoratyviniai lipdukai |
 | **Konstrukcijų tipai** | Statiniai kubai, pastatomi [prekystalio stoveliai](/prekystaliai-displejai-stoveliai/), mobilios aukų dėžutės su rankenomis |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

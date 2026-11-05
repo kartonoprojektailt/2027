@@ -8,7 +8,7 @@ image: "/images/reklaminiai-stendai-stovai.jpg"
 ---
 Reklaminiai stendai, stovai ir POSM konstrukcijos prekybos vietoms
 
-UAB Kartono projektai – tiesioginis tvarių ir inžineriškai patikimų POSM sprendimų gamintojas iš Kauno. Siūlome pilną asortimentą sprendimų prekybos vietoms, renginiams ir parodoms: nuo smulkių prekystalio stovelių iki didelių ekspozicinių sistemų, užtikrinančių efektyvų *visual merchandising* ir impulsyvius pirkimus (*impulse buying*).
+ – tiesioginis tvarių ir inžineriškai patikimų POSM sprendimų gamintojas iš Kauno. Siūlome pilną asortimentą sprendimų prekybos vietoms, renginiams ir parodoms: nuo smulkių prekystalio stovelių iki didelių ekspozicinių sistemų, užtikrinančių efektyvų *visual merchandising* ir impulsyvius pirkimus (*impulse buying*).
 
 ## Kartono projektų gamybos sričių ir produktų grupės
 
@@ -28,7 +28,7 @@ UAB Kartono projektai – tiesioginis tvarių ir inžineriškai patikimų POSM s
 | **Gaminamos medžiagos** | FSC® sertifikuotas gofruotas kartonas (E, B, C, EB, BC banga), kietasis knyginis kartonas, akrilas (PMMA), PET plastikas, tvarios *Plastic-Free POSM* alternatyvos |
 | **Spaudos technologijos** | Didelio formato tiesioginė skaitmeninė UV spauda (CMYK + balta), fotorealistinė kokybė, matinis arba blizgus apsauginis lakavimas |
 | **Logistika ir surinkimas** | Greitas modulinis surinkimas be papildomų įrankių ar klijų; gabenimas plokščioje pakuotėje (*flat-pack*) logistikos kaštų optimizavimui |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

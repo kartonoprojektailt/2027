@@ -4,7 +4,7 @@ slug: "cnc-paslaugos"
 type: "page"
 description: "Profesionalios CNC paslaugos verslui: lak\u0161tini\u0173 med\u017eiag\u0173 pjovimas ir frezavimas. Ma\u017ei ir vidutiniai tira\u017eai, operatyvus vykdymas ir pristatymas visoje Lietuvoje."
 ---
-UAB Kartono projektai teikia profesionalias CNC paslaugas: kartono, plastiko, akrilo apdirbimas.
+teikia profesionalias CNC paslaugas: kartono, plastiko, akrilo apdirbimas.
 
 ## Techninės specifikacijos
 
@@ -15,7 +15,7 @@ UAB Kartono projektai teikia profesionalias CNC paslaugas: kartono, plastiko, ak
 | **Failų formatai ir tikslumas** | Vektoriniai brėžiniai (DXF, AI, PDF, DWG); didelio tikslumo skaitmeninis pjovimas pagal mikronines tolerancijas |
 | **Gamybiniai privalumai** | Pjovimas be kirtimo štampų (brangių formų gaminti nereikia), galimybė išpjauti sudėtingus kontūrus ir vidines kiaurymes |
 | **Tiražai ir apimtys** | Nuo 1 vnt. (prototipai, pavyzdžiai, individualūs užsakymai) iki mažų ir vidutinių serijinių partijų |
-| **Gamybos vieta** | Tiesioginis paslaugų teikėjas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis paslaugų teikėjas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

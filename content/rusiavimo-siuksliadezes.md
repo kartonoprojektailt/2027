@@ -18,7 +18,7 @@ Kartoninės šiukšliadėžės ir atliekų rūšiavimo konteineriai. Gamyba ir a
 | **Spaudos ir žymėjimo opcijos** | Tiesioginė skaitmeninė UV spauda vandens pagrindu pagamintais dažais; spalvinis frakcijų žymėjimas (popieriui, plastikui, stiklui, organikai) |
 | **Konstrukcijos tipai** | Vienkartinės ir daugkartinės dėžės su dangčiais, skersiniais maišų laikikliais bei modulinės kelių sekcijų šiukšliadėžės |
 | **Gamybos apimtys** | Nuo 1 vnt. (bandomieji pavyzdžiai renginiams) iki serijinių partijų biurams ir įmonėms |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

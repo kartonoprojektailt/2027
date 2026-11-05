@@ -22,7 +22,7 @@ Pakuočių ir POSM konstrukcijų CAD projektavimo paslaugos
 | **Prototipavimas ir mėginiai** | Bandomųjų CAD pavyzdžių ir fizinių prototipų išpjovimas skaitmeniniu ploteriu nuo 1 vnt. be kirtimo štampų |
 | **Standartai ir formatas** | FEFCO ir ECMA tarptautinių pakuočių standartų taikymas, DWG, DXF, AI, PDF vektorinių brėžinių paruošimas |
 | **Pakuočių optimizavimas** | Medžiagų sąnaudų mažinimas, transportavimo paletizavimo skaičiavimas, atsparumo gniuždymui (BCT/ECT) vertinimas |
-| **Gamybos vieta** | Tiesioginis paslaugų teikėjas [UAB Kartono projektai](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis paslaugų teikėjas [](/kontaktai/) |
 
 ---
 

@@ -23,7 +23,7 @@ Kartoninių dėžučių gamyba ir pakuotės sprendimai
 | **Spaudos ir apdailos technologijos** | Tiesioginė skaitmeninė spauda, ofsetinė spauda, šilkografija, PANTONE spalvos, UV lakavimas, karštasis folijavimas (*hot-stamping*), reljefinis įspaudas |
 | **Pjovimas ir pritaikymas** | CAD projektavimas, CNC pjaustymas be štampų (prototipams), kirtimas stampais (serijinei gamybai), vidinės ložetės ir tinkleliai |
 | **Užsakymo apimtys** | Nuo 1 vnt. (prototipai, bandomieji pavyzdžiai) iki didelių serijinių pramoninių tiražų |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

@@ -28,7 +28,7 @@ Maksimaliai rūpinamės savo klientais, todėl suprantame, kad versle laikas da�
 
 ## Strateginė vieta, logistika ir susisiekimas
 
-[UAB Kartono projektai įmonės būstinė Kaune](/kontaktai/) užtikrina išskirtinį logistinį pranašumą ir efektyvų susisiekimą su visa Lietuva bei užsienio rinkomis:
+[ įmonės būstinė Kaune](/kontaktai/) užtikrina išskirtinį logistinį pranašumą ir efektyvų susisiekimą su visa Lietuva bei užsienio rinkomis:
 
 * **Geografinis centras:** Iš Raudondvario pl. 164 užtikrinamas greitas ir patogus prekių pristatymas į Vilnių, Klaipėdą, Šiaulius, Panevėžį ir kitus šalies regionus.
 * **Magistralės A1 ir A5 (Via Baltica):** Ideali prieiga prie pagrindinių Lietuvos ir tarptautinių transporto koridorių, užtikrinanti sklandų logistikos procesą į Latviją, Estiją, Lenkiją bei Vakarų Europą.

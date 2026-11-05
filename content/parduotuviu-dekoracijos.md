@@ -11,6 +11,11 @@ gallery_images:
   - "/images/parduotuviu-dekoracijos-g3.jpg"
   - "/images/parduotuviu-dekoracijos-g4.jpg"
   - "/images/parduotuviu-dekoracijos-g5.jpg"
+  - "/images/parduotuviu-dekoracijos-g6.jpg"
+  - "/images/parduotuviu-dekoracijos-g7.jpg"
+  - "/images/parduotuviu-dekoracijos-g8.jpg"
+  - "/images/parduotuviu-dekoracijos-g9.jpg"
+  - "/images/parduotuviu-dekoracijos-g10.jpg"
 ---
 Parduotuvių, vitrinų ir prekybos vietų dekoracijos bei POSM sprendimai 
 ## Techninės specifikacijos
@@ -22,7 +27,7 @@ Parduotuvių, vitrinų ir prekybos vietų dekoracijos bei POSM sprendimai
 | **Spaudos ir apdailos technologijos** | Didelio formato tiesioginė skaitmeninė UV spauda (CMYK + balta), tikslus skaitmeninis CNC pjovimas, frezavimas, bigavimas, dvipusė spauda, atsparus trinčiai matinis/blizgus lakas, foto spaudos kokybė |
 | **Montavimas ir surinkimas** | Greitas modulinis surinkimas be įrankių ir klijų; gabenami sulankstyti plokščioje pakuotėje (*flat-pack*) |
 | **Užsakymo tiražai** | Nuo 1 vnt. (unikalūs pavyzdžiai, butikų vitrinos, flagmanų salonai, renginiai) iki serijinių pramoninių tiražų prekybos tinklams |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

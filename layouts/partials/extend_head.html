@@ -24,22 +24,22 @@
     font-size: 1.125rem !important;
   }
 
-  /* 3. Nagłówki H2 (odpowiedni oddech nad i pod) */
-  .main h2,
-  .home-info h2,
-  .post-content h2 {
-    margin-top: 2.66rem !important;
-    margin-bottom: 1.25rem !important;
-    line-height: 1.3 !important;
+  /* 3. Odstępy dla głównego nagłówka i sekcji tytułowej */
+  .post-header {
+    margin-top: 3rem !important;
+    margin-bottom: 1.2rem !important;
   }
 
-  /* 4. Nagłówki H3 */
-  .main h3,
-  .home-info h3,
-  .post-content h3 {
-    margin-top: 2.33rem !important;
+  /* 4. Perfekcyjne odstępy dla nagłówków (H1, H2, H3, H4):
+     - Dużo przestrzeni NAD nagłówkiem (margin-top: 3rem -> 100%)
+     - Mało przestrzeni POD nagłówkiem, bliżej tekstu (margin-bottom: 1rem -> 75%) */
+  .main h1, .home-info h1, .post-content h1,
+  .main h2, .home-info h2, .post-content h2,
+  .main h3, .home-info h3, .post-content h3,
+  .main h4, .home-info h4, .post-content h4 {
+    margin-top: 3rem !important;
     margin-bottom: 1rem !important;
-    line-height: 1.35 !important;
+    line-height: 1.3 !important;
   }
 
   /* 5. Listy punktowane */
@@ -57,7 +57,7 @@
   .post-content table {
     width: 100%;
     border-collapse: collapse;
-    margin: 2.5rem 0;
+    margin: 3rem 0;
     font-size: 1rem !important;
   }
 

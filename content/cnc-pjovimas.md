@@ -15,7 +15,7 @@ Kartono projektai atlieka tikslų kartono ir lakštinių medžiagų CNC pjovimą
 | **Pjovimo privalumai** | Nereikia gaminti brangių kirtimo formų (štampų); idealiai švarūs pjūvio kraštai be kartono deformacijų ar pluošto išpešiojimo |
 | **Tolerancija ir failai** | Aukštas skaitmeninis tikslumas pagal vektorinius brėžinius (DXF, AI, PDF, DWG) |
 | **Užsakymo apimtys** | Nuo 1 vnt. (bandomieji prototipai, pavyzdžiai) iki mažų bei vidutinių serijinių partijų |
-| **Gamybos vieta** | Tiesioginis paslaugų teikėjas [UAB Kartono projektai (Kaunas, Lietuva)](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis paslaugų teikėjas [ (Kaunas, Lietuva)](/kontaktai/) |
 
 ---
 

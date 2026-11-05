@@ -17,7 +17,7 @@ Kartoninės dėžės pakavimui, logistikai ir sandėliavimui
 | **Apsauginiai elementai** | Vidinės tektūrinės grotelės, separatoriai, apsauginiai kartono kampuočiai, gofro lakštai |
 | **Spaudos ir žymėjimo opcijos** | Tiesioginė skaitmeninė UV spauda, fleksografija, logotipų, paštomatų dydžių bei saugumo piktogramų spauda |
 | **Gamybos apimtys** | Nuo 1 vnt. (bandomieji CAD pavyzdžiai, nestandartinės dėžės) iki didelių pramoninių serijų |
-| **Gamybos vieta** | Tiesioginis gamintojas [UAB Kartono projektai](/kontaktai/) |
+| **Gamybos vieta** | Tiesioginis gamintojas [](/kontaktai/) |
 
 ---
 

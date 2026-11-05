@@ -7,8 +7,8 @@ type: "page"
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "UAB Kartono projektai",
-  "legalName": "UAB Kartono projektai",
+  "name": "",
+  "legalName": "",
   "taxID": "303235896",
   "vatID": "LT100008359510",
   "url": "https://kartonoprojektai.lt/rekvizitai/",
