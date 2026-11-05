@@ -2,6 +2,7 @@
 title: "Reklaminiai stendai ir stovai"
 slug: "reklaminiai-stendai-stovai"
 type: "page"
+menu_title: "Reklaminiai stendai ir stovai"
 description: "Mobili\u0173 ir tvari\u0173 kartonini\u0173 reklamini\u0173 stend\u0173, ekspozitori\u0173, foto sieneli\u0173 bei POSM konstrukcij\u0173 gamyba verslui. Individualus projektavimas ir spauda."
 hero_image: "/images/reklaminiai-stendai-stovai.jpg"
 image: "/images/reklaminiai-stendai-stovai.jpg"

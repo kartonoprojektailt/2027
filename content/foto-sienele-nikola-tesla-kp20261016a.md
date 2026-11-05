@@ -2,6 +2,7 @@
 title: "Foto sienel\u0117s Nikola Tesla"
 slug: "foto-sienele-nikola-tesla-kp20261016a"
 type: "sandelyje"
+menu_title: "Foto sienel\u0117s Nikola Tesla"
 description: "Foto senel\u0117s renginiams: Nikola Tesla | Kartono projekt\u0173 sand\u0117lio pasi\u016blymai Kaune"
 url: "/foto-sienele-nikola-tesla-kp20261016a/"
 layout: "single"

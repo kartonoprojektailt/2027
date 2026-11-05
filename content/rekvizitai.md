@@ -2,6 +2,7 @@
 title: "Rekvizitai"
 slug: "rekvizitai"
 type: "page"
+menu_title: "Rekvizitai"
 ---
 <script type="application/ld+json">
 {

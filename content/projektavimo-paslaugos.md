@@ -2,6 +2,7 @@
 title: "Pakuo\u010di\u0173 ir stend\u0173 projektavimo paslaugos"
 slug: "projektavimo-paslaugos"
 type: "page"
+menu_title: "Pakuo\u010di\u0173 ir stend\u0173 projektavimo paslaugos"
 description: "Profesionalus kartonini\u0173 pakuo\u010di\u0173, POSM stend\u0173 ir konstrukcij\u0173 CAD projektavimas. Prototip\u0173 i\u0161pjovimas nuo 1 vnt., 3D vizualizacija ir in\u017eineriniai sprendimai."
 hero_image: "/images/projektavimo-paslaugos.jpg"
 image: "/images/projektavimo-paslaugos.jpg"

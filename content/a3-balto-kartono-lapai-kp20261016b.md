@@ -2,6 +2,7 @@
 title: "A3 balto kartono lapai"
 slug: "a3-balto-kartono-lapai-kp20261016b"
 type: "sandelyje"
+menu_title: "A3 balto kartono lapai"
 description: "A3 balto kartono lapai (gamybos perteklius). Kaina: 35 EUR/vnt. Likutis: 14. Kodas: kp20261016b. U\u017esisakykite tiesiai i\u0161 Kartono projektai sand\u0117lio. | Sand\u0117lio pasi\u016blymai | Kartono projektai"
 url: "/a3-balto-kartono-lapai-kp20261016b/"
 layout: "single"

@@ -20,13 +20,13 @@
                     {{- if .HasChildren -}}
                         <li class="menu-item-has-children desktop-only" style="position: relative;">
                             <a href="{{ .URL | absURL }}" class="menu-link" style="display: flex; align-items: center; gap: 4px;">
-                                <span>{{ .Name }}</span> ▾
+                                <span>{{ with .Page }}{{ .Params.menu_title | default .Title }}{{ else }}{{ .Name }}{{ end }}</span> ▾
                             </a>
                             <ul class="sub-menu">
                                 {{- range .Children -}}
                                 <li>
                                     <a href="{{ .URL | absURL }}" class="submenu-link">
-                                        <span>{{ .Name }}</span>
+                                        <span>{{ with .Page }}{{ .Params.menu_title | default .Title }}{{ else }}{{ .Name }}{{ end }}</span>
                                     </a>
                                 </li>
                                 {{- end -}}
@@ -35,13 +35,13 @@
                         <!-- Wersja mobilna dla pozycji z podkategoriami (pokazuje tylko główny link bez rozwijanej listy) -->
                         <li class="mobile-only" style="display: none;">
                             <a href="{{ .URL | absURL }}" class="menu-link">
-                                <span>{{ .Name }}</span>
+                                <span>{{ with .Page }}{{ .Params.menu_title | default .Title }}{{ else }}{{ .Name }}{{ end }}</span>
                             </a>
                         </li>
                     {{- else -}}
                         <li>
                             <a href="{{ .URL | absURL }}" class="menu-link">
-                                <span>{{ .Name }}</span>
+                                <span>{{ with .Page }}{{ .Params.menu_title | default .Title }}{{ else }}{{ .Name }}{{ end }}</span>
                             </a>
                         </li>
                     {{- end -}}
@@ -62,7 +62,6 @@
 </header>
 
 <style>
-    /* DODANE: Import i wstrzyknięcie czcionki Plus Jakarta Sans bez naruszania struktury */
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
     body, html, h1, h2, h3, h4, h5, h6, a, p, span, li, button, input {
@@ -122,12 +121,10 @@
         transition: filter 0.2s ease-in-out;
     }
 
-    /* Ukrywanie klas mobilnych na desktopie */
     .mobile-only {
         display: none !important;
     }
 
-    /* MOBILNY UKŁAD (Poniżej 768px) */
     @media screen and (max-width: 768px) {
         .nav {
             position: relative;
@@ -135,7 +132,6 @@
         #custom-menu-toggle {
             display: block !important;
         }
-        /* Przełączenie widoczności elementów na mobile */
         .desktop-only {
             display: none !important;
         }

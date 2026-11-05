@@ -2,6 +2,7 @@
 title: "Kartono d\u0117\u017e\u0117s r\u016b\u0161iavimui"
 slug: "rusiavimo-siuksliadezes"
 type: "page"
+menu_title: "Kartono d\u0117\u017e\u0117s r\u016b\u0161iavimui"
 description: "Ekologi\u0161kos kartonin\u0117s \u0161iuk\u0161liad\u0117\u017e\u0117s ir r\u016b\u0161iavimo konteineriai biurams, mokykloms ir renginiams. Tvarios med\u017eiagos, individualus dizainas ir spauda."
 hero_image: "/images/rusiavimo-siuksliadezes.jpg"
 image: "/images/rusiavimo-siuksliadezes.jpg"

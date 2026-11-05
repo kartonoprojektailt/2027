@@ -2,6 +2,7 @@
 title: "Kartono lentyna"
 slug: "kartono-lentyna-kp20261018a"
 type: "sandelyje"
+menu_title: "Kartono lentyna"
 description: "Kartono lentyna telefonams | Sand\u0117lio pasi\u016blymai | Kartono projektai"
 url: "/kartono-lentyna-kp20261018a/"
 layout: "single"

@@ -2,6 +2,7 @@
 title: "Stendai ir stovai"
 slug: "stendai-stovai"
 type: "page"
+menu_title: "Stendai ir stovai"
 description: "Profesional\u016bs kartono stendai, grindiniai lentyniniai ekspozitoriai ir reklaminiai stovai verslui, FMCG sektoriui bei parodoms. Individualus projektavimas, didel\u0117 apkrova ir ekologi\u0161kos med\u017eiagos."
 hero_image: "/images/stendai-stovai.jpg"
 image: "/images/stendai-stovai.jpg"

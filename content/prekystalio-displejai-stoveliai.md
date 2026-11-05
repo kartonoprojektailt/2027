@@ -2,6 +2,7 @@
 title: "Prekystalio stendai ir stoveliai (Counter Displays)"
 slug: "prekystalio-displejai-stoveliai"
 type: "page"
+menu_title: "Prekystalio stendai ir stoveliai (Counter Displays)"
 description: "Prekystalio stendai, kasos zonos stoveliai ir reklaminiai laikikliai (POSM gamyba)"
 hero_image: "/images/prekystalio-displejai-stoveliai.jpg"
 image: "/images/prekystalio-displejai-stoveliai.jpg"

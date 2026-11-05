@@ -2,6 +2,7 @@
 title: "D\u0117\u017eut\u0117s"
 slug: "dezutes"
 type: "page"
+menu_title: "D\u0117\u017eut\u0117s"
 description: "Kartonini\u0173 d\u0117\u017eu\u010di\u0173 pakavimui gamyba pagal paskirt\u012f, matmenis, konstrukcij\u0105. Visi tira\u017eai ir sud\u0117tingumo lygiai."
 hero_image: "/images/dezutes.jpg"
 image: "/images/dezutes.jpg"

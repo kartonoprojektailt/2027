@@ -274,7 +274,6 @@ for _, row in df.iterrows():
 
     slug = clean_slug(raw_slug)
     if not slug or slug in ['unikalus-puslapio-adresas', 'search']:
-        # KROK NAPRAWCZY: OMIJAMY 'search', ABY NIE NADPISAĆ SEARCH.MD Z LAYOUT: SEARCH
         continue
         
     title = title_raw if is_valid_val(title_raw) else slug
@@ -333,6 +332,14 @@ for _, row in df.iterrows():
         f"type: {json.dumps('sandelyje' if source_tab == 'sandelyje' else 'page')}",
     ]
     
+    # --- OBSŁUGA MENU_TITLE Z GOOGLE SHEETS ---
+    menu_title_val = row.get('menu_title', '')
+    if is_valid_val(menu_title_val):
+        fm.append(f"menu_title: {json.dumps(str(menu_title_val).strip())}")
+    else:
+        fm.append(f"menu_title: {json.dumps(title)}")
+    # ------------------------------------------
+    
     meta_desc = row.get('meta_description ', '') or row.get('meta_description', '')
     if is_valid_val(meta_desc):
         fm.append(f"description: {json.dumps(str(meta_desc).strip())}")
@@ -388,7 +395,7 @@ for _, row in df.iterrows():
             llms_lines.append(f"- [{title} (/{slug}/)]({p_url}) - Kod: {p_code}, Kaina: {p_price} EUR, Likutis: {p_stock} vnt. Kategorija: {p_cat}")
 
         excluded_cols = {
-            'slug', 'title', 'code', 'offer_code', 'sku', 'category', 
+            'slug', 'title', 'menu_title', 'code', 'offer_code', 'sku', 'category', 
             'price', 'kaina', 'unit', 'stock', 'likutis', 'sale_reason', 
             'hero_image', 'gallery_images', 'search_cloud', 'content_body', 
             'content', 'source_tab', 'meta_description', 'meta_description '

@@ -2,6 +2,7 @@
 title: "Kontaktai"
 slug: "kontaktai"
 type: "page"
+menu_title: "Kontaktai"
 ---
 <script type="application/ld+json">
 {

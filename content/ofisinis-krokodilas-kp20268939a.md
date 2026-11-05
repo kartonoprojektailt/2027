@@ -2,6 +2,7 @@
 title: "Ofisinis krokodilas"
 slug: "ofisinis-krokodilas-kp20268939a"
 type: "sandelyje"
+menu_title: "Ofisinis krokodilas"
 description: "Auksinis krokodilas ofisui | Sand\u0117lio pasi\u016blymai | Kartono projektai"
 url: "/ofisinis-krokodilas-kp20268939a/"
 layout: "single"

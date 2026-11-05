@@ -2,6 +2,7 @@
 title: "CNC paslaugos"
 slug: "cnc-paslaugos"
 type: "page"
+menu_title: "CNC paslaugos"
 description: "Profesionalios CNC paslaugos verslui: lak\u0161tini\u0173 med\u017eiag\u0173 pjovimas ir frezavimas. Ma\u017ei ir vidutiniai tira\u017eai, operatyvus vykdymas ir pristatymas visoje Lietuvoje."
 ---
 teikia profesionalias CNC paslaugas: kartono, plastiko, akrilo apdirbimas.

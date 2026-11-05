@@ -2,6 +2,7 @@
 title: "G\u0117rim\u0173 stendas"
 slug: "stendas-gerimams-kp20261102a"
 type: "sandelyje"
+menu_title: "G\u0117rim\u0173 stendas"
 description: "Gerim\u0173 stendas. Talpina 100 vnt. 300 ml skardini\u0173 arba 45 kg"
 url: "/stendas-gerimams-kp20261102a/"
 layout: "single"

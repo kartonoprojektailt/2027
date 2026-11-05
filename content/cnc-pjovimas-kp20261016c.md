@@ -2,6 +2,7 @@
 title: "CNC Pjovimo paslaugos"
 slug: "cnc-pjovimas-kp20261016c"
 type: "sandelyje"
+menu_title: "CNC Pjovimo paslaugos"
 description: "CNC pjovimo paslaugos | Sand\u0117lio pasi\u016blymai | Kartono projektai"
 url: "/cnc-pjovimas-kp20261016c/"
 layout: "single"

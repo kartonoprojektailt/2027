@@ -2,6 +2,7 @@
 title: "FEFCO katalogo d\u0117\u017e\u0117s"
 slug: "fefco-dezes"
 type: "page"
+menu_title: "FEFCO katalogo d\u0117\u017e\u0117s"
 description: "Standartini\u0173 FEFCO katalog\u0173 kartonini\u0173 d\u0117\u017ei\u0173 gamyba verslui. Klapin\u0117s, fasonin\u0117s ir pakuot\u0117s su u\u017eraktais. Greitas gamybos terminas ir auk\u0161ta kokyb\u0117."
 gallery_images:
   - "/images/fefco-dezes-g1.jpg"

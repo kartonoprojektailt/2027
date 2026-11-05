@@ -2,6 +2,7 @@
 title: "Foto sienel\u0117s ir rengini\u0173 dekoracijos"
 slug: "foto-sieneles"
 type: "page"
+menu_title: "Foto sienel\u0117s ir rengini\u0173 dekoracijos"
 description: "Mobili\u0173 foto sieneli\u0173, pres-sieneli\u0173 ir modulini\u0173 reklamini\u0173 sieneli\u0173 gamyba renginiams, parodoms bei \u0161vent\u0117ms i\u0161 tvaraus kartono. Tiesiogin\u0117 spauda."
 hero_image: "/images/foto-sieneles.jpg"
 image: "/images/foto-sieneles.jpg"
