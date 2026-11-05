@@ -67,9 +67,6 @@ theme = "PaperMod"
   isPlainText = true
   notAlternative = true
 
-permissions:
-  contents: write
-
 # ==========================================
 # KONFIGURACJA MENU GŁÓWNEGO (HEADER MENU)
 # ==========================================
