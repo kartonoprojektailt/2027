@@ -16,6 +16,13 @@ gallery_images:
   - "/images/dovanu-dezutes-g8.jpg"
   - "/images/dovanu-dezutes-g9.jpg"
   - "/images/dovanu-dezutes-g10.jpg"
+search_cloud:
+  - "D\u0117\u017eut\u0117s su spauda"
+  - "dviej\u0173 dali\u0173 d\u0117\u017eut\u0117s"
+  - "deko d\u0117\u017e\u0117s"
+  - "dekoratyvin\u0117s d\u0117\u017eut\u0117s"
+  - "dovan\u0173 d\u0117\u017eut\u0117s"
+  - "d\u0117\u017eu\u010di\u0173 gamyba"
 ---
 Visų tipų dovanų dėžučių, dekoratyvinių deko dėžių ir reprezentacinės taros verslui pasirinkimas
 
