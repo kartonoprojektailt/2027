@@ -114,26 +114,19 @@
         const clearBtn = document.getElementById("clearSearch");
         const suggestionsContainer = document.getElementById("random-suggestions-container");
 
-        // 1. ZBIERANIE WSZYSTKICH HASŁ Z DRZEWA (KATEGORIE, PODKATEGORIE, FRAZY)
         const allMatrixChips = Array.from(document.querySelectorAll(".cloud-matrix .search-chip"));
         const allQueries = Array.from(new Set(allMatrixChips.map(c => c.getAttribute("data-query").trim()))).filter(Boolean);
 
-        // 2. LOSOWANIE OD 5 DO 12 UNIKALNYCH HASŁ PRZY KAŻDYM WEJŚCIU/ODŚWIEŻENIU
         if (allQueries.length > 0 && suggestionsContainer) {
-            // Losowa liczba elementów do wyciągnięcia (zakres 5 - 12)
             const countToPick = Math.floor(Math.random() * 8) + 5; 
-            
-            // Algorytm mieszania (Fisher-Yates shuffle)
             const shuffled = [...allQueries].sort(() => 0.5 - Math.random());
             const selected = shuffled.slice(0, Math.min(countToPick, shuffled.length));
 
-            // Generowanie chmurek w sugerowanym pasku
             suggestionsContainer.innerHTML = selected.map(q => 
                 `<button class="search-chip" data-query="${q}">${q}</button>`
             ).join("");
         }
 
-        // 3. INICJALIZACJA WSZYSTKICH CHMUREK (W TYM NOWO WYGENEROWANYCH)
         const chips = document.querySelectorAll(".search-chip");
 
         function updateChipStates() {
@@ -183,7 +176,6 @@
             });
         }
 
-        // Obsługa otwierania z parametrem ?q= w URL
         const urlParams = new URLSearchParams(window.location.search);
         const queryParam = urlParams.get('q');
         if (queryParam && searchInput) {
