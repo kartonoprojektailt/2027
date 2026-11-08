@@ -7,6 +7,12 @@ image: "/images/index-hero.jpg"
 featured_image: "/images/index-hero.jpg"
 cover:
   image: "/images/index-hero.jpg"
+search_cloud:
+  - "Kartono projektai"
+  - "pakuo\u010di\u0173 gamintojas"
+  - "kartono konstrukcij\u0173 projektavimas ir gamyba"
+  - "kartono send\u0173 gamyba"
+  - "kartono stov\u0173 gamyba"
 ---
 # Tvarūs pakuočių, reklamos stendų ir konstrukcijų inžineriniai sprendimai
 

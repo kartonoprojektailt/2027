@@ -4,6 +4,9 @@ slug: "cnc-pjovimas"
 type: "page"
 menu_title: "CNC pjovimas"
 description: "Tikslus CNC pjovimas verslui: gofruoto kartono, popieriaus ir lak\u0161tini\u0173 med\u017eiag\u0173 pjaustymas pagal individualius br\u0117\u017einius. Ma\u017ei ir vidutiniai tira\u017eai, greitas pristatymas visoje Lietuvoje."
+search_cloud:
+  - "kartono CNC pjovimas"
+  - "plastiko CNC pjovimas"
 ---
 Kartono projektai atlieka tikslų kartono ir lakštinių medžiagų CNC pjovimą Kaune. Pristatymas į visus Lietuvos miestus. 
 

@@ -18,6 +18,11 @@ gallery_images:
   - "/images/prekystalio-displejai-stoveliai-g9.jpg"
   - "/images/prekystalio-displejai-stoveliai-g10.jpg"
   - "/images/prekystalio-displejai-stoveliai-g11.jpg"
+search_cloud:
+  - "Prekystalio stendai"
+  - "kasos zonos stoveliai"
+  - "reklaminiai laikikliai"
+  - "POSM gamyba"
 ---
 # Prekystalio stendai, kasos zonos stoveliai ir reklaminiai laikikliai (POSM gamyba)
 

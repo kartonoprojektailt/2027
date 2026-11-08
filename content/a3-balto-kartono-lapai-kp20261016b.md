@@ -27,8 +27,6 @@ gallery_images:
 search_cloud:
   - "Kartonas baltas"
   - "ekologi\u0161kas kartonas"
-  - "nedegus kartonas"
   - "\u0161ventin\u0117s dekoracijos"
-  - "DIY"
 ---
 A3 formato balto kartono lapai šventinėms dekoracijoms. Atsparus ugniai ir vandeniui. Saugus naudojimui namuose, ekologiškas

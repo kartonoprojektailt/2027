@@ -11,6 +11,13 @@ gallery_images:
   - "/images/projektavimo-paslaugos-g2.jpg"
   - "/images/projektavimo-paslaugos-g3.jpg"
   - "/images/projektavimo-paslaugos-g4.jpg"
+search_cloud:
+  - "Pakuo\u010di\u0173 projektavimo paslaugos"
+  - "POSM projektavimo paslaugos"
+  - "projektavimo paslaugos"
+  - "gofruoto kartono d\u0117\u017ei\u0173 projektavimo paslaugos"
+  - "individualios nestandartin\u0117s pakuot\u0117s projektavimas"
+  - "reklamini\u0173 stend\u0173 projektavimas"
 ---
 Pakuočių ir POSM konstrukcijų CAD projektavimo paslaugos
 

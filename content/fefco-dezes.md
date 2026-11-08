@@ -7,6 +7,10 @@ description: "Standartini\u0173 FEFCO katalog\u0173 kartonini\u0173 d\u0117\u017
 gallery_images:
   - "/images/fefco-dezes-g1.jpg"
   - "/images/fefco-dezes-g2.jpg"
+search_cloud:
+  - "FEFCO katalogo gofrokartono d\u0117\u017e\u0117s"
+  - "FEFCO"
+  - "FEFCO d\u0117\u017e\u0117s"
 ---
 FEFCO katalogo gofrokartono dėžės ir standartinė tara
 

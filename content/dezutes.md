@@ -12,6 +12,8 @@ gallery_images:
   - "/images/dezutes-g3.jpg"
   - "/images/dezutes-g4.jpg"
   - "/images/dezutes-g5.jpg"
+search_cloud:
+  - "kartonini\u0173 d\u0117\u017eu\u010di\u0173 gamyba"
 ---
 Kartoninių dėžučių gamyba ir pakuotės sprendimai 
 

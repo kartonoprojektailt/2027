@@ -11,6 +11,9 @@ gallery_images:
   - "/images/akrilo-gaminiai-g2.jpg"
   - "/images/akrilo-gaminiai-g3.jpg"
   - "/images/akrilo-gaminiai-g4.jpg"
+search_cloud:
+  - "akrilo gaminiai"
+  - "balsad\u0117\u017e\u0117s i\u0161 organinio stiklo"
 ---
 Akrilo gaminiai ir balsadėžės iš organinio stiklo 
 

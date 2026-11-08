@@ -41,6 +41,8 @@ gallery_images:
   - "/images/stendai-stovai-g32.jpg"
   - "/images/stendai-stovai-g33.jpg"
   - "/images/stendai-stovai-g34.jpg"
+search_cloud:
+  - "POSM"
 ---
 Reklaminiai kartono stendai ir prekybiniai stovai (POSM gamyba)
 

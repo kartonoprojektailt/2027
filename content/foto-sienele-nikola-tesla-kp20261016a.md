@@ -28,10 +28,7 @@ gallery_images:
   - "/images/foto-sienele-nikola-tesla-kp20261016a-g3.jpg"
 search_cloud:
   - "Foto sienel\u0117"
-  - "Dekoracijos \u0161vent\u0117ms"
-  - "Dekoracijos renginiams"
-  - "Mokyklai"
-  - "Festivaliams"
-  - "Reklamai"
+  - "\u0161vent\u0117ms"
+  - "renginiams"
 ---
 Foto sienelės su Nikola Tesla. 1:1. 5 vnt. Lengvai transportuojamos ir sudėdamos konstrukcijos. 1 vnt. sveria 2 kg. Perkantiems visą kiekį dovanų du tikroviški kartono banginiai

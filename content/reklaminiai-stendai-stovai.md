@@ -7,13 +7,14 @@ description: "Mobili\u0173 ir tvari\u0173 kartonini\u0173 reklamini\u0173 stend\
 hero_image: "/images/reklaminiai-stendai-stovai.jpg"
 image: "/images/reklaminiai-stendai-stovai.jpg"
 search_cloud:
-  - "reklaminiai stendai i\u0161 kartono"
-  - "reklaminiai stovai i\u0161 kartono"
-  - "prekybiniai stendai"
-  - "stovai"
-  - "kartono stendai"
-  - "reklaminiai stendai"
-  - "reklaminiai stovai"
+  - "parduotuvi\u0173 dekoracijos"
+  - "vitrin\u0173 dekoracijos"
+  - "stendai"
+  - "lentyniniai stovai"
+  - "akrilo gaminiai"
+  - "balsad\u0117\u017e\u0117s"
+  - "balsad\u0117\u017ei\u0173 gamyba"
+  - "rengini\u0173 \u012franga"
 ---
 Reklaminiai stendai, stovai ir POSM konstrukcijos prekybos vietoms
 

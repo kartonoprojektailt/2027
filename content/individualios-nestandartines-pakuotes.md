@@ -11,6 +11,10 @@ gallery_images:
   - "/images/individualios-nestandartines-pakuotes-g2.jpg"
   - "/images/individualios-nestandartines-pakuotes-g3.jpg"
   - "/images/individualios-nestandartines-pakuotes-g4.jpg"
+search_cloud:
+  - "Individualios pakuot\u0117s"
+  - "nestandartin\u0117s pakuot\u0117s"
+  - "sud\u0117ting\u0173 kartonini\u0173 pakuo\u010di\u0173 gamyba"
 ---
 Individualių, nestandartinių kartoninių pakuočių projektavimas ir gamyba nuo 2014 m.
 

@@ -23,7 +23,7 @@ search_cloud:
   - "deko d\u0117\u017e\u0117s"
   - "dekoratyvin\u0117s d\u0117\u017eut\u0117s"
   - "dovan\u0173 d\u0117\u017eut\u0117s"
-  - "d\u0117\u017eu\u010di\u0173 gamyba"
+  - "dovan\u0173 d\u0117\u017eu\u010di\u0173 gamyba"
 ---
 Visų tipų dovanų dėžučių, dekoratyvinių deko dėžių ir reprezentacinės taros verslui pasirinkimas
 

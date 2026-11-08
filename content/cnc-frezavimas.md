@@ -4,6 +4,9 @@ slug: "cnc-frezavimas"
 type: "page"
 menu_title: "CNC frezavimas"
 description: "Profesionalios CNC frezavimo paslaugos verslui. Tikslus ir \u0161varus \u012fvairi\u0173 med\u017eiag\u0173 apdorojimas pagal individualius br\u0117\u017einius. Ma\u017ei ir vidutiniai tira\u017eai, greitas pristatymas visoje Lietuvoje."
+search_cloud:
+  - "CNC frezavimas"
+  - "plastiko CNC frezavimas"
 ---
 Tikslus CNC frezavimas ir lakštinių medžiagų apdirbimas Kaune. Pristatymas visoje šalyje. 
 

@@ -74,9 +74,11 @@ if df is None or df.empty:
 
 images_dir = os.path.join("static", "images")
 content_dir = "content"
+data_dir = "data"
 
 os.makedirs(images_dir, exist_ok=True)
 os.makedirs(content_dir, exist_ok=True)
+os.makedirs(data_dir, exist_ok=True)
 
 def is_valid_val(val):
     if val is None:
@@ -194,7 +196,6 @@ print("Generuojami Markdown puslapiai ir prekės iš Google Sheets...")
 
 valid_slugs = {"sandelyje", "_index", "search"}
 
-# --- AUTOMATYCZNE TWORZENIE PLIKU SEARCH.MD Z WYMUSZENIEM LAYOUTU SEARCH ---
 search_file_path = os.path.join(content_dir, "search.md")
 search_markdown = """---
 title: "Paieška"
@@ -208,16 +209,34 @@ with open(search_file_path, 'w', encoding='utf-8') as f:
 
 llms_lines = []
 
+# Słownik do budowania drzewa kategorii i słów kluczowych dla search.html
+matrix_tree = {}
+
 for _, row in df.iterrows():
     raw_slug = str(row.get('slug', '')).strip()
     title_raw = str(row.get('title', '')).strip()
     
-    # Czyszczenie treści z niechcianego tekstu "UAB Kartono projektai"
     content_body = str(row.get('content_body', '')).strip()
     if not is_valid_val(content_body):
         content_body = str(row.get('content', '')).strip()
     
     content_body = re.sub(r'UAB\s+Kartono\s+projektai', '', content_body, flags=re.IGNORECASE).strip()
+
+    # Zbieranie danych do drzewa wyszukiwarki
+    cat_name = str(row.get('category', '')).strip()
+    menu_t = str(row.get('menu_title', '')).strip() or title_raw
+    cloud_raw = str(row.get('search_cloud', '')).strip()
+    
+    if is_valid_val(cat_name) and cat_name != 'Unikalus puslapio adresas':
+        if cat_name not in matrix_tree:
+            matrix_tree[cat_name] = {}
+        
+        clouds_list = []
+        if is_valid_val(cloud_raw):
+            clouds_list = [c.strip() for c in cloud_raw.replace('\n', ',').split(',') if is_valid_val(c.strip())]
+            
+        if is_valid_val(menu_t) and menu_t != 'Pavadinimas':
+            matrix_tree[cat_name][menu_t] = clouds_list
 
     # Strona główna (_index)
     if raw_slug in ['_index', 'index', '/'] or "kartoninės pakuotės" in title_raw.lower():
@@ -332,13 +351,11 @@ for _, row in df.iterrows():
         f"type: {json.dumps('sandelyje' if source_tab == 'sandelyje' else 'page')}",
     ]
     
-    # --- OBSŁUGA MENU_TITLE Z GOOGLE SHEETS ---
     menu_title_val = row.get('menu_title', '')
     if is_valid_val(menu_title_val):
         fm.append(f"menu_title: {json.dumps(str(menu_title_val).strip())}")
     else:
         fm.append(f"menu_title: {json.dumps(title)}")
-    # ------------------------------------------
     
     meta_desc = row.get('meta_description ', '') or row.get('meta_description', '')
     if is_valid_val(meta_desc):
@@ -433,7 +450,13 @@ for _, row in df.iterrows():
         if is_valid_val(content_body):
             f.write(content_body + "\n")
 
-# --- AUTOMATYCZNY ZAPIS PLIKU LLMS.TXT ---
+# ZAPIS DANYCH DLA dynamicznego search.html
+matrix_filepath = os.path.join(data_dir, "search_matrix.json")
+with open(matrix_filepath, 'w', encoding='utf-8') as f:
+    json.dump(matrix_tree, f, ensure_ascii=False, indent=2)
+print("Pomyślnie wygenerowano plik data/search_matrix.json z danymi dla wyszukiwarki.")
+
+# AUTOMATYCZNY ZAPIS LLMS.TXT
 llms_filepath = os.path.join(content_dir, "llms.txt")
 with open(llms_filepath, 'w', encoding='utf-8') as f:
     f.write("\n".join(llms_lines) + "\n")

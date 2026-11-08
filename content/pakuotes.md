@@ -10,6 +10,10 @@ gallery_images:
   - "/images/pakuotes-g1.jpg"
   - "/images/pakuotes-g2.jpg"
   - "/images/pakuotes-g3.jpg"
+search_cloud:
+  - "Kartono pakuot\u0117s"
+  - "gofrokartono d\u0117\u017e\u0117s"
+  - "pramonin\u0117 tara i\u0161 kartono"
 ---
 Kartoniniai pakuočių sprendimai, gofrokartono dėžės ir pramoninė tara
 

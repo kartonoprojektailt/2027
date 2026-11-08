@@ -13,7 +13,7 @@
         {{- end }}
     </header>
 
-    <!-- CENTRALNE, POTĘŻNE OKNO WYSZUKIWANIA -->
+    <!-- CENTRALNE OKNO WYSZUKIWANIA -->
     <div id="searchbox" class="searchbox" style="width: 100%; max-width: 700px; position: relative;">
         <div style="display: flex; gap: 10px; align-items: center; background: var(--entry); border: 2px solid var(--border); border-radius: 12px; padding: 6px 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); transition: border-color 0.2s;">
             <svg style="width: 22px; height: 22px; opacity: 0.5; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -23,21 +23,15 @@
         <ul id="searchResults" class="searchResults" aria-label="search results" style="text-align: left; position: absolute; width: 100%; z-index: 99; background: var(--entry); border-radius: 8px; margin-top: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);"></ul>
     </div>
 
-    <!-- LEKKIE, KOMPAKTOWE SUGESTIE (INSPIRACJE NA START) -->
+    <!-- PASEK SUGESTII GENEROWANY DYNAMICZNIE I LOSOWO PRZEZ JS -->
     <div class="search-suggestions-bar" style="margin-top: 1.8rem; max-width: 750px; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;">
-        <span style="font-size: 0.85rem; color: var(--secondary); width: 100%; margin-bottom: 0.2rem; font-weight: 500;">Populiarios užklausos ir įkvėpimai:</span>
-        <button class="search-chip" data-query="reklaminiai stendai iš kartono">reklaminiai stendai</button>
-        <button class="search-chip" data-query="dėžučių gamyba">dėžučių gamyba</button>
-        <button class="search-chip" data-query="FEFCO standartas">FEFCO standartas</button>
-        <button class="search-chip" data-query="CNC paslaugos">CNC paslaugos</button>
-        <button class="search-chip" data-query="dovanų dėžutės">dovanų dėžutės</button>
-        <button class="search-chip" data-query="UV spauda">UV spauda</button>
-        <button class="search-chip" data-query="Sandėlyje">Sandėlyje</button>
+        <span style="font-size: 0.85rem; color: var(--secondary); width: 100%; margin-bottom: 0.2rem; font-weight: 500;">Populiarios užklausos:</span>
+        <div id="random-suggestions-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;"></div>
     </div>
 
 </div>
 
-<!-- ROZWIJANY KATALOG (SEO / AI ARCHITEKTURA UKRYTA W HARMONIJCE - NIE PRZESZKADZA W UX) -->
+<!-- STRUKTURA KATEGORII W HARMONIJCE (DANE Z GOOGLE SHEETS DLA SEO I AI) -->
 <details class="full-matrix-accordion" style="max-width: 900px; margin: 1rem auto 4px auto; background: var(--entry); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem 1.5rem;">
     <summary style="cursor: pointer; font-weight: 700; color: var(--primary); font-size: 0.95rem; outline: none; display: flex; justify-content: space-between; align-items: center;">
         <span>📂 Visų Kartono projektų paslaugų ir inžinerinių raktažodžių katalogas</span>
@@ -45,85 +39,26 @@
     </summary>
 
     <div class="cloud-matrix" style="display: flex; flex-direction: column; gap: 2rem; margin-top: 1.2rem; border-top: 1px solid var(--border); padding-top: 1.2rem;">
-
-        <!-- KATEGORIA 1 -->
+        {{ range $cat, $subcats := site.Data.search_matrix }}
         <div class="matrix-category">
             <div style="margin-bottom: 0.8rem;">
-                <button class="search-chip category-chip" data-query="Reklaminiai stendai ir POSM">Reklaminiai stendai ir POSM</button>
+                <button class="search-chip category-chip" data-query="{{ $cat }}">{{ $cat }}</button>
             </div>
             <div class="matrix-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.2rem;">
+                {{ range $subcatTitle, $clouds := $subcats }}
                 <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                    <button class="search-chip subcategory-chip" data-query="Stendai ir ekspoziciniai stovai">Stendai ir ekspoziciniai stovai</button>
-                    <button class="search-chip" data-query="reklaminiai stendai iš kartono">reklaminiai stendai iš kartono</button>
-                    <button class="search-chip" data-query="stendai iš kartono">stendai iš kartono</button>
-                    <button class="search-chip" data-query="prekybiniai stendai">prekybiniai stendai</button>
+                    <button class="search-chip subcategory-chip" data-query="{{ $subcatTitle }}">{{ $subcatTitle }}</button>
+                    {{ range $clouds }}
+                    <button class="search-chip" data-query="{{ . }}">{{ . }}</button>
+                    {{ end }}
                 </div>
-                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                    <button class="search-chip subcategory-chip" data-query="Prekystalio stendai ir stoveliai">Prekystalio stendai</button>
-                    <button class="search-chip" data-query="Lentyna elektronikai">Lentyna elektronikai</button>
-                    <button class="search-chip" data-query="Prekių stendas">Prekių stendas</button>
-                </div>
-                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                    <button class="search-chip subcategory-chip" data-query="Parduotuvių ir vitrinų dekoracijos">Dekoracijos</button>
-                    <button class="search-chip" data-query="Šventinės dekoracijos">Šventinės dekoracijos</button>
-                    <button class="search-chip" data-query="žaismingos figūros">žaismingos figūros</button>
-                </div>
-                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                    <button class="search-chip subcategory-chip" data-query="Foto sienelės ir renginių įranga">Foto sienelės</button>
-                    <button class="search-chip" data-query="Festivaliams">Festivaliams</button>
-                    <button class="search-chip" data-query="Mokyklai">Mokyklai</button>
-                </div>
+                {{ end }}
             </div>
         </div>
-
-        <!-- KATEGORIA 2 -->
-        <div class="matrix-category">
-            <div style="margin-bottom: 0.8rem;">
-                <button class="search-chip category-chip" data-query="Kartono pakuotės">Kartono pakuotės</button>
-            </div>
-            <div class="matrix-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.2rem;">
-                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                    <button class="search-chip subcategory-chip" data-query="Dėžės">Dėžės</button>
-                    <button class="search-chip" data-query="Kartonas baltas">Kartonas baltas</button>
-                    <button class="search-chip" data-query="ekologiškas kartonas">ekologiškas kartonas</button>
-                </div>
-                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                    <button class="search-chip subcategory-chip" data-query="Dėžutės">Dėžutės</button>
-                    <button class="search-chip" data-query="dvejų dalių dėžutės">dvejų dalių dėžutės</button>
-                    <button class="search-chip" data-query="Dėžutės su spauda">Dėžutės su spauda</button>
-                </div>
-                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                    <button class="search-chip subcategory-chip" data-query="Dovanų dėžutės">Dovanų dėžutės</button>
-                    <button class="search-chip" data-query="Magnetinis užraktas">Magnetinis užraktas</button>
-                </div>
-                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                    <button class="search-chip subcategory-chip" data-query="FEFCO katalogas">FEFCO katalogas</button>
-                    <button class="search-chip" data-query="FEFCO standartas">FEFCO standartas</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- KATEGORIA 3 -->
-        <div class="matrix-category">
-            <div style="margin-bottom: 0.8rem;">
-                <button class="search-chip category-chip" data-query="CNC Paslaugos">CNC Paslaugos</button>
-            </div>
-            <div class="matrix-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.2rem;">
-                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                    <button class="search-chip subcategory-chip" data-query="CNC frezavimas">CNC frezavimas</button>
-                    <button class="search-chip" data-query="CNC paslaugos Kaune">CNC paslaugos Kaune</button>
-                </div>
-                <div class="matrix-col" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                    <button class="search-chip subcategory-chip" data-query="CNC pjovimas">CNC pjovimas</button>
-                    <button class="search-chip" data-query="kartono pjovimo paslaugos">kartono pjovimo paslaugos</button>
-                </div>
-            </div>
-        </div>
-
+        {{ end }}
     </div>
 </details>
 
-<!-- STYLE -->
 <style>
     .search-chip {
         background-color: var(--entry, #25262b);
@@ -172,13 +107,33 @@
     }
 </style>
 
-<!-- LOGIKA -->
+<!-- LOGIKA: DYNAMICZNE LOSOWANIE SUGESTII + OBSŁUGA WYSZUKIWARKI -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const searchInput = document.getElementById("searchInput");
         const clearBtn = document.getElementById("clearSearch");
-        if (!searchInput) return;
+        const suggestionsContainer = document.getElementById("random-suggestions-container");
 
+        // 1. ZBIERANIE WSZYSTKICH HASŁ Z DRZEWA (KATEGORIE, PODKATEGORIE, FRAZY)
+        const allMatrixChips = Array.from(document.querySelectorAll(".cloud-matrix .search-chip"));
+        const allQueries = Array.from(new Set(allMatrixChips.map(c => c.getAttribute("data-query").trim()))).filter(Boolean);
+
+        // 2. LOSOWANIE OD 5 DO 12 UNIKALNYCH HASŁ PRZY KAŻDYM WEJŚCIU/ODŚWIEŻENIU
+        if (allQueries.length > 0 && suggestionsContainer) {
+            // Losowa liczba elementów do wyciągnięcia (zakres 5 - 12)
+            const countToPick = Math.floor(Math.random() * 8) + 5; 
+            
+            // Algorytm mieszania (Fisher-Yates shuffle)
+            const shuffled = [...allQueries].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, Math.min(countToPick, shuffled.length));
+
+            // Generowanie chmurek w sugerowanym pasku
+            suggestionsContainer.innerHTML = selected.map(q => 
+                `<button class="search-chip" data-query="${q}">${q}</button>`
+            ).join("");
+        }
+
+        // 3. INICJALIZACJA WSZYSTKICH CHMUREK (W TYM NOWO WYGENEROWANYCH)
         const chips = document.querySelectorAll(".search-chip");
 
         function updateChipStates() {
@@ -215,20 +170,23 @@
             });
         });
 
-        searchInput.addEventListener("input", function() {
-            updateChipStates();
-        });
+        if (searchInput) {
+            searchInput.addEventListener("input", updateChipStates);
+        }
 
-        clearBtn.addEventListener("click", function() {
-            searchInput.value = "";
-            updateChipStates();
-            searchInput.dispatchEvent(new Event("input"));
-            searchInput.focus();
-        });
+        if (clearBtn) {
+            clearBtn.addEventListener("click", function() {
+                searchInput.value = "";
+                updateChipStates();
+                searchInput.dispatchEvent(new Event("input"));
+                searchInput.focus();
+            });
+        }
 
+        // Obsługa otwierania z parametrem ?q= w URL
         const urlParams = new URLSearchParams(window.location.search);
         const queryParam = urlParams.get('q');
-        if (queryParam) {
+        if (queryParam && searchInput) {
             searchInput.value = queryParam;
             updateChipStates();
             setTimeout(() => {

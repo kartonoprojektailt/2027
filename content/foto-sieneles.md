@@ -15,6 +15,10 @@ gallery_images:
   - "/images/foto-sieneles-g6.jpg"
   - "/images/foto-sieneles-g7.jpg"
   - "/images/foto-sieneles-g8.jpg"
+search_cloud:
+  - "mobilios reklamin\u0117s konstrukcijos"
+  - "foto sienel\u0117s"
+  - "press wall"
 ---
 Renginių foto sienelės ir mobilios reklaminės konstrukcijos. Foto sienelės – praktiškas sprendimas renginiams ir šventėms. 
 

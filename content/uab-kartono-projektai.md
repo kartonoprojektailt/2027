@@ -3,6 +3,12 @@ title: "\u012emon\u0117 UAB Kartono projektai"
 slug: "uab-kartono-projektai"
 type: "page"
 menu_title: "\u012emon\u0117 UAB Kartono projektai"
+search_cloud:
+  - "Reklamini\u0173 stend\u0173 gamyba"
+  - "kartono stov\u0173 gamyba Kaune"
+  - "POSM gamyba"
+  - "kartono pakuo\u010di\u0173 gamyba"
+  - "kartono konstrukcij\u0173 projektavimas"
 ---
 UAB „Kartono projektai“ – tai gamybinė įmonė ir tiesioginis gamintojas, įsikūrusi strategiškai patogioje vietoje šalies centre – **Kaune (Raudondvario pl. 164)**. Nuo 2014 metų specializuojamės tvarių pakuočių, prekybinių stendų ir individualių sprendimų gamyboje verslui. Siūlome lanksčias gamybos sąlygas: visi [reklaminiai stendai ir POSM](/reklaminiai-stendai-stovai/) bei [kartono pakuotės](/pakuotes/) gaminami **nuo 1 vieneto**, užtikrinant operatyvų prisitaikymą prie individualių verslo klientų poreikių.
 
