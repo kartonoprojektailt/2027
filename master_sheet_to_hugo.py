@@ -208,8 +208,6 @@ with open(search_file_path, 'w', encoding='utf-8') as f:
     f.write(search_markdown)
 
 llms_lines = []
-
-# Słownik do budowania drzewa kategorii i słów kluczowych dla search.html
 matrix_tree = {}
 
 for _, row in df.iterrows():
@@ -222,7 +220,6 @@ for _, row in df.iterrows():
     
     content_body = re.sub(r'UAB\s+Kartono\s+projektai', '', content_body, flags=re.IGNORECASE).strip()
 
-    # Zbieranie danych do drzewa wyszukiwarki
     cat_name = str(row.get('category', '')).strip()
     menu_t = str(row.get('menu_title', '')).strip() or title_raw
     cloud_raw = str(row.get('search_cloud', '')).strip()
@@ -238,7 +235,6 @@ for _, row in df.iterrows():
         if is_valid_val(menu_t) and menu_t != 'Pavadinimas':
             matrix_tree[cat_name][menu_t] = clouds_list
 
-    # Strona główna (_index)
     if raw_slug in ['_index', 'index', '/'] or "kartoninės pakuotės" in title_raw.lower():
         title = title_raw if is_valid_val(title_raw) else "Pradžia"
         
@@ -411,8 +407,9 @@ for _, row in df.iterrows():
             p_url = f"https://kartonoprojektai.lt/sandelyje/{slug}/"
             llms_lines.append(f"- [{title} (/{slug}/)]({p_url}) - Kod: {p_code}, Kaina: {p_price} EUR, Likutis: {p_stock} vnt. Kategorija: {p_cat}")
 
+        # UKRYWANIE PÓL "Image:" i "Menu Title:" Z GOOGLE SHEETS DLA PODSTRONY OGŁOSZENIA
         excluded_cols = {
-            'slug', 'title', 'menu_title', 'code', 'offer_code', 'sku', 'category', 
+            'slug', 'title', 'menu_title', 'menu title', 'image', 'code', 'offer_code', 'sku', 'category', 
             'price', 'kaina', 'unit', 'stock', 'likutis', 'sale_reason', 
             'hero_image', 'gallery_images', 'search_cloud', 'content_body', 
             'content', 'source_tab', 'meta_description', 'meta_description '
@@ -450,19 +447,16 @@ for _, row in df.iterrows():
         if is_valid_val(content_body):
             f.write(content_body + "\n")
 
-# ZAPIS DANYCH DLA dynamicznego search.html
 matrix_filepath = os.path.join(data_dir, "search_matrix.json")
 with open(matrix_filepath, 'w', encoding='utf-8') as f:
     json.dump(matrix_tree, f, ensure_ascii=False, indent=2)
 print("Pomyślnie wygenerowano plik data/search_matrix.json z danymi dla wyszukiwarki.")
 
-# AUTOMATYCZNY ZAPIS LLMS.TXT
 llms_filepath = os.path.join(content_dir, "llms.txt")
 with open(llms_filepath, 'w', encoding='utf-8') as f:
     f.write("\n".join(llms_lines) + "\n")
 print("Plik llms.txt został pomyślnie zaktualizowany z Google Sheets.")
 
-# Senų failų valymas
 for filename in os.listdir(content_dir):
     if filename.endswith(".md") and filename not in ["_index.md", "search.md", "llms.txt"]:
         file_slug = filename[:-3]

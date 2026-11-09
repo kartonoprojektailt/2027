@@ -5,19 +5,26 @@
 
 html {
     scroll-behavior: smooth;
-    font-size: 100% !important; /* Pozwala stronie dostosować się do domyślnych ustawień urządzenia/przeglądarki */
-    -webkit-overflow-scrolling: touch; /* Płynne przewijanie dotykowe na urządzeniach Apple */
+    font-size: 100% !important;
+    -webkit-overflow-scrolling: touch;
     color-scheme: dark light;
 }
 
 body {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     font-size: 1rem !important;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased; /* Idealne wygładzanie czcionek na ekranach Retina (Apple) */
+    font-weight: 500 !important;
+    color: #1A1A1A !important;    /* Domyślny kolor tekstu dla jasnego motywu */
+    line-height: 1.5 !important;
+    -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%; /* Zapobiega automatycznej zmianie rozmiaru tekstu przez iOS przy obrocie */
+    -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+}
+
+/* Naprawienie widoczności tekstu w ciemnym motywie (zapobiega znikaniu tekstu na homepage i podstronach) */
+.dark body {
+    color: var(--content) !important;
 }
 
 /* ================================================= */
@@ -96,7 +103,6 @@ body {
 
 @media screen and (max-width: 768px) {
   body {
-    /* Bezpieczne marginesy dla nowych ekranów Apple (Dynamic Island / Notch / Home Indicator) */
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
@@ -110,13 +116,11 @@ body {
     display: flex !important; 
   }
 
-  /* Poprawka szerokości i kontenera logo na mobile (zapobiega zwężaniu widoku) */
   .logo img.adaptive-logo {
     max-height: 42px !important;
     width: auto !important;
   }
 
-  /* Pionowy układ całego menu na telefonie */
   #custom-menu, #menu {
     display: flex !important;
     flex-direction: column;
@@ -137,7 +141,6 @@ body {
     display: block;
   }
 
-  /* Główne kategorie: Wielkie litery, duża czytelna czcionka, wyrównanie do lewej */
   #menu li a {
     font-size: 1.03rem !important;
     font-weight: 700 !important;
@@ -153,7 +156,6 @@ body {
     white-space: normal !important;
   }
 
-  /* Podkategorie z wcięciem i wyśrodkowaniem */
   #menu li .sub-menu {
     position: static !important;
     display: block !important;
@@ -198,16 +200,21 @@ article a.btn,
 .post-content a.btn,
 .map-button,
 a[href*="maps.app.goo.gl"],
-a[href*="waze.com"] {
+a[href*="waze.com"],
+.post-content a[href*="maps.google.com"],
+.post-content a[href*="waze.com"] {
     background-color: var(--entry) !important;
     color: var(--primary) !important;
     border: 1px solid var(--border) !important;
-    padding: 8px 14px;
-    border-radius: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
-    display: inline-block;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .main a.btn:hover, 
@@ -216,9 +223,12 @@ article a.btn:hover,
 .post-content a.btn:hover,
 .map-button:hover,
 a[href*="maps.app.goo.gl"]:hover,
-a[href*="waze.com"]:hover {
+a[href*="waze.com"]:hover,
+.post-content a[href*="maps.google.com"]:hover,
+.post-content a[href*="waze.com"]:hover {
     background-color: var(--secondary) !important;
     color: var(--theme) !important;
+    border-color: var(--primary) !important;
 }
 
 
@@ -242,7 +252,51 @@ figure.highlight code {
 
 
 /* ================================================= */
-/* 5. SEKCJA CHROMA / SYNTAX HIGHLIGHTING (ZACHOWANA) */
+/* 5. --- OPTIMAL ANCHOR HEADING STYLES (LIGHT & DARK) --- */
+/* ================================================= */
+
+.post-content h1 .anchor,
+.post-content h2 .anchor,
+.post-content h3 .anchor,
+.post-content h4 .anchor {
+    opacity: 0;
+    margin-left: 0.35em;
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+:root .post-content h1:hover .anchor,
+:root .post-content h2:hover .anchor,
+:root .post-content h3:hover .anchor,
+:root .post-content h4:hover .anchor {
+    opacity: 0.45;
+    color: var(--primary);
+}
+
+:root .post-content .anchor:hover {
+    opacity: 0.9 !important;
+    color: var(--theme);
+}
+
+.dark .post-content h1:hover .anchor,
+.dark .post-content h2:hover .anchor,
+.dark .post-content h3:hover .anchor,
+.dark .post-content h4:hover .anchor {
+    opacity: 0.5;
+    color: var(--primary);
+}
+
+.dark .post-content .anchor:hover {
+    opacity: 1 !important;
+    color: #ffffff;
+}
+
+
+/* ================================================= */
+/* 6. SEKCJA CHROMA / SYNTAX HIGHLIGHTING            */
 /* ================================================= */
 .bg {
     color: #cad3f5;
@@ -355,9 +409,21 @@ figure.highlight code {
   .content ol,
   article ul,
   article ol {
-    padding-left: 20px !important;  /* Wcięcie dla kropek/numerów */
-    margin-left: 8px !important;    /* Odstęp od lewej krawędzi ekranu */
-    margin-right: 12px !important;  /* Odstęp z prawej strony */
+    padding-left: 20px !important;
+    margin-left: 8px !important;
+    margin-right: 12px !important;
     max-width: calc(100% - 20px) !important;
   }
+}
+
+.hero-image-block {
+    min-height: 350px;
+}
+
+.post-gallery-section {
+    min-height: 200px;
+}
+
+html {
+    scroll-padding-top: 80px;
 }
